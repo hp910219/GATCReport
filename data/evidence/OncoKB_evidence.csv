@@ -1,0 +1,7 @@
+Isoform,RefSeq,Entrez Gene ID,Gene,Alteration,Cancer Type,Level,Drugs(s),PMIDs for drug,Abstracts for drug
+ENST00000275493,NM_005228.3,1956,EGFR,T790M,Non-Small Cell Lung Cancer,R1,"Erlotinib, Afatinib, Gefitinib","24478319, 26051236, 23816963","Yang et al. Abstract# O03.05, IASLC 2013 http://library.iaslc.org/search-speaker?search_speaker=17991"
+ENST00000275493,NM_005228.3,1956,EGFR,T790M,Non-Small Cell Lung Cancer,1,Osimertinib,25923549,
+ENST00000275493,NM_005228.3,1956,EGFR,Exon 19 deletion/insertion,Non-Small Cell Lung Cancer,1,"Erlotinib, Afatinib, Gefitinib","15638953, 22452895, 25589191, 23816960, 14570950, 22285168, 20022809, 19692680, 21670455, 18408761, 22370314, 20573926",
+ENST00000275493,NM_005228.3,1956,EGFR,Exon 19 deletion,Non-Small Cell Lung Cancer,1,"Erlotinib, Afatinib, Gefitinib","15638953, 22452895, 25589191, 23816960, 14570950, 22285168, 20022809, 19692680, 21670455, 18408761, 22370314, 20573926",
+ENST00000397752,NM_000245.2,4233,MET,Amplification,Renal Cell Carcinoma,2A,Cabozantinib,"27279544, 27462141",
+ENST00000397752,NM_000245.2,4233,MET,Amplification,Non-Small Cell Lung Cancer,2A,Crizotinib,21623265,"Camidge et al. Abstract# 8001, ASCO 2014 http://meetinglibrary.asco.org/content/132030-144"

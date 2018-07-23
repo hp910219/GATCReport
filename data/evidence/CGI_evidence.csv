@@ -1,0 +1,33 @@
+SAMPLE,CANCER_TYPE,SAMPLE_ALTERATION,ALTERATION_MATCH,TUMOR_MATCH,DRUG,BIOMARKER,EFFECT,BIOMARKER_IDX,RESISTANCE_LIST,RESISTANCE_TYPE,TESTED_TUMOR,EVIDENCE,SOURCE
+default_id,CANCER,EGFR MUT (T790M),complete,1,EGFR inhibitor 1st gens,EGFR (T790M),Resistant,56,,,NSCLC,Late trials,PMID:19680293
+default_id,CANCER,EGFR MUT (T790M),complete,1,EGFR inhibitor 2nd gens,EGFR (T790M),Resistant,67,,,NSCLC,Late trials,PMID:22452896
+default_id,CANCER,EGFR MUT (T790M),complete,1,EGFR inhibitor 3rd gens,EGFR (T790M),Responsive,275,,,L,Early trials,ASCO 2014 (abstr 8009);ENA 2014 (abstr 10LBA);ENA 2014 (abstr 9LBA);ASCO 2015 (abstr 8001)
+default_id,CANCER,EGFR MUT (T790M),complete,1,HSP90 inhibitors,EGFR (T790M),Responsive,283,,,L,Early trials,ESMO 2012 (abstr 4380)
+default_id,CANCER,EGFR MUT (T790M),complete,1,MEK inhibitor (alone or in combination)s,"EGFR (L858R,L861Q,G719A,G719S,G719C,G719D,L747S,S768I,L861P,L861R,T790M)",Responsive,285,,,L,Pre-clinical,PMID:23102728
+default_id,CANCER,EGFR MUT (T790M),complete,1,"EGFR inhibitor 3rd gens (Rociletinib,HM61713,etc)",EGFR (T790M),Responsive,287,,,NSCLC,Late trials,NCT02322281
+default_id,CANCER,EGFR MUT* (L747_E749delLRE),complete,1,Afatinib (ERBB2 inhibitor&EGFR inhibitor 2nd gen),EGFR exon 19 deletions,Responsive,288,67,Resistant,NSCLC,FDA guidelines,FDA
+default_id,CANCER,EGFR MUT (T790M),complete,1,Afatinib + Cetuximab (ERBB2 inhibitor&EGFR inhibitor 2nd gen + EGFR mAb inhibitor),EGFR (T790M),Responsive,295,,,L,Early trials,PMID:25074459
+default_id,CANCER,EGFR MUT (T790M),complete,1,Afatinib + Nimotuzumab (ERBB2 inhibitor&EGFR inhibitor 2nd gen + EGFR mAb inhibitor),EGFR (T790M),Responsive,296,,,L,Early trials,PMID:26667485
+default_id,CANCER,EGFR MUT* (L747_E749delLRE),complete,1,Erlotinib (EGFR inhibitor 1st gen),EGFR exon 19 deletions,Responsive,302,56,Resistant,NSCLC,FDA guidelines,FDA
+default_id,CANCER,EGFR MUT* (L747_E749delLRE),complete,1,Gefitinib (EGFR inhibitor 1st gen),EGFR exon 19 deletions,Responsive,312,56,Resistant,NSCLC,FDA guidelines,FDA
+default_id,CANCER,EGFR MUT* (L747_E749delLRE),complete,1,Osimertinib (EGFR inhibitor 3rd gen),EGFR exon 19 deletions,Responsive,320,,,L,Early trials,NCT02465060
+default_id,CANCER,EGFR MUT (T790M),complete,1,Osimertinib (EGFR inhibitor 3rd gen),EGFR (T790M),Responsive,326,,,NSCLC,FDA guidelines,FDA
+default_id,CANCER,EGFR MUT (T790M),complete,1,Afatinib (ERBB2 inhibitor&EGFR inhibitor 2nd gen),EGFR (T790M),Resistant,832,,,L,NCCN/CAP guidelines,NCCN
+default_id,CANCER,EGFR MUT (T790M),complete,1,Erlotinib (EGFR inhibitor 1st gen),EGFR (T790M),Resistant,881,,,L,NCCN/CAP guidelines,NCCN
+tcgi,CANCER,ATR:del CNA,complete,1,Olaparib (PARP inhibitor),ATR deletion,Responsive,100,,,"OV, CANCER",Pre-clinical,PMID:23548269
+tcgi,CANCER,CDKN2A:del CNA,complete,1,CDK4/6 inhibitors,CDKN2A deletion,Responsive,226,,,CM,Case report,ASCO 2013 (abstr 2500)
+tcgi,CANCER,CDKN2A:del CNA,complete,1,CDK4/6 inhibitors,CDKN2A deletion,Responsive,227,,,"G, CANCER",Pre-clinical,PMID:22471707;PMID:22586120;PMID:22711607
+tcgi,CANCER,CDKN2A:del CNA,complete,1,Ilorasertib (AURKA-VEGF inhibitor),CDKN2A deletion,Responsive,229,,,CANCER,Early trials,NCT02478320
+tcgi,CANCER,CDKN2B:del CNA,complete,1,CDK4/6 inhibitors,CDKN2B deletion,Responsive,231,,,"G, CANCER",Pre-clinical,PMID:22471707;PMID:22711607
+tcgi,CANCER,MET:amp CNA,complete,1,EGFR inhibitor 1st gens,MET amplification,Resistant,267,,,"NSCLC, COREAD",Early trials,PMID:22189054;PMID:23729478
+tcgi,CANCER,MET:amp CNA,complete,1,EGFR mAb inhibitors,MET amplification,Resistant,268,,,COREAD,Early trials,PMID:23729478
+tcgi,CANCER,MET:amp CNA,complete,1,BCL2 inhibitors,MET amplification,Responsive,656,,,COREAD,Pre-clinical,PMID:27397505
+tcgi,CANCER,MET:amp CNA,complete,1,MET inhibitors,MET amplification,Responsive,659,,,HC,Case report,ENA 2015 (abstract A55)
+tcgi,CANCER,MET:amp CNA,complete,1,MET inhibitors,MET amplification,Responsive,660,,,ST,Pre-clinical,PMID:22729845;PMID:23327903
+tcgi,CANCER,MET:amp CNA,complete,1,MET inhibitors,MET amplification,Responsive,661,,,R,Early trials,PMID:23213094;AACR 2016 (abstr CT2006)
+tcgi,CANCER,MET:amp CNA,complete,1,Cabozantinib + Panitumumab (Pan-kinase inhibitor + EGFR mAb inhibitor),MET amplification,Responsive,666,,,COREAD,Case report,ENA 2015 (abstr A52)
+tcgi,CANCER,MET:amp CNA,complete,1,Crizotinib (ALK inhibitor),MET amplification,Responsive,669,,,NSCLC,Early trials,NCT02499614;ASCO 2015 (abstr 2595)
+tcgi,CANCER,MET:amp CNA,complete,1,Crizotinib (ALK inhibitor),MET amplification,Responsive,670,,,"LUAD, ST",Early trials,ASCO 2014 (abstr 8001);ASCO 2015 (abstr 2595);ASCO GI 2015 (abstr 1)
+tcgi,CANCER,MET:amp CNA,complete,1,Crizotinib (ALK inhibitor),MET amplification,Responsive,671,,,G,Case report,PMID:22162573
+tcgi,CANCER,MET:amp CNA,complete,1,"EGFR inhibitor 3rd gens (Osimertinib,etc)",MET amplification,Resistant,778,,,LUAD,Case report,PMID:27252416
+tcgi,CANCER,MET:amp CNA,complete,1,"EGFR inhibitor 3rd gens (Rociletinib,etc)",MET amplification,Resistant,897,,,LUAD,Case report,PMID:27252416

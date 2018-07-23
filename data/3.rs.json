@@ -1,0 +1,800 @@
+{
+    "nodes": [
+        {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "30c1648c6fae0702f3", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "1651648c6fae070532", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "1d41648c6fae070ae5", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "751648c6fae071094", 
+                            "text": "A/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2d31648c6fae070227", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "e91648c6fae071516", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "13e1648c6fae070131", 
+                    "text": "rs1872328"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "1c91648c6fae0702a10", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "2ad1648c6fae070aa9", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "4e1648c6fae070a212", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "1c21648c6fae0713b11", 
+                            "text": "A/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "611648c6fae0700814", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "1d71648c6fae0705513", 
+                            "text": "C/C"
+                        }
+                    ], 
+                    "collapsed": false, 
+                    "id": "2bc1648c6fae0707d8", 
+                    "text": "rs3212986"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "18b1648c6fae070d817", 
+                                    "text": "毒副作用高、疗效差"
+                                }
+                            ], 
+                            "id": "1bb1648c6fae0710716", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "e41648c6fae0711c19", 
+                                    "text": "毒副作用中等、疗效中等"
+                                }
+                            ], 
+                            "id": "2471648c6fae0706a18", 
+                            "text": "A/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3091648c6fae0716121", 
+                                    "text": "毒副作用低、疗效好"
+                                }
+                            ], 
+                            "id": "891648c6fae070af20", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "491648c6fae0700c15", 
+                    "text": "rs11615"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "32b1648c6fae070d124", 
+                                    "text": "毒副作用高、疗效差"
+                                }
+                            ], 
+                            "id": "b61648c6fae0704a23", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2181648c6fae0713126", 
+                                    "text": "毒副作用中等、疗效中等"
+                                }
+                            ], 
+                            "id": "22e1648c6fae0707725", 
+                            "text": "A/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2131648c6fae0718328", 
+                                    "text": "毒副作用低、疗效好"
+                                }
+                            ], 
+                            "id": "12d1648c6fae0708427", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "cd1648c6fae070c922", 
+                    "text": "rs1695"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "a11648c6fae0711131", 
+                                    "text": "疗效好"
+                                }
+                            ], 
+                            "id": "4f1648c6fae0703d30", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2f91648c6fae0712933", 
+                                    "text": "疗效中等"
+                                }
+                            ], 
+                            "id": "3bd1648c6fae0703332", 
+                            "text": "A/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3751648c6fae0711d35", 
+                                    "text": "疗效差"
+                                }
+                            ], 
+                            "id": "3311648c6fae070ee34", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "781648c6fae0701a29", 
+                    "text": "rs1801133"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "38d1648c6fae0711538", 
+                                    "text": "毒副作用低、疗效好"
+                                }
+                            ], 
+                            "id": "2871648c6fae0714837", 
+                            "text": "C/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2401648c6fae0714a40", 
+                                    "text": "毒副作用中等、疗效中等"
+                                }
+                            ], 
+                            "id": "37b1648c6fae070b739", 
+                            "text": "C/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2f81648c6fae0700a42", 
+                                    "text": "毒副作用高、疗效差"
+                                }
+                            ], 
+                            "id": "1a91648c6fae0707241", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "691648c6fae0714236", 
+                    "text": "rs1042522"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "1071648c6fae070d745", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "36f1648c6fae070b244", 
+                            "text": "G/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2741648c6fae070f647", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "8c1648c6fae070246", 
+                            "text": "G/T"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3e61648c6fae0717449", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "3501648c6fae070ef48", 
+                            "text": "T/T"
+                        }
+                    ], 
+                    "id": "3d31648c6fae0701d43", 
+                    "text": "rs2228001"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "31a1648c6fae070bc52", 
+                                    "text": "疗效好"
+                                }
+                            ], 
+                            "id": "1351648c6fae070a151", 
+                            "text": "C/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "1d71648c6fae0714254", 
+                                    "text": "疗效中等"
+                                }
+                            ], 
+                            "id": "3471648c6fae070c253", 
+                            "text": "C/T"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "41648c6fae0717956", 
+                                    "text": "疗效差"
+                                }
+                            ], 
+                            "id": "30a1648c6fae0704855", 
+                            "text": "T/T"
+                        }
+                    ], 
+                    "id": "f1648c6fae070cc50", 
+                    "text": "rs25487"
+                }
+            ], 
+            "id": "d11648c6f1101056", 
+            "modified": 1531364486666, 
+            "text": "铂类药物"
+        }, 
+        {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "be1648c6fae0706260", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "1dd1648c6fae0709359", 
+                            "text": "C/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "1b51648c6fae070bf62", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "20d1648c6fae070a61", 
+                            "text": "C/T"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2931648c6fae0713164", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "4a1648c6fae070cb63", 
+                            "text": "T/T"
+                        }
+                    ], 
+                    "id": "2b21648c6fae0713558", 
+                    "text": "rs3918290"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "2a21648c6fae0709d67", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "921648c6fae0712b66", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "1ee1648c6fae0718869", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "d81648c6fae0715568", 
+                            "text": "A/T"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "1f1648c6fae0702e71", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "1111648c6fae0702570", 
+                            "text": "T/T"
+                        }
+                    ], 
+                    "id": "3e61648c6fae070b965", 
+                    "text": "rs67376798"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "31a1648c6fae0709174", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "ac1648c6fae0712973", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "1261648c6fae0707876", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "11b1648c6fae0707275", 
+                            "text": "A/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2c41648c6fae0700178", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "1231648c6fae0707677", 
+                            "text": "C/C"
+                        }
+                    ], 
+                    "id": "db1648c6fae0714172", 
+                    "text": "rs55886062"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "3511648c6fae070a381", 
+                                    "text": "毒副作用高、疗效差"
+                                }
+                            ], 
+                            "id": "1171648c6fae0718c80", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "10a1648c6fae070ca83", 
+                                    "text": "毒副作用中等、疗效中等"
+                                }
+                            ], 
+                            "id": "2251648c6fae0701482", 
+                            "text": "A/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3521648c6fae071985", 
+                                    "text": "毒副作用低、疗效好"
+                                }
+                            ], 
+                            "id": "36a1648c6fae0716c84", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "14e1648c6fae0703a79", 
+                    "text": "rs1695"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "22d1648c6fae0701988", 
+                                    "text": "毒副作用低、疗效好"
+                                }
+                            ], 
+                            "id": "3641648c6fae0706487", 
+                            "text": "C/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3811648c6fae0718990", 
+                                    "text": "毒副作用中等、疗效中等"
+                                }
+                            ], 
+                            "id": "3651648c6fae0707389", 
+                            "text": "C/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2a21648c6fae0718692", 
+                                    "text": "毒副作用高、疗效差"
+                                }
+                            ], 
+                            "id": "671648c6fae070fa91", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "2d01648c6fae070d886", 
+                    "text": "rs1042522"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "3751648c6fae0708195", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "1551648c6fae0702794", 
+                            "text": "C/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "22d1648c6fae0812b1", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "2301648c6fae080b1", 
+                            "text": "C/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3d21648c6fae0816a3", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "2d51648c6fae0814e2", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "2661648c6fae0709b93", 
+                    "text": "rs1801019"
+                }
+            ], 
+            "id": "3481648c6fae070ac57", 
+            "modified": 1531364486689, 
+            "text": "氟尿嘧啶类"
+        }, 
+        {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "16a1648c6fae081457", 
+                                    "text": "毒副作用低、疗效好"
+                                }
+                            ], 
+                            "id": "271648c6fae080826", 
+                            "text": "C/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3c11648c6fae080089", 
+                                    "text": "毒副作用中等、疗效中等"
+                                }
+                            ], 
+                            "id": "2321648c6fae081388", 
+                            "text": "C/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "441648c6fae080c511", 
+                                    "text": "毒副作用高、疗效差"
+                                }
+                            ], 
+                            "id": "1d1648c6fae080a610", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "a41648c6fae0818b5", 
+                    "text": "rs1042522"
+                }
+            ], 
+            "id": "1bd1648c6fae080af4", 
+            "modified": 1531364486689, 
+            "text": "紫杉醇类药物"
+        }, 
+        {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "10f1648c6fae0804815", 
+                                    "text": "毒副作用低、疗效好"
+                                }
+                            ], 
+                            "id": "2741648c6fae0812b14", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3e11648c6fae0803917", 
+                                    "text": "毒副作用中等、疗效中等"
+                                }
+                            ], 
+                            "id": "601648c6fae0808116", 
+                            "text": "A/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3ac1648c6fae0813219", 
+                                    "text": "毒副作用高、疗效差"
+                                }
+                            ], 
+                            "id": "3281648c6fae0813318", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "3831648c6fae080cd13", 
+                    "text": "rs1695"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "1391648c6fae0800222", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "211648c6fae0801621", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3091648c6fae0817924", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "25c1648c6fae0812923", 
+                            "text": "A/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "1d1648c6fae0812126", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "fb1648c6fae0811825", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "collapsed": false, 
+                    "id": "7a1648c6fae0812520", 
+                    "text": "rs1801133"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "3c21648c6fae0817729", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "711648c6fae080d628", 
+                            "text": "C/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "19c1648c6fae0810531", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "971648c6fae0816d30", 
+                            "text": "C/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2bb1648c6fae0806e33", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "1ca1648c6fae080a432", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "3341648c6fae080a127", 
+                    "text": "rs738409"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "2921648c6fae0819836", 
+                                    "text": "疗效好"
+                                }
+                            ], 
+                            "id": "1dd1648c6fae0803e35", 
+                            "text": "A/A"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3641648c6fae0800738", 
+                                    "text": "疗效中等"
+                                }
+                            ], 
+                            "id": "2171648c6fae080a937", 
+                            "text": "A/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "1d91648c6fae0808740", 
+                                    "text": "疗效差"
+                                }
+                            ], 
+                            "id": "31a1648c6fae080bb39", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "collapsed": true, 
+                    "id": "901648c6fae0802334", 
+                    "text": "rs4880"
+                }, 
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "21c1648c6fae080f743", 
+                                    "text": "毒副作用低、疗效好"
+                                }
+                            ], 
+                            "id": "3531648c6fae0813b42", 
+                            "text": "C/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "3be1648c6fae0819945", 
+                                    "text": "毒副作用中等、疗效中等"
+                                }
+                            ], 
+                            "id": "26e1648c6fae080c44", 
+                            "text": "C/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "2441648c6fae0814147", 
+                                    "text": "毒副作用高、疗效差"
+                                }
+                            ], 
+                            "id": "1771648c6fae0806a46", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "collapsed": true, 
+                    "id": "c91648c6fae080c541", 
+                    "text": "rs1042522"
+                }
+            ], 
+            "id": "3431648c6fae0811912", 
+            "modified": 1531364486689, 
+            "text": "环磷酰胺"
+        }, 
+        {
+            "children": [
+                {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "id": "3071648c6fae0809951", 
+                                    "text": "毒副作用低"
+                                }
+                            ], 
+                            "id": "2951648c6fae080a750", 
+                            "text": "C/C"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "5d1648c6fae0804b53", 
+                                    "text": "毒副作用中等"
+                                }
+                            ], 
+                            "id": "1cc1648c6fae081252", 
+                            "text": "C/G"
+                        }, 
+                        {
+                            "children": [
+                                {
+                                    "id": "1291648c6fae0805b55", 
+                                    "text": "毒副作用高"
+                                }
+                            ], 
+                            "id": "3461648c6fae0809754", 
+                            "text": "G/G"
+                        }
+                    ], 
+                    "id": "2351648c6fae0808649", 
+                    "text": "rs738409"
+                }
+            ], 
+            "collapsed": false, 
+            "id": "951648c6fae0817a48", 
+            "modified": 1531364486689, 
+            "text": "长春新碱"
+        }
+    ]
+}

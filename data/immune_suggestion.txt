@@ -1,0 +1,5 @@
+Source	Result	Conclusion
+MSI	MSS微卫星稳定	PD1等免疫检查点抗体可能效果不显著
+TMB	22.9个/MB， 大于95%该癌种人群	PD1等免疫检查点抗体可能有效
+PDL1		
+CD8		

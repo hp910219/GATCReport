@@ -1,0 +1,195 @@
+SAMPLE	CANCER_TYPE	SAMPLE_ALTERATION	ALTERATION_MATCH	TUMOR_MATCH	DRUG	BIOMARKER	EFFECT	BIOMARKER_IDX	RESISTANCE_LIST	RESISTANCE_TYPE	TESTED_TUMOR	EVIDENCE	SOURCE
+tcgi	CANCER	B2M:del CNA	only gene	1	PD1 Ab inhibitors	B2M oncogenic mutation	Resistant	14			CM	Case report	PMID:27433843
+tcgi	CANCER	BRAF:amp CNA	only gene	1	EGFR TK inhibitors	BRAF (V600E,G469A)	Resistant	23			LUAD	Case report	PMID:22773810
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR inhibitor 1st gens	EGFR inframe deletion (30-336)	No Responsive	52			G	Early trials	PMID:19204207
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR inhibitor 1st gens	EGFR exon 20 insertions	Resistant	53			L	Late trials	PMID:21764376;PMID:26773740;PMID:26051236
+tcgi	CANCER	EGFR:amp CNA	complete	1	EGFR inhibitor 1st gens	EGFR amplification	No Responsive	54			G	Early trials	PMID:16282176;PMID:16278407
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR inhibitor 1st gens	EGFR (D761Y)	Resistant	55			NSCLC	Case report	PMID:19680293
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR inhibitor 1st gens	EGFR (T790M)	Resistant	56			NSCLC	Late trials	PMID:19680293
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR inhibitor 2nd gens	EGFR inframe deletion (30-336)	No Responsive	57			G	Early trials	PMID:19204207
+tcgi	CANCER	EGFR:amp CNA	complete	1	EGFR inhibitor 2nd gens	EGFR amplification	No Responsive	59			G	Early trials	PMID:16282176;PMID:16278407
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR inhibitor 2nd gens	EGFR (T790M)	Resistant	67			NSCLC	Late trials	PMID:22452896
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR inhibitor 3rd gens	EGFR inframe deletion (30-336)	No Responsive	68			G	Early trials	PMID:19204207
+tcgi	CANCER	EGFR:amp CNA	complete	1	EGFR inhibitor 3rd gens	EGFR amplification	No Responsive	69			G	Early trials	PMID:16282176;PMID:16278407
+tcgi	CANCER	ESR1:del CNA	only gene	1	ESR1 inhibitors	ESR1-YAP1 fusion	Resistant	75			BRCA	Pre-clinical	PMID:24055055
+tcgi	CANCER	ATR:del CNA	only gene	1	Olaparib (PARP inhibitor)	ATR oncogenic mutation	Responsive	99			OV, CANCER	Pre-clinical	PMID:23548269
+tcgi	CANCER	ATR:del CNA	complete	1	Olaparib (PARP inhibitor)	ATR deletion	Responsive	100			OV, CANCER	Pre-clinical	PMID:23548269
+tcgi	CANCER	ATR:del CNA	only gene	1	Temozolomide (Chemotherapy)	ATR oncogenic mutation	Responsive	101			G	Pre-clinical	PMID:23960094
+tcgi	CANCER	BRAF:amp CNA	only gene	1	BRAF inhibitor + CDK2/4 inhibitors	BRAF (V600E)	Responsive	117			CM	Pre-clinical	PMID:22997239
+tcgi	CANCER	BRAF:amp CNA	only gene	1	BRAF inhibitor + EGFR mAb inhibitor +/- PI3K inhibitors	BRAF (V600)	Responsive	118			COREAD	Early trials	PMID:28363909
+tcgi	CANCER	BRAF:amp CNA	only gene	1	BRAF inhibitor + HSP90 inhibitors	BRAF (V600E)	Responsive	119			CM	Pre-clinical	PMID:22351686
+tcgi	CANCER	BRAF:amp CNA	only gene	1	BRAF inhibitor + MEK inhibitors	BRAF (V600E)	Responsive	120			TH	Early trials	ASCO 2013 (abstr 9029)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	BRAF inhibitor + MEK inhibitors	BRAF fusion	Responsive	121			LUAD	Case report	ASCO 2017 (abstr 9072)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	BRAF inhibitor + PI3K pathway inhibitors	BRAF (V600E)	Responsive	122			CM	Pre-clinical	PMID:22389471;PMID:21156289
+tcgi	CANCER	BRAF:amp CNA	only gene	1	BRAF inhibitors	BRAF (L597R)	Responsive	123			CM	Case report	PMID:23715574
+tcgi	CANCER	BRAF:amp CNA	only gene	1	BRAF inhibitors	BRAF (V600E)	Responsive	124			G	Pre-clinical	PMID:22038996;PMID:22586120
+tcgi	CANCER	BRAF:amp CNA	only gene	1	BRAF inhibitors	BRAF (V600E)	Responsive	125			OV	Case report	PMID:22608338
+tcgi	CANCER	BRAF:amp CNA	only gene	1	ERK inhibitors	BRAF (V600E)	Responsive	127			CM	Pre-clinical	PMID:23614898;PMID:22997239
+tcgi	CANCER	BRAF:amp CNA	only gene	1	ERK inhibitors	BRAF (G469A)	Responsive	128			HNSC	Case report	ASCO 2017 (abstr 2508)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	ERK inhibitors	BRAF (L485W)	Responsive	129			BT	Case report	ASCO 2017 (abstr 2508)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	ERK inhibitors	BRAF (V600E)	Responsive	130			LUAD	Early trials	ASCO 2017 (abstr 2508)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	MEK inhibitors	BRAF (V600E)	Responsive	131			TH	Early trials	PMID:22241789
+tcgi	CANCER	BRAF:amp CNA	only gene	1	MEK inhibitors	BRAF (V600E)	Responsive	132			OV	Pre-clinical	PMID:19018267
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Pan-RAF inhibitors	BRAF inframe deletion (L485),inframe deletion (P490)	Responsive	133			CANCER	Pre-clinical	PMID:26732095
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Pan-RAF inhibitors	BRAF (V600E)	Responsive	134			CM	Early trials	ESMO 2015 (abstract 300);AACR 2016 (abstr CT005);AACR 2017 (abstr  CT002)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	MEK inhibitors (Trametinib,etc)	BRAF fusion	Responsive	135			LUAD, CM, PRAD	Pre-clinical	PMID:24727320;PMID:24345920;PMID:20526349
+tcgi	CANCER	BRAF:amp CNA	only gene	1	MEK inhibitors (Trametinib,etc)	BRAF (K601R,L597R,V600R)	Responsive	136			CM	Case report	PMID:23248257;PMID:22805292;PMID:23248257
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dabrafenib (BRAF inhibitor)	BRAF (V600E)	Responsive	138			LUAD, TH	Early trials	PMID:23524406;PMID:22608338;ASCO 2013 (abstr 8009);ESMO 2014 (abstr LBA38_PR);PMID:20818844;PMID:23489023;PMID:27080216
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dabrafenib (BRAF inhibitor)	BRAF (V600E)	Responsive	139			NSCLC	NCCN guidelines	NCCN
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dabrafenib (BRAF inhibitor)	BRAF (V600E)	Responsive	140			CM	FDA guidelines	FDA
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dabrafenib (BRAF inhibitor)	BRAF (V600E)	Responsive	141			GIST	Case report	PMID:23470635;PMID:22608338
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dabrafenib (BRAF inhibitor)	BRAF (V600R)	Responsive	142			CM	Early trials	PMID:23237741
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dabrafenib + Trametinib (BRAF inhibitor + MEK inhibitor)	BRAF (V600E)	Responsive	143			COREAD	Early trials	PMID:26392102;ASCO 2015 (abstr 8006)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dabrafenib + Trametinib (BRAF inhibitor + MEK inhibitor)	BRAF (V600E)	Responsive	144			NEU	Case report	PMID:27048246
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dabrafenib + Trametinib (BRAF inhibitor + MEK inhibitor)	BRAF (V600E)	Responsive	145			LUAD	FDA guidelines	PMID:27283860
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dabrafenib + Trametinib (BRAF inhibitor + MEK inhibitor)	BRAF (V600E,V600K)	Responsive	146			CM	FDA guidelines	FDA
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dasatinib (BCR-ABL inhibitor 2nd gen)	BRAF (G466V)	Responsive	147			LUAD	Pre-clinical	PMID:22649091
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Dasatinib (BCR-ABL inhibitor 2nd gen)	BRAF (Y472C)	Responsive	148			LUAD	Case report	PMID:22649091
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Irinotecan + Vemurafenib + Cetuximab (TOPO1 inhibitor + BRAF inhibitor + EGFR mAb inhibitor)	BRAF (V600)	Responsive	149			COREAD	Early trials	PMID:27729313
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Panitumumab + Dabrafenib + BYL719 (EGFR mAb inhibitor + BRAF inhibitor + PI3K inhibitor)	BRAF (V600)	Responsive	151			COREAD	Early trials	ENA 2014 (abstr 11LBA)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Panitumumab + Dabrafenib + Trametinib (EGFR mAb inhibitor + BRAF inhibitor + MEK inhibitor)	BRAF (V600E)	Responsive	152			COREAD	Early trials	ASCO 2014 (abstr 3515);ASCO 2015 (abstr 103)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	PLX4720 (BRAF inhibitor)	BRAF (V600E)	Responsive	153			MA	Pre-clinical	PMC3638050
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Selumetinib (MEK inhibitor)	BRAF fusion	Responsive	154			OV	Case report	PMID:26324360
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Selumetinib (MEK inhibitor)	BRAF (V600E)	Responsive	155			PG	Early trials	NCT01089101
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Sorafenib (Pan-TK inhibitor)	BRAF fusion	Responsive	156			CM, LUAD, PRAD	Pre-clinical	PMID:238900088;PMID:20526349;PMID:24727320
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Sorafenib (Pan-TK inhibitor)	BRAF (D594G,G469E)	Responsive	157			CM	Pre-clinical	PMID:18794803
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Trametinib (MEK inhibitor)	BRAF (V600E,V600K)	Responsive	158			CM	FDA guidelines	FDA
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Vemurafenib (BRAF inhibitor)	BRAF (V600D,V600K,V600M,V600G,V600R)	Responsive	161			CM	NCCN guidelines	NCCN
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Vemurafenib (BRAF inhibitor)	BRAF (V600E)	Responsive	162			LUAD, HCL, MYMA	Case report	PMID:22743296;PMID:22621641;PMID:23612012
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Vemurafenib (BRAF inhibitor)	BRAF (V600E)	Responsive	163			MA	Early trials	PMID:22586120
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Vemurafenib (BRAF inhibitor)	BRAF (V600E)	Responsive	164			CM	FDA guidelines	FDA
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Vemurafenib (BRAF inhibitor)	BRAF (V600E)	Responsive	165			THCA	Early trials	PMID:22608338;PMID:20818844;PMID:23489023
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Vemurafenib (BRAF inhibitor)	BRAF (V600E,V600D,V600K,V600M,V600G,V600R)	Responsive	166			NSCLC, HISLC, HISEC	NCCN guidelines	PMID:26287849
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Vemurafenib + Cobimetinib (BRAF inhibitor + MEK inhibitor)	BRAF (V600E,V600K)	Responsive	167			CM	FDA guidelines	FDA
+tcgi	CANCER	BRAF:amp CNA, EGFR:amp CNA	only gene	1	EGFR TK inhibitor + MEK inhibitors	BRAF (G469A) + EGFR oncogenic mutation	Responsive	168			LUAD	Pre-clinical	PMID:22773810
+tcgi	CANCER	CDK6:amp CNA	complete	1	CDK6 inhibitors	CDK6 amplification	Responsive	217			CANCER	Pre-clinical	PMID:22471707
+tcgi	CANCER	CDK6:amp CNA	only gene	1	LEE011 (CDK4/6 inhibitor)	CDK6 oncogenic mutation	Responsive	218			LIP, LY, CANCER	Early trials	NCT02187783;NCT01237236
+tcgi	CANCER	CDK6:amp CNA	complete	1	LEE011 (CDK4/6 inhibitor)	CDK6 amplification	Responsive	219			LIP, LY, CANCER	Early trials	NCT02187783;NCT01237236;http://meetinglibrary.asco.org/content/83791-102
+tcgi	CANCER	CDKN2A:del CNA	only gene	1	CDK4/6 inhibitors	CDKN2A oncogenic mutation	Responsive	224			CM	Case report	ASCO 2013 (abstr 2500)
+tcgi	CANCER	CDKN2A:del CNA	only gene	1	CDK4/6 inhibitors	CDKN2A oncogenic mutation	Responsive	225			G, CANCER	Pre-clinical	PMID:22471707;PMID:22586120;PMID:22711607
+tcgi	CANCER	CDKN2A:del CNA	complete	1	CDK4/6 inhibitors	CDKN2A deletion	Responsive	226			CM	Case report	ASCO 2013 (abstr 2500)
+tcgi	CANCER	CDKN2A:del CNA	complete	1	CDK4/6 inhibitors	CDKN2A deletion	Responsive	227			G, CANCER	Pre-clinical	PMID:22471707;PMID:22586120;PMID:22711607
+tcgi	CANCER	CDKN2A:del CNA	only gene	1	Ilorasertib (AURKA-VEGF inhibitor)	CDKN2A oncogenic mutation	Responsive	228			CANCER	Early trials	NCT02478320
+tcgi	CANCER	CDKN2A:del CNA	complete	1	Ilorasertib (AURKA-VEGF inhibitor)	CDKN2A deletion	Responsive	229			CANCER	Early trials	NCT02478320
+tcgi	CANCER	CDKN2B:del CNA	only gene	1	CDK4/6 inhibitors	CDKN2B oncogenic mutation	Responsive	230			G, CANCER	Pre-clinical	PMID:22471707;PMID:22711607
+tcgi	CANCER	CDKN2B:del CNA	complete	1	CDK4/6 inhibitors	CDKN2B deletion	Responsive	231			G, CANCER	Pre-clinical	PMID:22471707;PMID:22711607
+tcgi	CANCER	MCL1:amp CNA	complete	1	Tubulin inhibitors	MCL1 amplification	Resistant	266			CANCER	Pre-clinical	PMID:21368834
+tcgi	CANCER	MET:amp CNA	complete	1	EGFR inhibitor 1st gens	MET amplification	Resistant	267			NSCLC, COREAD	Early trials	PMID:22189054;PMID:23729478
+tcgi	CANCER	MET:amp CNA	complete	1	EGFR mAb inhibitors	MET amplification	Resistant	268			COREAD	Early trials	PMID:23729478
+tcgi	CANCER	MET:amp CNA	only gene	1	MET inhibitors	MET (D1246V)	Resistant	269			LUAD	Case report	PMID:27694386
+tcgi	CANCER	MET:amp CNA, EGFR:amp CNA	only gene	1	EGFR TK inhibitors	MET amplification + EGFR oncogenic mutation	Resistant	270			LUAD	Early trials	ASCO 2015 (abstr 8089)
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR inhibitor 3rd gens	EGFR (T790M)	Responsive	275			L	Early trials	ASCO 2014 (abstr 8009);ENA 2014 (abstr 10LBA);ENA 2014 (abstr 9LBA);ASCO 2015 (abstr 8001)
+tcgi	CANCER	EGFR:amp CNA	complete	1	EGFR inhibitors	EGFR amplification	Responsive	276			HNSC	Case report	PMID:26763254
+tcgi	CANCER	EGFR:amp CNA	complete	1	EGFR mAb inhibitors	EGFR amplification	Responsive	277	268	Resistant	COREAD	Late trials	PMID:18794099;PMID:17664472
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR TK inhibitors	EGFR exon 19 insertions	Responsive	278			L	Late trials	PMID:22753918
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR TK inhibitors	EGFR (L858R,L861Q,G719A,G719S,G719C,G719D,L747S,S768I,L861P,L861R)	Responsive	279			L	Late trials	PMID:22753918
+tcgi	CANCER	EGFR:amp CNA	only gene	1	HSP90 inhibitors	EGFR exon 19 insertions	Responsive	280			L	Early trials	ESMO 2012 (abstr 4380)
+tcgi	CANCER	EGFR:amp CNA	only gene	1	HSP90 inhibitors	EGFR exon 20 insertions	Responsive	281			L	Case report	ASCO 2014 (abstr 8015)
+tcgi	CANCER	EGFR:amp CNA	only gene	1	HSP90 inhibitors	EGFR (L858R,L861Q,G719A,G719S,G719C,G719D,L747S,S768I,L861P,L861R)	Responsive	282			L	Early trials	ESMO 2012 (abstr 4380)
+tcgi	CANCER	EGFR:amp CNA	only gene	1	HSP90 inhibitors	EGFR (T790M)	Responsive	283			L	Early trials	ESMO 2012 (abstr 4380)
+tcgi	CANCER	EGFR:amp CNA	only gene	1	MEK inhibitor (alone or in combination)s	EGFR exon 19 insertions	Responsive	284			L	Pre-clinical	PMID:23102728
+tcgi	CANCER	EGFR:amp CNA	only gene	1	MEK inhibitor (alone or in combination)s	EGFR (L858R,L861Q,G719A,G719S,G719C,G719D,L747S,S768I,L861P,L861R,T790M)	Responsive	285			L	Pre-clinical	PMID:23102728
+tcgi	CANCER	EGFR:amp CNA	only gene	1	novel EGFR mAb inhibitors	EGFR (S492R)	Responsive	286	268	Resistant	COREAD	Early trials	PMID:25962717
+tcgi	CANCER	EGFR:amp CNA	only gene	1	EGFR inhibitor 3rd gens (Rociletinib,HM61713,etc)	EGFR (T790M)	Responsive	287			NSCLC	Late trials	NCT02322281
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Afatinib (ERBB2 inhibitor&EGFR inhibitor 2nd gen)	EGFR exon 19 deletions	Responsive	288			NSCLC	FDA guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Afatinib (ERBB2 inhibitor&EGFR inhibitor 2nd gen)	EGFR exon 19 insertions	Responsive	289			L	Late trials	PMID:22753918;PMID:25589191
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Afatinib (ERBB2 inhibitor&EGFR inhibitor 2nd gen)	EGFR (L858R,L861Q,G719A,G719S,G719C,G719D,L747S,S768I,L861P,L861Q,L861R)	Responsive	290			NSCLC	FDA guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Afatinib (ERBB2 inhibitor&EGFR inhibitor 2nd gen)	EGFR (L861Q,G719A,G719S,G719C,G719D,L747S,S768I,L861P,L861Q,L861R)	Responsive	291			NSCLC	NCCN guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Afatinib + Cetuximab (ERBB2 inhibitor&EGFR inhibitor 2nd gen + EGFR mAb inhibitor)	EGFR exon 19 insertions	Responsive	293			L	Early trials	ESMO 2012 (abstr 1289)
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Afatinib + Cetuximab (ERBB2 inhibitor&EGFR inhibitor 2nd gen + EGFR mAb inhibitor)	EGFR (L858R,L861Q,G719A,G719S,G719C,G719D,L747S,S768I,L861P,L861R)	Responsive	294			L	Early trials	ESMO 2012 (abstr 1289)
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Afatinib + Cetuximab (ERBB2 inhibitor&EGFR inhibitor 2nd gen + EGFR mAb inhibitor)	EGFR (T790M)	Responsive	295			L	Early trials	PMID:25074459
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Afatinib + Nimotuzumab (ERBB2 inhibitor&EGFR inhibitor 2nd gen + EGFR mAb inhibitor)	EGFR (T790M)	Responsive	296			L	Early trials	PMID:26667485
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Cetuximab (EGFR mAb inhibitor)	EGFR overexpression	Responsive	297	268	Resistant	COREAD	FDA guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Cetuximab (EGFR mAb inhibitor)	EGFR (P546S)	Responsive	298	268	Resistant	HNC	Case report	PMID:23578570
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Cetuximab + Sirolimus (EGFR mAb inhibitor + MTOR inhibitor)	EGFR (P753S)	Responsive	299			HNC	Case report	PMID:24934779
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR-RAD51 fusion	Responsive	300	267	Resistant	NSCLC	Case report	PMID:27102076
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR-RAD51 fusion	Responsive	301	267	Resistant	L	Case report	PMID:27102076
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR exon 19 deletions	Responsive	302	267	Resistant	NSCLC	FDA guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR exon 19 insertions	Responsive	303	267	Resistant	L	Early trials	PMID:22190593
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR inframe insertion (769-770)	Responsive	304	267	Resistant	L	Case report	PMID:26773740;PMID:23328547
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR (A289V,R108K,G598V,T263P)	Responsive	305	267	Resistant	G	Pre-clinical	PMID:17177598
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR (K757R,E746G)	Responsive	307	267	Resistant	L	Case report	PMID:26773740
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR (L858R)	Responsive	308	267	Resistant	NSCLC	FDA guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR (L858R,L861,G719,S768I)	Responsive	309	267	Resistant	NSCLC	NCCN guidelines	NCCN
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Gefitinib (EGFR inhibitor 1st gen)	EGFR exon 19 deletions	Responsive	312	267	Resistant	NSCLC	FDA guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	complete	1	Gefitinib (EGFR inhibitor 1st gen)	EGFR amplification	Responsive	315	267	Resistant	ED	Late trials	PMID:24950987
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Gefitinib (EGFR inhibitor 1st gen)	EGFR (L858R,L861Q,G719A,G719S,G719C,G719D,L747S,S768I,L861P,L861Q,L861R)	Responsive	316	267	Resistant	NSCLC	FDA guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Gefitinib (EGFR inhibitor 1st gen)	EGFR (L861Q,G719A,G719S,G719C,G719D,L747S,S768I,L861P,L861Q,L861R)	Responsive	317	267	Resistant	NSCLC	NCCN guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Lapatinib (ERBB2 inhibitor)	EGFR (E690K)	Responsive	319			ED	Case report	PMID:22885469
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Osimertinib (EGFR inhibitor 3rd gen)	EGFR exon 19 deletions	Responsive	320	778	Resistant	L	Early trials	NCT02465060
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Osimertinib (EGFR inhibitor 3rd gen)	EGFR exon 20 insertions	Responsive	321	778	Resistant	L	Pre-clinical	PMID:26515464
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Osimertinib (EGFR inhibitor 3rd gen)	EGFR (L858R)	Responsive	325	778	Resistant	L	Early trials	NCT02465060
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Osimertinib (EGFR inhibitor 3rd gen)	EGFR (T790M)	Responsive	326	778	Resistant	NSCLC	FDA guidelines	FDA
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Panitumumab (EGFR mAb inhibitor)	EGFR (S492R)	Responsive	329	268	Resistant	COREAD	Case report	PMID:22270724
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Rindopepimut (Vaccine)	EGFR inframe deletion (6-273)	Responsive	330			GB	Late trials	NCT01480479
+tcgi	CANCER	RAC1:amp CNA, BRAF:amp CNA	only gene	1	BRAF inhibitors	RAC1 (P29S) + BRAF oncogenic mutation	Resistant	358			CM	Case report	PMID:25056119
+tcgi	CANCER	RAC1:amp CNA, BRAF:amp CNA	only gene	1	BRAF inhibitors	RAC1 (P29S) + BRAF oncogenic mutation	Resistant	373			CM	Case report	PMID:25056119
+tcgi	CANCER	ESR1:del CNA	only gene	1	novel ER degraders (GDC-0810,etc)	ESR1 (E380Q,537,538,L536,P535H)	Responsive	422			BRCA	Case report	AACR 2015 (abstr CT231)
+tcgi	CANCER	ESR1:del CNA	only gene	1	Fluvestrant (Hormonal therapy)	ESR1 oncogenic mutation	Responsive	424			BRCA	Late trials	PMID:27269946
+tcgi	CANCER	EZH2:amp CNA	only gene	1	EZH2 inhibitors (EPZ-005687,EPZ-6438,etc)	EZH2 (Y641,A677)	Responsive	427			LY	Pre-clinical	PMID:23023262;PMID:24563539
+tcgi	CANCER	FGFR1:del CNA	only alteration type	1	FGFR inhibitors	FGFR1 amplification	Responsive	440			LUSC	Case report	PMID:27870574
+tcgi	CANCER	FGFR1:del CNA	only alteration type	1	FGFR inhibitors	FGFR1 amplification	Responsive	441			ED	Case report	ASCO 2017 (abstr 2500)
+tcgi	CANCER	FGFR1:del CNA	only alteration type	1	FGFR inhibitors	FGFR1 amplification	Responsive	442			LUSC	Early trials	AACR 2012 (abstr LB-122);AACR 2013 (abstr LB-145)
+tcgi	CANCER	FGFR1:del CNA	only alteration type	1	FGFR inhibitors	FGFR1 amplification	Responsive	443			HNC	Pre-clinical	PMID:23418312
+tcgi	CANCER	FGFR1:del CNA	only alteration type	1	FGFR inhibitors (Lucitanib,etc)	FGFR1 amplification	Responsive	444			BRCA	Early trials	PMID:25193991
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Panitumumab (EGFR mAb inhibitor)	EGFR overexpression	Resistant	451			COREAD	FDA guidelines	FDA guidelines
+tcgi	CANCER	ROS1:del CNA	only gene	1	Ceritinib (ALK inhibitor)	ROS1 (S1986Y,S1986F)	Resistant	492			LUAD	Case report	PMID:27401242
+tcgi	CANCER	HDAC2:del CNA	only alteration type	1	Olaparib (PARP inhibitor)	HDAC2 biallelic inactivation	Responsive	501			PRAD	Case report	PMID:26510020
+tcgi	CANCER	HGF:amp CNA	only gene	1	Cabozantinib (Pan-kinase inhibitor)	HGF overexpression	Responsive	502			UTC	Pre-clinical	PMID:25534569
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Cetuximab (EGFR mAb inhibitor)	BRAF (V600E)	Resistant	503			COREAD	Late trials	PMID:20619739;PMID:21163703;PMID:23325582
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Cetuximab (EGFR mAb inhibitor)	EGFR (S464L,G465R,I491M)	Resistant	521			COREAD	Pre-clinical	PMID:25623215
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Cetuximab (EGFR mAb inhibitor)	EGFR (S492R,G465R,R451C,K467T)	Resistant	522			COREAD	Case report	PMID:22270724;PMID:26059438;PMID:25623215;PMID:22270724;PMID:26888827
+tcgi	CANCER	MET:amp CNA	only gene	1	Crizotinib (ALK inhibitor)	MET (Y1230C;Y1235D)	Resistant	592			CANCER	Pre-clinical	PMID:17483355
+tcgi	CANCER	ROS1:del CNA	only gene	1	Crizotinib (ALK inhibitor)	ROS1 (G2032R)	Resistant	595			LUAD	Case report	PMID:23724914;PMID:25688157
+tcgi	CANCER	ROS1:del CNA	only gene	1	Crizotinib (ALK inhibitor)	ROS1 (S1986Y,S1986F)	Resistant	596			LUAD	Case report	PMID:27401242
+tcgi	CANCER	EGFR:amp CNA	complete	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR amplification	No Responsive	624			L	Early trials	ASCO2015(abstre19028)
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR (S720)	No Responsive	625			L	Case report	PMID:26773740
+tcgi	CANCER	ESR1:del CNA	only gene	1	Exemestane (Hormonal therapy)	ESR1 oncogenic mutation	Resistant	648			BRCA	Late trials	PMID:27269946
+tcgi	CANCER	ESR1:del CNA	only gene	1	Fulvestrant (Hormonal therapy)	ESR1 (Y537S)	Resistant	650			BRCA	Pre-clinical	PMID:27986707
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Gefitinib (EGFR inhibitor 1st gen)	EGFR inframe deletion (L747),inframe insertion (P753PS)	No Responsive	652			HNC	Case report	PMID:21274259
+tcgi	CANCER	MDM4:amp CNA	complete	1	MDM2/MDMX inhibitors	MDM4 amplification	Responsive	653			S	Pre-clinical	PMID:24336067
+tcgi	CANCER	EGFR:amp CNA	complete	1	Gefitinib (EGFR inhibitor 1st gen)	EGFR amplification	No Responsive	654			HNC	Early trials	PMID:21274259;PMID:22261807
+tcgi	CANCER	MET:amp CNA	only gene	1	Savolitinib (MET inhibitor)	MET kinase domain mutation	Responsive	655			R	Early trials	PMID:28644771
+tcgi	CANCER	MET:amp CNA	complete	1	BCL2 inhibitors	MET amplification	Responsive	656			COREAD	Pre-clinical	PMID:27397505
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Gefitinib (EGFR inhibitor 1st gen)	EGFR (V843I)	No Responsive	657			HNC	Case report	PMID:21274259
+tcgi	CANCER	MET:amp CNA	complete	1	MET inhibitors	MET amplification	Responsive	659			HC	Case report	ENA 2015 (abstract A55)
+tcgi	CANCER	MET:amp CNA	complete	1	MET inhibitors	MET amplification	Responsive	660			ST	Pre-clinical	PMID:22729845;PMID:23327903
+tcgi	CANCER	MET:amp CNA	complete	1	MET inhibitors	MET amplification	Responsive	661			R	Early trials	PMID:23213094;AACR 2016 (abstr CT2006)
+tcgi	CANCER	MET:amp CNA	only gene	1	MET inhibitors	MET (H1112R)	Responsive	663			R	Early trials	PMID:23213094
+tcgi	CANCER	MET:amp CNA	only gene	1	MET inhibitors	MET (M1268T)	Responsive	664			R	Case report	PMID:23610116
+tcgi	CANCER	MET:amp CNA	only gene	1	MET inhibitors (Crizotinib,etc)	MET (H1112L)	Responsive	665			CANCER	Pre-clinical	AACR 2012 (abstr 1786)
+tcgi	CANCER	MET:amp CNA	complete	1	Cabozantinib + Panitumumab (Pan-kinase inhibitor + EGFR mAb inhibitor)	MET amplification	Responsive	666			COREAD	Case report	ENA 2015 (abstr A52)
+tcgi	CANCER	MET:amp CNA	only gene	1	Crizotinib (ALK inhibitor)	MET fusion	Responsive	667			G	Case report	PMID:27748748
+tcgi	CANCER	MET:amp CNA	only gene	1	Crizotinib (ALK inhibitor)	MET mutation in exon 16-19	Responsive	668			R	Early trials	AACR 2016 (abstr CT2006)
+tcgi	CANCER	MET:amp CNA	complete	1	Crizotinib (ALK inhibitor)	MET amplification	Responsive	669			NSCLC	Early trials	NCT02499614;ASCO 2015 (abstr 2595)
+tcgi	CANCER	MET:amp CNA	complete	1	Crizotinib (ALK inhibitor)	MET amplification	Responsive	670			LUAD, ST	Early trials	ASCO 2014 (abstr 8001);ASCO 2015 (abstr 2595);ASCO GI 2015 (abstr 1)
+tcgi	CANCER	MET:amp CNA	complete	1	Crizotinib (ALK inhibitor)	MET amplification	Responsive	671			G	Case report	PMID:22162573
+tcgi	CANCER	MET:amp CNA	only gene	1	Crizotinib (ALK inhibitor)	MET (V1110I,H1112R,M1268T,R988C,T1010I)	Responsive	672			CANCER	Pre-clinical	PMID:17483355
+tcgi	CANCER	MET:amp CNA, BRAF:amp CNA	only gene	1	Crizotinib + Vemurafenib (ALK inhibitor + BRAF inhibitor)	MET amplification + BRAF (V600E)	Responsive	676			COREAD	Case report	PMID:27325282
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Osimertinib (EGFR inhibitor 3rd gen)	EGFR (C797S)	Resistant	770			L	Early trials	PMID:25939061
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Osimertinib (EGFR inhibitor 3rd gen)	EGFR (L718)	Resistant	771			L	Early trials	ASCO 2017 (abstr 2572)
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Osimertinib (EGFR inhibitor 3rd gen)	EGFR (L792)	Resistant	776			L	Early trials	ASCO 2017 (abstr 2572)
+tcgi	CANCER	MET:amp CNA	complete	1	EGFR inhibitor 3rd gens (Osimertinib,etc)	MET amplification	Resistant	778			LUAD	Case report	PMID:27252416
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Panitumumab (EGFR mAb inhibitor)	BRAF (V600E)	Resistant	802			COREAD	Late trials	PMID:20619739;PMID:21163703;PMID:23325582
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Panitumumab (EGFR mAb inhibitor)	EGFR (G465R)	Resistant	803			COREAD	Case report	PMID:26059438
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Afatinib (ERBB2 inhibitor&EGFR inhibitor 2nd gen)	EGFR (T790M)	Resistant	832			L	NCCN/CAP guidelines	NCCN
+tcgi	CANCER	NRG1:del CNA	only gene	1	Afatinib (ERBB2&EGFR inhibitor 2nd gen)	NRG1 fusion	Responsive	847			LUAD	Case report	AACR 2016 (abstr 2631)
+tcgi	CANCER	NRG1:del CNA	only gene	1	Lapatinib (ERBB2 inhibitor)	NRG1 fusion	Responsive	848			LUAD	Pre-clinical	PMID:24727320
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Erlotinib (EGFR inhibitor 1st gen)	EGFR (T790M)	Resistant	881			L	NCCN/CAP guidelines	NCCN
+tcgi	CANCER	EGFR:amp CNA	only gene	1	Rociletinib (EGFR inhibitor)	EGFR (L798I)	Resistant	886			LUAD	Case report	PMID:27283993
+tcgi	CANCER	MET:amp CNA	complete	1	EGFR inhibitor 3rd gens (Rociletinib,etc)	MET amplification	Resistant	897			LUAD	Case report	PMID:27252416
+tcgi	CANCER	ESR1:del CNA	only gene	1	Tamoxifen (Hormonal therapy)	ESR1 (E380Q,537,538,L536,P535H)	Resistant	944			BRCA	Early trials	PMID:24185512;PMID:24185510;PMID:24398047
+tcgi	CANCER	ROS1:del CNA	only gene	1	HSP90 inhibitors	ROS1 fusion	Responsive	981			LUAD	Pre-clinical	PMID:23533265
+tcgi	CANCER	ROS1:del CNA	only gene	1	Cabozantinib (Pan-kinase inhibitor)	ROS1 fusion	Responsive	982			LUAD	Case report	PMID:27370605
+tcgi	CANCER	ROS1:del CNA	only gene	1	Cabozantinib (Pan-kinase inhibitor)	ROS1 (G2032R)	Responsive	983			LUAD	Pre-clinical	PMID:25351743
+tcgi	CANCER	ROS1:del CNA	only gene	1	Crizotinib (ALK inhibitor)	ROS1 fusion	Responsive	985			IM	Case report	PMID:24875859
+tcgi	CANCER	ROS1:del CNA	only gene	1	Crizotinib (ALK inhibitor)	ROS1 fusion	Responsive	986			LUAD	Early trials	PMID:25264305
+tcgi	CANCER	ROS1:del CNA	only gene	1	Crizotinib (ALK inhibitor)	ROS1 fusion	Responsive	987			NSCLC	FDA guidelines	FDA
+tcgi	CANCER	ROS1:del CNA	only gene	1	Lorlatinib (ALK&ROS1 inhibitor)	ROS1 (S1986Y,S1986F)	Responsive	990			LUAD	Case report	PMID:27401242
+tcgi	CANCER	SLC44A4:amp CNA	only gene	1	SLC44A4 inhibitors	SLC44A4 overexpression	Responsive	998			PRAD, PAAD	Pre-clinical	PMID:27550944 
+tcgi	CANCER	SMO:amp CNA	only gene	1	Vismodegib (SHH inhibitor)	SMO (P641A)	Responsive	1008			L	Case report	ASCO 2017 (abstr 9062)
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Vemurafenib (BRAF inhibitor)	BRAF inframe deletion (L485),inframe deletion (P490)	Resistant	1011			CANCER	Pre-clinical	PMID:26732095
+tcgi	CANCER	BRAF:amp CNA	only gene	1	Vemurafenib (BRAF inhibitor)	BRAF (V600)	No Responsive	1021			COREAD	Early trials	PMID:26287849
+tcgi	CANCER	MET:amp CNA, BRAF:amp CNA	only gene	1	Vemurafenib + Panitumumab (BRAF inhibitor + EGFR mAb inhibitor)	MET amplification + BRAF (V600E)	Resistant	1056			COREAD	Case report	PMID:27325282
+tcgi	CANCER	SMO:amp CNA	only gene	1	Vismodegib (SHH inhibitor)	SMO (D473H)	Resistant	1073			MB	Case report	PMID:19726788;PMID:25759019
+tcgi	CANCER	SMO:amp CNA	only gene	1	Vismodegib (SHH inhibitor)	SMO (D473H,D473G,W535L,L412F,W281C,Q477E,G497W)	Resistant	1082			BCC	Case report	PMID:25759020;PMID:25306392
