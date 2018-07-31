@@ -272,7 +272,8 @@ class Run:
 
     def text(self, content, size=10.5, weight=0, underline='', space=False, wingdings=False, windChar='F09E',
              vertAlign='', lastRender=False, br='', color='', italic=False, fill='', rStyle=False, rStyleVal='', szCs=0, lang='', noProof=False):
-        content = str(content).replace("<", "&lt;").replace(">", "&gt;")
+        # https://www.jb51.net/web/560864.html
+        content = str(content).replace("<", "&lt;").replace(">", "&gt;").replace('&', '&amp;')
         rFonts = '<w:rFonts w:ascii="' + self.family_en
         if self.family == '':
             rFonts += '" w:eastAsiaTheme="' + self.familyTheme
@@ -835,9 +836,11 @@ def get_imgs(path):
         path_file = os.path.join(path,i)
         if os.path.isfile(path_file):
             if i.endswith('.pdf'):
-                pdf2img(path_file)
                 i = i.replace('.pdf', '.png')
-                path_file = path_file.replace('.pdf', '.png')
+                out_path = os.path.join(base_dir, 'images\\pdf\\%s' % i)
+                pdf2img(path_file, out_path=out_path)
+                path_file = out_path
+                # print i, path_file, path
             if is_img(i):
                 img = Image.open(path_file)
                 sp = img.size
@@ -849,12 +852,11 @@ def get_imgs(path):
         else:
             infos1 = get_imgs(path_file)
             infos += infos1
-            # my_file.write('data/img_info.json', infos)
     return infos
 
 
 def get_img(rId):
-    items = my_file.read('img_info.json', dict_name='data')
+    items = my_file.read('base/img_info.json', dict_name='data')
     for item in items:
         if rId.lower() == item['rId'].lower():
             return item
@@ -896,3 +898,16 @@ def crop_img(input_url, output_url):
     cropImg = img.crop(region)
     #保存裁切后的图片
     cropImg.save(output_url)
+
+
+def get_img_info(base_dir, is_refresh=False):
+    crop_img(r'%s\data\signature\signature.png' % base_dir, r'%s\images\part4\4.5.1signature.png' % base_dir)
+    crop_img(r'%s\data\signature\signature_pie.png' % base_dir, r'%s\images\part4\4.5.2signature_pie.png' % base_dir)
+    file_path = 'data/base/img_info.json'
+    if is_refresh:
+        img_info = get_imgs(base_dir)
+        img_info = uniq_list(img_info)
+        my_file.write(file_path, img_info)
+    else:
+        img_info = my_file.read(file_path)
+    return img_info

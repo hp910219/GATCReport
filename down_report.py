@@ -16,7 +16,7 @@ my_file = File()
 
 @app.route('/')
 def download_docx():
-    patient_infos = my_file.read('0.1.1.patient_info.tsv', dict_name='data')
+    patient_infos = my_file.read('patient_info.tsv', dict_name='data')
     patient_info = patient_infos[0]
     user_name = patient_info['name']
     file_name = u'results/%s检测报告.doc' % user_name
@@ -32,4 +32,4 @@ def download_docx():
 if __name__ == '__main__':
     report_title_cn = u'多组学临床检测报告'
     report_title_en = 'AIomics1'
-    app.run(port=1478, debug=False)
+    app.run(port=5678, debug=False)

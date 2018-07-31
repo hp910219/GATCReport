@@ -27,8 +27,8 @@ class FetchRealLevel():
         return real_level
 
     def name_transform(self, db_name, origin_descr):
-        flag, disease_info = self.load_json(r"data/disease_name.json")
-        origin_descr_list = origin_descr.split(",") if "'" in origin_descr else [origin_descr]
+        flag, disease_info = self.load_json("data/base/disease_name.json")
+        origin_descr_list = origin_descr.split(",") if "," in origin_descr else [origin_descr]
         target_list = list()
         for index_n, index_value in enumerate(origin_descr_list):
             index_value = index_value.strip()
@@ -36,7 +36,7 @@ class FetchRealLevel():
                 continue
             if index_value not in disease_info[db_name].keys():
                 return False
-            target_list.extend(disease_info[db_name][origin_descr])
+            target_list.extend(disease_info[db_name][index_value])
         target_list = map(unicode, target_list)
         return flag if flag is False else target_list
 

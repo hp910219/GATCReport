@@ -7,8 +7,8 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 from report_doc.tools.File import base_dir
-from report_doc.tools.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink, get_imgs
-from report_doc.tools.Word import write_pkg_parts, write_cat
+from report_doc.tools.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink
+from report_doc.tools.Word import write_pkg_parts, write_cat, get_img_info
 from report_doc.report_data import *
 
 my_file = File()
@@ -48,28 +48,25 @@ page_br = p.write(r.br('page'))
 
 # ##################下载报告所需方法######################
 def get_report_core(title_cn, title_en, data):
-    # crop_img(r'%s\data\signature\signature.png' % base_dir, r'%s\data\4.5.1signature.png' % base_dir)
-    # crop_img(r'%s\data\signature\signature_pie.png' % base_dir, r'%s\data\4.5.2signature_pie.png' % base_dir)
-    imgs = get_imgs(base_dir)
-    # print len(imgs)
-    imgs = uniq_list(imgs)
-    my_file.write('data/img_info.json', imgs)
-    imgs = my_file.read('img_info.json', dict_name='data')
+    img_info = get_img_info(base_dir, is_refresh=True)
     body = write_body(title_cn, title_en, data)
-    none = 'none'
     titles = get_page_titles()
-    pkgs1 = write_pkg_parts(imgs, body, none, title=titles)
+    pkgs1 = write_pkg_parts(img_info, body, title=titles)
     return pkgs1
 
 
 def write_body(title_cn, title_en, data):
+    chem_items, trs3 = get_data3(chem_durg_list)
+    diagnose = data['patient_info']['diagnose']
+    data['target_tips'] = get_target_tips(diagnose)
+    data['chem_tip'] = ', '.join(trs3[1][1])
     body = ''
     body += write_cover(title_cn, title_en)
     body += write_catalog()
-    body += write_chapter0(title_cn, data['patient_info'], 2)
-    body += write_chapter1(data['patient_info'], 3)
+    body += write_chapter0(title_cn, data, 2)
+    body += write_chapter1(data, 3)
     body += write_chapter2(4)
-    body += write_chapter3(5)
+    body += write_chapter3(5, trs3, chem_items)
     body += write_chapter4(6)
     body += write_chapter5(7)
     body += write_backcover()
@@ -102,22 +99,21 @@ def write_catalog():
     return para
 
 
-def write_chapter0(data, patient_info, index):
+def write_chapter0(title_cn, data, index):
     para = p.write(p.set(sect_pr=set_page('A4', footer='rIdFooter2', pgNumType_s=1, header='rIdHeader%d' % index)))
-    para += p.write(p.set(spacing=[0, 0], jc='center', line=12, rule='auto'), r.text(data, size=18, weight=1))
-    para += write_patient_info(patient_info)
+    para += p.write(p.set(spacing=[0, 0], jc='center', line=12, rule='auto'), r.text(title_cn, size=18, weight=1))
+    para += write_patient_info(data['patient_info'])
     title = u'靶向治疗提示'
     para += p.h4(title)
     run = r.text('（')
     run += r.text('蓝色', color=blue)
     run += r.text('提示可能敏感药物，完整信息见附录）')
     para += p.write(p.set(jc='right'), run=run)
-    items = [['多组学发现', 'A级证据药物（CFDA、FDA、指南）', 'B级证据药物（专家共识）', 'C级证据药物（临床证据）', 'D级证据药物（临床前证据）']]
-    items += get_target_tips(patient_info['diagnose'])[:1]
-    para += write_target_tip(items)
+    target_tips_title = ['多组学发现', 'A级证据药物（CFDA、FDA、指南）', 'B级证据药物（专家共识）', 'C级证据药物（临床证据）', 'D级证据药物（临床前证据）']
+    para += write_target_tip(target_tips_title, data['target_tips'])
     para += write_immun_tip()
     tips = [
-        {'title': '化学治疗提示', 'text': '可能有效且毒副作用低的药物：铂类药物（顺铂、卡铂、奥沙利铂等）、紫杉醇类药物'},
+        {'title': '化学治疗提示', 'text': '可能有效且毒副作用低的药物：%s' % data['chem_tip']},
         {'title': '最新研究进展治疗提示', 'sub_title': '（完整信息见附录）', 'text': recent_study},
         {'title': '检测方法', 'text': '检测技术：基于illumina Hiseq Xten平台，肿瘤组织外显子组80G、外周血外显子组10G\n相关局限性说明：由于肿瘤异质性等原因，本检测报告仅对本样本负责，患者诊疗决策需在临床医生指导下进行'},
     ]
@@ -126,25 +122,23 @@ def write_chapter0(data, patient_info, index):
         for t in tip['text'].split('\n'):
             if len(t) > 0:
                 para += p.write(r.picture(cy=0.6, rId='tip0') + r.text(t, 9.5))
-    # para += con1
     para += p.write(p.set(sect_pr=set_page('A4', footer='rIdFooter2', pgNumType_s=1, header='rIdHeader%d' % index, type='continuous', cols=1)))
     return para
 
 
-def write_chapter1(patient_info, index):
+def write_chapter1(data, index):
     cats = get_catalog()[0: 4]
     para = ''
     print cats[0]['title']
-    items = [['多组学发现', 'A级证据药物（CFDA、FDA、指南）', 'B级证据药物（专家共识）', 'C级证据药物（临床证据）', 'D级证据药物（临床前证据）', '致癌模式']]
-    items += get_target_tips(patient_info['diagnose'])
-    para += p.h4(cat=cats[1]) + write_target_tip(items)
+    title = ['多组学发现', 'A级证据药物（CFDA、FDA、指南）', 'B级证据药物（专家共识）', 'C级证据药物（临床证据）', 'D级证据药物（临床前证据）', '致癌模式']
+    target_tips = data['target_tips']
+    para += p.h4(cat=cats[1]) + write_target_tip(title, data['target_tips'])
     para += p.h4(cat=cats[2])
-    for i, item in enumerate(items[1:]):
-        gene = item[-1]
-        para += p.write(p.set(shade=red, line=24), r.text('%d.变异：%s' % (i + 1, item[0]), color=white, space=True))
+    for i, item in enumerate(target_tips[1:]):
+        para += p.write(p.set(shade=red, line=24), r.text('%d.变异：%s' % (i + 1, item['col1']), color=white, space=True))
         para += p.h4('（1）该基因变异所处保守结构域位置')
         para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=15, rId='EGFR_struct', posOffset=[0, 0], align=['center', '']))
-        para1, index1 = write_evidences(gene)
+        para1, index1 = write_evidences(item)
         para += para1
         para += write_gene_info(item, index1)
         para += p.h4('（%d）基因突变保守结构域分布情况' % (index1 + 1))
@@ -191,7 +185,7 @@ def write_chapter2(index):
     ]
     neoantigen = get_neoantigen()
     for n in neoantigen[:15]:
-        trs.append({'text': [n['GeneSymbol'], n['MutPeptide'], '/'.join([n['MutPeptide'], n['RefAFF']]), n['Mut'], n['HLA']]})
+        trs.append({'text': [n['GeneSymbol'], n['MutPeptide'], '/'.join([n['MutAFF'], n['RefAFF']]), n['Mut'], n['HLA']]})
     # trs += [{'text': ['fff'] * 5}] *5
     borders=['top', 'bottom', 'left', 'right']
     para += table.write_jy1(trs, [1600] * 5, tc_borders=borders, th_borders=borders, th_color=gray, cell_color=gray_lighter)
@@ -247,63 +241,33 @@ def write_chapter2(index):
     return para
 
 
-def write_chapter3(index):
+def write_chapter3(index, trs, chem_items):
     n, start, bm0 = 2, 10, 453150355
-    # items = []
-    # for rs in rs_genotype:
-    #     items += filter(lambda x: x['rs'] == rs['rs'], variant_knowledge)
-    items = get_data3(rs, drugs)
     cats = get_catalog()[start-1: start + n]
     print cats[0]['title']
+    c2 = ''
+    for i in range(len(chem_items)):
+        item = chem_items[i]
+        cell = item['cell']
+        row, col = cell[0], cell[1]
+        c2 += p.h4('%d.%s（%s）' % (i+1, item['category'], item['drug']))
+        data = [item['tr1'], '%s%s，%s' % (item['category'], trs[0][col], trs[row][0])]
+        c2 += write_immun(data, jc='center', w=5000)
+        c2 += p.write()
+        text = 'PharmGKB'
+        c2 += p.h4('（%d）                   %s药物基因组数据库（基因多态性相关证据）' % (0 + 1, text), runs=r.picture(cy=0.6, rId=text, posOffset=[1.3, 0.7]))
+        c2 += p.write()
+        genes = item['rs_list']
+        c2 += write_gene_list3(item['genes'])
+        c2 += p.write()
+        for genes1 in genes:
+            c2 += write_genotype(genes1['rs_list'], [1000, 8000])
     para = p.h4(cat=cats[1])
-    trs = [
-        {'text': ['', '疗效可能好', '疗效可能差', '疗效未知']},
-        {'text': ['毒副作用低', [], [], []]},
-        {'text': ['毒副作用高', [], [], []]},
-        {'text': ['毒副作用未知', [], [], []]},
-    ]
-    for item in items:
-        for item1 in item['rs_list']:
-            summary = item1['summary'].split('、')
-            venom = summary[0]  # 毒副作用
-            curative_effect = '疗效未知'
-            if len(summary) > 1:
-                curative_effect = summary[1]
-                if '好' in summary[1]:
-                    curative_effect = '疗效可能好'
-                elif '差' in summary[1]:
-                    curative_effect = '疗效可能差'
-            cell = '%s(%s)' % (item['category'], item['drug'])
-            if '低' in venom:
-                for i in range(1, 4):
-                    if curative_effect == trs[0]['text'][i]:
-                        trs[1]['text'][i].append(cell)
-            elif '高' in venom:
-                for i in range(1, 4):
-                    if curative_effect == trs[0]['text'][i]:
-                        trs[2]['text'][i].append(cell)
-            else:
-                for i in range(1, 4):
-                    if curative_effect == trs[0]['text'][i]:
-                        trs[3]['text'][i].append(cell)
-
     para += write_chemotherapy(trs, [800, 2400, 2400, 2400])
     para += p.write()
     para += write_explain({'title': '结果说明：', 'text': '该疗效预测汇总仅根据以下证据进行汇总。疗效预测证据主要来自CIVic数据库，并根据专家人工对相关证据进行梳理取舍。毒副作用证据及部分由基因多态性提供的疗效证据则来自于药物基因组数据库PharmGKB。采取该数据库二级以上的证据，并结合部分三级证据（不具备二级以上证据的情况下）。由于化学治疗的疗效影响因素较多，各个生物标志物的预测能力有限，且多个证据之间缺乏合理的证据平衡方式。目前初步采取多个证据之间目前采取均权投票的方式，即默认多个生物标志物的预测能力完全一致，仅根据各个证据的量进行评估,当相反证据量一致时，将证据级别纳入考量。'})
     para += p.h4(cat=cats[2])
-    for i in range(len(items)):
-        item = items[i]
-        para += p.h4('%d.%s（%s）' % (i+1, item['category'], item['drug']))
-        data = ['疗效预测方面共纳入5个证据，其中4个预测疗效好，1个预测疗效差；毒副作用预测共纳入6个证据，其中3个预测毒副作用低，2个预测毒副作用高', '铂类药物疗效可能好，毒副作用低']
-        para += write_immun(data, jc='center', w=5000)
-        para += p.write()
-        text = 'PharmGKB'
-        para += p.h4('（%d）                   %s药物基因组数据库（基因多态性相关证据）' % (0 + 1, text), runs=r.picture(cy=0.6, rId=text, posOffset=[1.3, 0.7]))
-        para += p.write()
-        genes = item['rs_list']
-        para += write_gene_list3(genes)
-        para += p.write()
-        para += write_genotype(genes, [1000, 8000])
+    para += c2
     para += p.write(p.set(sect_pr=set_page('A4', header='rIdHeader%d' % index)))
     return para
 
@@ -324,7 +288,7 @@ def write_chapter4(index):
 
 
 def write_chapter5(index):
-    n, start, bm0 = 4, 4 + 3 + 4 + 2 +6, 453150365
+    n = 4
     cats = get_catalog()[19: 20 + n]
     print cats[0]['title']
     para = p.h4(cat=cats[1]) + write_chapter51()
@@ -528,28 +492,26 @@ def write_chapter45():
 
 def write_chapter51():
     para = ''
-    trs = ''
     ws = [1800, 1600, 1600, 1600, 1800]
     pPr = p.set(jc='left', spacing=[0.5, 0.5])
     titles = ['基因突变（肿瘤细胞克隆组成）', '变异类型', '所在结构域', '功能预测', '驱动基因类型及致癌性']
-    data = [{'text': titles}] + filter_db(impact='HIGH')[:15]
-    # print len(data5)
+    data = filter_db(impact='HIGH')
+    trs = write_thead51(titles, pPr=pPr, ws=ws)
     for k in range(len(data)):
         tcs = ''
         size = 10
         item1 = data[k]
-        if k == 0:
-            item = titles
-        else:
-            cellurity = get_quantum_cellurity(item1['Chromosome'], item1['Start_Position'])
-            col1 = '%s %s %s' % (item1['Hugo_Symbol'], item1['HGVSp_Short'], cellurity)
-            col5 = get_gene_MoA(item1['Hugo_Symbol'])
-            item = [col1, item1['Variant_Classification'], 'variant_CGI.DOMAINS', '有害突变', col5]
+        gene = item1['Hugo_Symbol']
+        variant = item1['HGVSp_Short']
+        domain = get_domain(gene, variant, item1['HGVSc'])
+        cellurity = get_quantum_cellurity(item1['Chromosome'], item1['Start_Position'])
+        col1 = '%s %s %s' % (gene, variant, cellurity)
+        col5 = get_gene_MoA(gene)
+        item = [col1, item1['Variant_Classification'], domain, '有害突变', col5]
         for i in range(len(item)):
             t = item[i]
             run = r.text(t, size=size, weight=0)
-            fill = gray if k == 0 else 'auto'
-            tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=['top', 'bottom', 'left', 'right'], fill=fill, color=gray_lighter))
+            tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=['top', 'bottom', 'left', 'right'], color=gray_lighter))
         trs += tr.write(tcs)
     para += table.write(trs, ws=ws, bdColor=gray_lighter)
     para += p.write()
@@ -656,7 +618,7 @@ def write_hla(data, w=4000):
     return table_str
 
 
-def write_evidences(gene):
+def write_evidences(item):
     infos = [
         {'rId': 'Oncokb', 'cx': 3, 'cy': 1, 'posy': 1, 'evidence': evidence_oncokb},
         {'rId': 'CGI', 'cx': 5.74, 'cy': 1.11, 'evidence': evidence_cgi},
@@ -667,14 +629,17 @@ def write_evidences(gene):
     index = 2
     for i in range(len(infos)):
         info = infos[i]
-        if 'evidence' in info:
-            rId = info['rId']
-            posy = 0.48 if 'posy' not in info else info['posy']
-            text = rId if 'text' not in info else info['text']
-            para += p.h4('（%d）                 %s数据库证据' % (i + 2, text), runs=r.picture(cy=1, rId=info['rId'], posOffset=[1.3, posy]))
-            evidences = get_evidences(info, gene)
-            para += write_evidence(evidences[:3])
-            index += 1
+        rId = info['rId']
+        if rId.upper() in item:
+            evidences = item[rId.upper()]
+            if len(evidences) > 0:
+                text = rId if 'text' not in info else info['text']
+                run = r.text('（%d） ' % (i + 1), 12, space=True, weight=True)
+                run += r.picture(cy=0.5, rId=info['rId'], text_wrapping='inline')
+                run += r.text(' %s数据库证据' % (text), 12, space=True, weight=True)
+                para += p.write(p.set(spacing=[1.5, 1.5]), run)
+                para += write_evidence(evidences)
+                index += 1
     return para, index
 
 
@@ -723,9 +688,9 @@ def write_db_info():
 
 
 def write_gene_info(gene_item, index):
-    gene = gene_item[-1]
+    gene = gene_item['gene']
     # print gene, u'%s' % str(gene_item[-2])
-    para = p.h4('（%d）基因说明:%s，%s' % (index, gene, gene_item[-2]))
+    para = p.h4('（%d）基因说明:%s，%s' % (index, gene, gene_item['gene_MoA']))
     for item in gene_list12:
         if item['hugoSymbol'] == gene:
             if 'geneAliases' in item:
@@ -778,25 +743,27 @@ def write_patient_info(data):
 
 
 # part1 靶向治疗提示
-def write_target_tip(items):
-    n = len(items[0])
-    trs = ''
+def write_target_tip(title, items):
+    n = len(title)
     ws = [9000 / n] * n
     pPr = p.set(jc='left', spacing=[0.5, 0.5])
+    trs = write_thead51(title, ws=ws)
     for k in range(len(items)):
         tcs2 = ''
         size = 10
-        item = items[k]
+        item1 = items[k]
+        item = [item1['col1']]
+        for level in level_names:
+            item.append(item1[level])
+        if len(item) < n:
+            item.append(item1['gene_MoA'])
         for i in range(n):
             texts = item[i]
             para = ''
-            fill = gray if k == 0 else 'auto'
-            if isinstance(texts, list):
-                texts = ','.join(texts)
             for t in texts.split('\n'):
-                run = r.text(t, size=size, weight=0)
+                run = r.text(t, size=size)
                 para += p.write(pPr, run)
-            tcs2 += tc.write(para, tc.set(w=ws[i], tcBorders=[], fill=fill))
+            tcs2 += tc.write(para, tc.set(w=ws[i], color=gray))
         trs += tr.write(tcs2)
     return table.write(trs, ws=ws, tblBorders=[])
 
@@ -861,17 +828,17 @@ def write_evidence(data, **kwargs):
     for k in range(len(data)):
         tcs = ''
         size = 10
-        item = data[k]
+        item = data[k][1:]
         for i in range(4):
             t = item[i]
-            run = r.text(t, size=size, weight=0)
+            run = r.text(t, size=size)
             fill = gray if k == 0 else 'auto'
             tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=[], fill=fill))
         trs += tr.write(tcs)
         if k > 0:
-            run = r.text(titles[4], size=size, weight=0)
+            run = r.text(titles[4], size=size)
             tc5 = tc.write(p.write(pPr, run), tc.set(w=ws[0], tcBorders=[], fill=gray))
-            run1 = r.text(item[4], size=size, weight=0)
+            run1 = r.text(item[4], size=size)
             tc5 += tc.write(p.write(pPr, run1), tc.set(w=6000, tcBorders=[], fill='auto', gridSpan=3))
             trs += tr.write(tc5)
     return table.write(trs, ws=ws, tblBorders=[])
@@ -887,7 +854,7 @@ def write_chemotherapy(trs, ws):
     borders=['top', 'bottom', 'left', 'right']
     for k in range(len(trs)):
         size = 10
-        items = trs[k]['text']
+        items = trs[k]
         tcs = ''
         for j in range(len(items)):
             item = items[j]
@@ -950,7 +917,7 @@ def write_genotype(gts, ws):
             tcs += tc.write(p.write(pPr, run), tc.set(w=ws[k], fill=fill, color=gray_lighter, tcBorders=borders))
         trs2 += tr.write(tcs)
     table_str = table.write(trs2, ws=ws, bdColor=gray_lighter)
-    return table_str
+    return table_str + p.write()
 
 
 def write_41():
@@ -1061,6 +1028,25 @@ def write_genes4(genes, col, whith, table_jc='center'):
         trs2 += tr.write(tcs, tr.set(trHeight=580))
     table_str = table.write(trs2, ws=ws, tblBorders=[], jc=table_jc)
     return table_str, reds, oranges
+
+
+def write_thead51(titles, **kwargs):
+    ws = [1800, 1600, 1600, 1600, 1800]
+    pPr = p.set(jc='left', spacing=[0.5, 0.5])
+    tcBorders = ['top', 'bottom', 'left', 'right']
+    if 'pPr' in kwargs:
+        pPr = kwargs['pPr']
+    if 'ws' in kwargs:
+        ws = kwargs['ws']
+    if 'tcBorders' in kwargs:
+        tcBorders = kwargs['tcBorders']
+    tcs = ''
+    size = 10
+    for i in range(len(titles)):
+        t = titles[i]
+        run = r.text(t, size=size, weight=0)
+        tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=tcBorders, fill=gray, color=gray_lighter))
+    return tr.write(tcs)
 
 
 def write_tr1(text, jc='center', w=4000):

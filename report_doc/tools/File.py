@@ -18,21 +18,31 @@ class File:
     def __init__(self):
         self.__description__ = '文件相关， 包括读文件，写文件， 下载文件'
 
-    def read(self, file_name, sheet_name='', read_type='r', dict_name=''):
+    def read(self, file_name, sheet_name='', read_type='r', dict_name='', to_json=True):
         url = base_dir + "/" + dict_name + "/" + file_name
         file_type = file_name.split('.')[-1]
         if file_type in ['xlsx', 'xls']:
             data = xlrd.open_workbook(url)
             return data.sheet_by_name(sheet_name)
-        if file_type == 'csv':
-            cons = csv.reader(open(url))
-            keys = next(cons)
+        if file_type in ['csv', 'tsv']:
+            if file_type == 'tsv':
+                csv.register_dialect('my_dialect', delimiter='\t')
+            else:
+                csv.register_dialect('my_dialect', delimiter=',')
+            f = open(url)
+            cons = csv.reader(f, 'my_dialect')
             items = []
+            keys = next(cons)
             for c in cons:
-                item = {}
-                for i in range(len(keys)):
-                    item[keys[i]] = c[i]
-                items.append(item)
+                if to_json:
+                    item = {}
+                    for i in range(len(keys)):
+                        item[keys[i]] = c[i]
+                    items.append(item)
+                else:
+                    items.append(c)
+            csv.unregister_dialect('my_dialect')
+            f.close()
             return items
         else:
             f = open(url, read_type)
@@ -47,12 +57,19 @@ class File:
             cons = text.split('\n')
             if len(cons) < 2:
                 return []
-            keys = cons[0].split(sign)
-            for con in cons[1:]:
-                item = {}
+            if to_json:
+                # return cons
+            # else:
+                keys = cons[0].split(sign)
+                cons = cons[1:]
+            for con in cons:
                 item_arr = con.split(sign)
-                for i in range(len(keys)):
-                    item[keys[i].strip('"')] = item_arr[i].strip('"') if i < len(item_arr) else ''
+                if to_json:
+                    item = {}
+                    for i in range(len(keys)):
+                        item[keys[i].strip('"')] = item_arr[i].strip('"') if i < len(item_arr) else ''
+                else:
+                    item = item_arr
                 items.append(item)
             return items
         return text
