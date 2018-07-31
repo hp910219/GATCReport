@@ -48,7 +48,7 @@ page_br = p.write(r.br('page'))
 
 # ##################下载报告所需方法######################
 def get_report_core(title_cn, title_en, data):
-    img_info = get_img_info(base_dir, is_refresh=True)
+    img_info = get_img_info(base_dir, is_refresh=False)
     body = write_body(title_cn, title_en, data)
     titles = get_page_titles()
     pkgs1 = write_pkg_parts(img_info, body, title=titles)
