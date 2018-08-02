@@ -29,7 +29,7 @@ chem_durg_list = my_file.read('base/chem_durg_list.tsv', dict_name='data')  # ca
 variant_knowledge = my_file.read(u'化疗多态位点证据列表.xlsx', dict_name='data', sheet_name='Sheet1')
 rs_geno = my_file.read('data/rs.geno.update.tsv', to_json=False)
 hla = my_file.read('hla.tsv', dict_name='data')
-variant_anno1 = my_file.read('variant_anno.maf', dict_name='data')
+variant_anno1 = my_file.read('variant_anno.maf', dict_name='data', sep='\t', to_json=False)
 gene_list12 = my_file.read('base/1.2gene_list.json', dict_name='data')
 gene_list53 = my_file.read('base/5.3gene_list.xlsx', dict_name='data', sheet_name='Sheet2')
 neoantigen = my_file.read('neoantigen.tsv', dict_name='data')
@@ -83,12 +83,13 @@ def transfer_level(level):
 
 
 def filter_db(gene=None, var=None, impact=None):
-    variant_annos = variant_anno1.split('\n')[1:]
+    variant_annos = variant_anno1
     items = []
-    keys = variant_annos[0].split('\t')
+    keys = variant_annos[0]
+    # print keys
     # print len(keys), keys
     for i in range(1, len(variant_annos)):
-        line = variant_annos[i].split('\t')
+        line = variant_annos[i]
         if len(line) > 1:
             gene_db = line[0]
             var_db = line[36]

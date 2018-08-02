@@ -32,4 +32,4 @@ def download_docx():
 if __name__ == '__main__':
     report_title_cn = u'多组学临床检测报告'
     report_title_en = 'AIomics1'
-    app.run(port=5678, debug=False)
+    app.run(port=4563, debug=False)

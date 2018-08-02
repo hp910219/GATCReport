@@ -18,18 +18,19 @@ class File:
     def __init__(self):
         self.__description__ = '文件相关， 包括读文件，写文件， 下载文件'
 
-    def read(self, file_name, sheet_name='', read_type='r', dict_name='', to_json=True):
+    def read(self, file_name, sheet_name='', read_type='r', dict_name='', to_json=True, **kwargs):
         url = base_dir + "/" + dict_name + "/" + file_name
         file_type = file_name.split('.')[-1]
         if file_type in ['xlsx', 'xls']:
             data = xlrd.open_workbook(url)
             return data.sheet_by_name(sheet_name)
-        if file_type in ['csv', 'tsv']:
-            if file_type == 'tsv':
-                csv.register_dialect('my_dialect', delimiter='\t')
-            else:
-                csv.register_dialect('my_dialect', delimiter=',')
-            f = open(url)
+        f = open(url, read_type)
+        if file_type in ['csv', 'tsv'] or 'sep' in kwargs:
+            sep = ',' if file_type == 'csv' else '\t'
+            if 'sep' in kwargs:
+                sep = kwargs['sep']
+            delimiter = {'delimiter': sep}
+            csv.register_dialect('my_dialect', **delimiter)
             cons = csv.reader(f, 'my_dialect')
             items = []
             keys = next(cons)
@@ -45,33 +46,11 @@ class File:
             f.close()
             return items
         else:
-            f = open(url, read_type)
+
             text = f.read()
             f.close()
         if file_type == 'json':
             return json.loads(text)
-
-        if file_type == 'tsv':
-            items = []
-            sign = '\t'
-            cons = text.split('\n')
-            if len(cons) < 2:
-                return []
-            if to_json:
-                # return cons
-            # else:
-                keys = cons[0].split(sign)
-                cons = cons[1:]
-            for con in cons:
-                item_arr = con.split(sign)
-                if to_json:
-                    item = {}
-                    for i in range(len(keys)):
-                        item[keys[i].strip('"')] = item_arr[i].strip('"') if i < len(item_arr) else ''
-                else:
-                    item = item_arr
-                items.append(item)
-            return items
         return text
 
     def read_message(self, file_name, file_type='json', sheet_name='', read_type='r', developer='huohuo', message='success'):
