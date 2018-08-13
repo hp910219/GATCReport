@@ -821,7 +821,7 @@ def write_evidence(data, **kwargs):
     ws = [2000] * 4
     pPr = p.set(jc='left', spacing=[0.5, 0.5])
     if 'titles' not in kwargs:
-        titles = ['生物标志物', '药物', '证据类型', '匹配程度', '证据来源']
+        titles = ['', '生物标志物', '药物', '证据类型', '匹配程度', '证据来源']
     else:
         titles = kwargs['titles']
     data.insert(0, titles)
@@ -836,9 +836,9 @@ def write_evidence(data, **kwargs):
             tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=[], fill=fill))
         trs += tr.write(tcs)
         if k > 0:
-            run = r.text(titles[4], size=size)
+            run = r.text(titles[-1], size=size)
             tc5 = tc.write(p.write(pPr, run), tc.set(w=ws[0], tcBorders=[], fill=gray))
-            run1 = r.text(item[4], size=size)
+            run1 = r.text(item[-1], size=size)
             tc5 += tc.write(p.write(pPr, run1), tc.set(w=6000, tcBorders=[], fill='auto', gridSpan=3))
             trs += tr.write(tc5)
     return table.write(trs, ws=ws, tblBorders=[])

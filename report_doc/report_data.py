@@ -30,6 +30,8 @@ variant_knowledge = my_file.read(u'化疗多态位点证据列表.xlsx', dict_na
 rs_geno = my_file.read('data/rs.geno.update.tsv', to_json=False)
 hla = my_file.read('hla.tsv', dict_name='data')
 variant_anno1 = my_file.read('variant_anno.maf', dict_name='data', sep='\t', to_json=False)
+# print variant_anno1[0]
+# item1['Chromosome'], item1['Start_Position']
 gene_list12 = my_file.read('base/1.2gene_list.json', dict_name='data')
 gene_list53 = my_file.read('base/5.3gene_list.xlsx', dict_name='data', sheet_name='Sheet2')
 neoantigen = my_file.read('neoantigen.tsv', dict_name='data')
@@ -362,41 +364,53 @@ def get_drug(col1, reset_item, diagnose):
     return item
 
 
-def get_drug_level(item):
+def get_drug_level(drug_items):
     for i in range(len(level_names)):
-        drug1 = item[level_names[i]]
+        level1 = level_names[i]
+        drugs1 = filter(lambda x: x['level'] == level1, drug_items)
         for j in range(i + 1, len(level_names)):
-            drug2 = item[level_names[j]]
-            for drug in drug1:
-                if drug in drug2:
-                    drug2.remove(drug)
+            level2 = level_names[j]
+            drugs2 = filter(lambda x: x['level'] == level2, drug_items)
+            for drug in drugs1:
+                drug2 = {'drug': drug['drug'], 'level': level2, 'db_name': drug['db_name']}
+                if drug2 in drugs2:
+                    drugs2.remove(drug2)
+    return drug_items
 
-    return item
 
-
-def get_drug_db(item):
-    item = get_drug_level(item)
+def get_drug_db(var):
+    # oncokb>civic>cgi
+    drug_items = []
+    for level_name in level_names:
+        for v in var[level_name]:
+            v['level'] = level_name
+            drug_items.append(v)
+    for i in range(len(db_names)):
+        db_name1 = db_names[i]
+        drug_items1 = filter(lambda x: x['db_name'] == db_name1, drug_items)
+        for j in range(i+1, len(db_names)):
+            db_name2 = db_names[j]
+            drug_items2 = filter(lambda x: x['db_name'] == db_name2, drug_items)
+            for drug_item1 in drug_items1:
+                for drug_item2 in drug_items2:
+                    if drug_item2['drug'] == drug_item1['drug']:
+                        drug_item2['db_name'] = db_name1
+                        drug_item2['level'] = drug_item1['level']
+    drug_items = get_drug_level(drug_items)
+    # print item['A']
+    # print item['C']
     for level in level_names:
-        drugs = item[level]
-        for i in range(len(db_names)):
-            db_name1 = db_names[i]
-            drugs1 = filter(lambda x: x['db_name'] == db_name1, drugs)
-            for j in range(i + 1, len(db_names)):
-                db_name2 = db_names[j]
-                drugs2 = filter(lambda x: x['db_name'] == db_name2, drugs)
-                for drug in drugs1:
-                    drug = {'db_name': db_name2, 'drug': drug['drug']}
-                    if drug in drugs2:
-                        # print drug
-                        drugs2.remove(drug)
         value = []
+        drugs = filter(lambda x: x['level'] == level, drug_items)
         for x1 in drugs:
             x_drug = x1['drug'].strip()
-            if x_drug not in value:
-                value.append(x_drug)
+            if x_drug.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
+                # x_drug = '%s===%s===%s' % (x_drug, x1['db_name'], x1['level'])
+                if x_drug not in value:
+                    value.append(x_drug)
         value = sorted(value)
-        item[level] = '; '.join(value)
-    return item
+        var[level] = ';'.join(value)
+    return var
 
 
 def get_exon(item):
@@ -427,6 +441,7 @@ def get_quantum_cellurity(chr, pos):
             chr = str(int(chr))
         if isinstance(pos, float):
             pos = str(int(pos))
+        # print chr, pos
         # print item['Start'], pos, item['Chr'].lstrip('chr'), chr, type(pos), type(item['Start']), type(chr)
         if item['Chr'].lstrip('chr') == str(chr) and item['Start'] == pos:
             return '%.2f%%' % (float(item['Cellularity']) * 100)
@@ -534,7 +549,7 @@ def get_data44(gene):
 
 
 def get_data45():
-    items = [['Signature ID', '权重', '主要出现的癌种', '可能的病因', '评论']]
+    items = [['', 'Signature ID', '权重', '主要出现的癌种', '可能的病因', '评论']]
     tr1, tr2 = '', '该癌症可能由'
     for item in signature_etiology:
         s_id = item['Signature_ID']
