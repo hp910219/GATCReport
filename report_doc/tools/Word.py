@@ -154,7 +154,7 @@ class Paragraph:
         return self.write(self.set(spacing=spacing, line=line, rule='exact', outline=outline, ind=ind, jc=jc),
                           r.text(text, size, weight=weight), bm_name)
 
-    def h4(self, text='', size=12, spacing=[1.3, 1], weight=1, ind=[0, 0], line=15, runs='', family='', family_en='', bm_name='', cat=None):
+    def h4(self, text='', size=12, spacing=[1.3, 1], weight=1, ind=[0, 0], line=15, runs='', family='', family_en='', bm_name='', cat=None, color=''):
         r = Run()
         if family != '':
             r.family = family
@@ -165,7 +165,7 @@ class Paragraph:
             text = cat['title']
         if bm_name != '':
             print text
-        run = r.text(text, size=size, weight=weight) + runs
+        run = r.text(text, size=size, weight=weight, color=color) + runs
         return self.write(self.set(spacing=spacing, line=line, rule='exact', outline=2, ind=ind), run, bm_name)
 
     def h3(self, text, run='', before=0, after=0, size=11, left=0, right=0, jc='center', family='', family_en=''):

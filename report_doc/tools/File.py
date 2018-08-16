@@ -7,8 +7,8 @@ import json
 import xlrd
 import csv
 __author__ = 'huohuo'
-# base_dir = os.getcwd()
-base_dir = 'D:\\pythonproject\\report'
+base_dir = os.getcwd()
+# base_dir = 'D:\\pythonproject\\report'
 if __name__ == "__main__":
     pass
 

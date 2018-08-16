@@ -260,16 +260,7 @@ def get_target_tips(diagnose):
                         if value1 not in var[key]:
                             var[key].append(value1)
                 for key in level_names:
-                    value1 = item1[key]
-                    if value1 is not None:
-                        x_db_name = value1['db_name']
-                        drug = value1['drug']
-                        if value1 not in var[key]:
-                            value = []
-                            for x1 in drug.split(','):
-                                if x1.strip() not in value:
-                                    value.append({'drug': x1.strip(), 'db_name': x_db_name})
-                            var[key] += value
+                    var[key] += item1[key]
         vars.append(get_drug_db(var))
     vars = sorted(vars, cmp=cmp_target_tip)
     return vars
@@ -359,8 +350,18 @@ def get_drug(col1, reset_item, diagnose):
     item = {'col1': col1, 'gene': gene, 'gene_MoA': col6, 'db_name': db_name}
     item[db_name.upper()] = reset_item['evidence_detail']
     this_level = real_level.level(db_name.lower(), reset_item['level'], reset_item['cancer_type'], diagnose)
+    item[db_name.upper()].append(this_level)
+    # item[2] drug
+    drug1 = []
+    for x1 in drug.split(','):
+        xx1 = x1.split('(')[0].strip()
+        if xx1.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
+            x2 = {'drug': xx1, 'db_name': db_name, 'level': this_level}
+            if x2 not in drug1:
+                drug1.append(x2)
+    item[db_name.upper()][2] = drug1
     for level in level_names:
-        item[level] = None if level != this_level else {'drug': drug.split('(')[0].strip(), 'db_name': db_name}
+        item[level] = [] if level != this_level else drug1
     return item
 
 
@@ -378,32 +379,46 @@ def get_drug_level(drug_items):
     return drug_items
 
 
+def get_drug_evidence(drug_item, var, key):
+    evidence = var[key]
+    evidence1 = []
+    for e in evidence:
+        for d in e[2]:
+            if d['drug'] != drug_item['drug']:
+                if e not in evidence1:
+                    evidence1.append(e)
+    var[key] = evidence1
+    return var
+
+
 def get_drug_db(var):
     # oncokb>civic>cgi
     drug_items = []
     for level_name in level_names:
         for v in var[level_name]:
-            v['level'] = level_name
             drug_items.append(v)
     for i in range(len(db_names)):
         db_name1 = db_names[i]
-        drug_items1 = filter(lambda x: x['db_name'] == db_name1, drug_items)
+        drug_items1 = filter(lambda x: x['db_name'].lower() == db_name1.lower(), drug_items)
         for j in range(i+1, len(db_names)):
             db_name2 = db_names[j]
-            drug_items2 = filter(lambda x: x['db_name'] == db_name2, drug_items)
+            drug_items2 = filter(lambda x: x['db_name'].lower() == db_name2.lower(), drug_items)
             for drug_item1 in drug_items1:
                 for drug_item2 in drug_items2:
                     if drug_item2['drug'] == drug_item1['drug']:
                         drug_item2['db_name'] = db_name1
                         drug_item2['level'] = drug_item1['level']
+                        var = get_drug_evidence(drug_item2, var, db_name2.upper())
     drug_items = get_drug_level(drug_items)
     # print item['A']
     # print item['C']
+    # print var.keys()
     for level in level_names:
         value = []
         drugs = filter(lambda x: x['level'] == level, drug_items)
-        for x1 in drugs:
-            x_drug = x1['drug'].strip()
+        for drug in drugs:
+            # get_drug_evidence(drug, evidence)
+            x_drug = drug['drug'].strip()
             if x_drug.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
                 # x_drug = '%s===%s===%s' % (x_drug, x1['db_name'], x1['level'])
                 if x_drug not in value:
