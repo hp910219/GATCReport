@@ -65,7 +65,7 @@ class Paragraph:
                     if type(ind[i]) == str:
                         ind_str += 'w:%s="%d"' % (iii[i], int(float(ind[i].split("cm")[0]) * 567))
                     else:
-                        ind_str += 'w:%sChars="%d" w:%s="%d"' % (iii[i], int(ind[i] * 100), iii[i], int(ind[i] * 210))
+                        ind_str += 'w:%sChars="%d" w:%s="%d" ' % (iii[i], int(ind[i] * 100), iii[i], int(ind[i] * 210))
             ind_str += '/>'
         pStyle = ''
         if 'pStyle' in kwargs:

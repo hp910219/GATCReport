@@ -315,23 +315,21 @@ def write_backcover():
 
     imgs = [
         [
-            {'id': 'logo', 'posOffset': 1},
-            {'id': 'location', 'posOffset': 5.17},
+            {'id': 'logo', 'posOffset': 1, 'text': '北京皑医科技有限公司    '},
+            {'id': 'location', 'posOffset': 5.17, 'text': '北京市中关村科技园区大兴生物医药基地绿地启航3号楼1003'},
         ],
         [
-            {'id': 'website', 'posOffset': 1},
-            {'id': 'phone', 'posOffset': 5}
+            {'id': 'website', 'posOffset': 1, 'text': 'https://aiyi.link          '},
+            {'id': 'phone', 'posOffset': 5, 'text': '010-86399801'}
         ]
     ]
-    runs = [r.text('北京皑医科技有限公司北京市中关村科技园区大兴生物医药基地绿地启航3号楼1003', 9), r.text('https://aiyi.link 010-86399801', 9)]
-    pos = [25.15, 26.32]
     for i in range(len(imgs)):
         infos = imgs[i]
-        posy = pos[i]
-        run = runs[i]
+        run = ''
         for info in infos:
-            run += r.picture(cy=0.6, rId=info['id'], posOffset=[info['posOffset']+0.5, posy], relativeFrom=['page', 'page'])
-        para += p.write(p.set(spacing=[1, 0.5]), run)
+            run += r.picture(cy=0.6, rId=info['id'], text_wrapping='inline')
+            run += r.text(info['text'], 9, space=True)
+        para += p.write(p.set(spacing=[0, 0]), run)
     para += set_page(header='rIdHeader8', footer='rIdFooter1')
     return para
 
@@ -692,31 +690,34 @@ def write_db_info():
 def write_gene_info(gene_item, index):
     gene = gene_item['gene']
     para = p.h4('（%d）基因说明:%s，%s' % (index, gene, gene_item['gene_MoA']))
+    pPr = p.set(line=15, ind=[4, 4])
+    size = 9
     for item in gene_list12:
         if item['hugoSymbol'] == gene:
             if 'geneAliases' in item:
                 if len(item['geneAliases']) > 0:
-                    para += p.write(r.text('Also known as %s' % ', '.join(item['geneAliases'])))
+                    para += p.write(pPr, r.text('Also known as %s' % ', '.join(item['geneAliases']), size))
             text = ''
             if 'curatedIsoform' in item:
                 text += 'Isoform: %s' % item['curatedIsoform']
             if 'curatedRefSeq' in item:
                 text += 'Isoform: %s' % item['curatedRefSeq']
             if len(text) > 0:
-                para += p.write(r.text(text))
+                para += p.write(pPr, r.text(text, size))
+
             description = item['description']
             summary = item['description']
             if len(summary) > 0:
-                para += p.write(r.text(summary))
+                para += p.write(pPr, r.text(summary, size))
             if len(description) > 0:
-                para += p.write(r.text(description))
+                para += p.write(pPr, r.text(description, size))
     return para
 
 
 def write_patient_info(data):
     para = p.h4('基本信息')
     trs = ''
-    ws = [1700, 1800, 2700, 1800]
+    ws = [2000, 2000, 3000, 2000]
     pPr = p.set(jc='left', spacing=[1, 1])
     ps = [
         '姓名: %s' % data['name'],
@@ -818,7 +819,7 @@ def write_evidence4(index):
 
 def write_evidence(data, **kwargs):
     trs = ''
-    ws = [2000] * 4
+    ws = [2150] * 4
     pPr = p.set(jc='left', spacing=[0.5, 0.5])
     if 'titles' not in kwargs:
         titles = ['', '生物标志物', '药物', '证据类型', '匹配程度', '证据来源']
