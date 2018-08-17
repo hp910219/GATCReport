@@ -261,7 +261,9 @@ def get_target_tips(diagnose):
                             var[key].append(value1)
                 for key in level_names:
                     var[key] += item1[key]
-        vars.append(get_drug_db(var))
+        var1 = get_drug_db(var)
+        if var1 is not None:
+            vars.append(var1)
     vars = sorted(vars, cmp=cmp_target_tip)
     return vars
 
@@ -413,6 +415,8 @@ def get_drug_db(var):
     # print item['A']
     # print item['C']
     # print var.keys()
+    if len(drug_items) == 0 :
+        return None
     for level in level_names:
         value = []
         drugs = filter(lambda x: x['level'] == level, drug_items)
