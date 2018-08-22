@@ -250,7 +250,7 @@ def write_chapter2(index):
 
 
 def write_chapter3(index, trs, chem_items):
-    n, start, bm0 = 2, 10, 453150355
+    n, start= 2, 10
     cats = get_catalog()[start-1: start + n]
     c2 = ''
     for i in range(len(chem_items)):
@@ -335,7 +335,7 @@ def write_backcover():
         for info in infos:
             y = 0.2
             if i == 1:
-                y = 0.24
+                y = 0.26
             run += r.picture(cy=0.6, rId=info['id'], posOffset=[info['posOffset'], y])
             run += r.text(info['text'], 9, space=True)
         para += p.write(p.set(spacing=[0.5, 0]), run)
@@ -601,8 +601,12 @@ def write_chapter5311(ch, index):
         else:
             para += p.write(r.picture(rId=ch['img_id'], zoom=0.22, posOffset=[0, 0.5], align=['center', '']))
         para += con1
-        if index < 10:
+        if index < 9:
             para += p.write(p.set(sect_pr=set_page()))
+        elif index == 9:
+            para += p.write() * 8
+    else:
+        para += p.write()
     return para
 
 
@@ -1010,7 +1014,7 @@ def write_genes(gene_list, col, whith, table_jc='center'):
                     var_text = p.write(pPr, r.text('突变', color=color, size=9))
                 para = p.write(pPr, r.text(text, color=color, size=9)) + var_text
                 tcs += tc.write(para, tc.set(w=ws[j], fill=fill, tcBorders=borders, color=white))
-        trs2 += tr.write(tcs, tr.set(trHeight=580))
+        trs2 += tr.write(tcs, tr.set(trHeight=660))
     table_str = table.write(trs2, ws=ws, tblBorders=[], jc=table_jc)
     return table_str
 
