@@ -780,25 +780,12 @@ def write_target_tip(title, items):
 def write_immun_tip():
     para = p.h4('免疫治疗提示') + con1 + con2
     para += write_immun_tip1('left') + p.write(p.set(line=2, rule='exact'), r.br())
-    # para += con2
     para += write_immun_tip2('left') + con2
     return para
 
 
 def write_immun(data, jc, h0=900, w=2800):
     trs2 = write_tr1(data[0]) + write_tr2(data[1])
-    table_str = table.write(trs2, ws=[w], jc=jc, bdColor=blue)
-    return table_str
-
-
-def write_blue_table(paras, jc, h0=900, w=2800):
-    trs2 = ''
-    for k in range(len(paras)):
-        color, fill, h = blue, 'auto', 800
-        if k == 0:
-            color, fill, h = 'FFFFFF',  blue, h0
-        tcs2 = tc.write(paras[k], tc.set(w=w, fill=fill, color=blue))
-        trs2 += tr.write(tcs2, tr.set(trHeight=h))
     table_str = table.write(trs2, ws=[w], jc=jc, bdColor=blue)
     return table_str
 
