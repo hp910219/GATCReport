@@ -1,13 +1,12 @@
 #! /usr/bin/env python
 # coding: utf-8
 __author__ = 'huo'
-import os
 import time
 import requests
 
-from report_doc.tools.File import File, base_dir
-from report_doc.tools.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink, get_imgs, get_img
-from report_doc.tools.Word import write_pkg_parts, write_cat, uniq_list
+from report_doc.tools.File import File
+from report_doc.tools.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink
+from report_doc.tools.Word import uniq_list
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -118,14 +117,16 @@ def get_evidence():
     return items
 
 
-def my_request(url):
+def my_request(url, r='json'):
     try:
         rq = requests.get(url)
     except:
         return None
     if rq.status_code == 200:
-        data = rq.json()
-        return data
+        if r == 'json':
+            data = rq.json()
+            return data
+        return rq.text
     return None
 
 
@@ -139,5 +140,8 @@ def format_time(t=None, frm="%Y-%m-%d %H:%M:%S"):
 
 
 
-write_gene_list()
+# write_gene_list()
 # get_evidence()
+
+
+print my_request('https://www.snpedia.com/index.php?title=Special:Ask&offset=0&limit=500&q=%5B%5BCategory%3AIs+a+genotype%5D%5D&p=mainlabel%3D%2Fformat%3Dtable&po=%3FMagnitude%0A%3FRepute%0A%3FSummary%0A&sort=magnitude&order=desc', 'text')

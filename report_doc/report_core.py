@@ -26,6 +26,7 @@ sect_pr_catalog = set_page('A4', footer='rIdFooter1', header='rIdHeader1')
 sect_pr_content = set_page('A4', footer='rIdFooter2', pgNumType_s=1, header='rIdHeader2')
 con1 = p.write(p.set(rule='exact', line=12, sect_pr=set_page(type='continuous', cols=1)))
 con2 = p.write(p.set(rule='exact', line=12, sect_pr=set_page(type='continuous', cols=2, space=40)))
+con3 = p.write(p.set(rule='exact', line=12, sect_pr=set_page(type='continuous', cols=3, space=40)))
 page_br = p.write(r.br('page'))
 
 # 初号=42磅
@@ -75,10 +76,10 @@ def write_body(title_cn, title_en, data):
 
 def write_cover(cn, en):
     cx = 3.76
-    run_logo1 = r.picture(cx, rId='cover1', posOffset=[0, 0.5])
-    run_logo2 = r.picture(cx, rId='cover1', posOffset=[7.8, 21.5])
+    run_logo1 = r.picture(cx, rId='cover1', posOffset=[0, -1.37])
+    run_logo2 = r.picture(cx, rId='cover1', posOffset=[13.5, 22.2])
     para = p.write(run_logo1)
-    para += p.write(r.picture(21, rId='cover2', align=['center', 'center'], relativeFrom=['page', 'page']))
+    para += p.write(r.picture(21, rId='cover2', align=['center', ''], relativeFrom=['page', 'page'], posOffset=[0, 10]))
     para += p.write(run_logo2)
     para += p.write(p.set(sect_pr=set_page('A4')))
     return para
@@ -93,7 +94,7 @@ def write_catalog():
     catalogue = get_catalog()
     for cat in catalogue:
         # print index, cat[0], catalogue.index(cat)
-        para = write_cat(cat, para, spacing=[0, 0.2], pos='8500')
+        para = write_cat(cat, para, spacing=[0, 0.2], pos=9600)
     para += p.write(r.fldChar('end'))
     para += p.write(p.set(sect_pr=sect_pr_catalog))
     return para
@@ -135,14 +136,14 @@ def write_chapter1(data, index):
     para += p.h4(cat=cats[1], spacing=[0, 1]) + write_target_tip(title, data['target_tips'])
     para += p.h4(cat=cats[2])
     for i, item in enumerate(target_tips[1:]):
-        para += p.write(p.set(shade=red, line=24), r.text('%d.变异：%s' % (i + 1, item['col1']), color=white, space=True))
+        para += p.write(p.set(shade=red, line=24, ind=[0.7, 0]), r.text('%d. 变异：%s' % (i + 1, item['col1']), color=white, space=True))
         para += p.h4('（1）该基因变异所处保守结构域位置')
-        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=15, rId='EGFR_struct', posOffset=[0, 0], align=['center', '']))
+        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.8, rId='EGFR_struct', posOffset=[0, 0], align=['center', '']))
         para1, index1 = write_evidences(item)
         para += para1
         para += write_gene_info(item, index1)
         para += p.h4('（%d）基因突变保守结构域分布情况' % (index1 + 1))
-        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=15, rId='EGFR_struct', posOffset=[0, 0], align=['center', '']))
+        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.8, rId='EGFR_struct', posOffset=[0, 0], align=['center', '']))
         para += p.h4('（%d）基因突变各癌肿分布情况' % (index1 + 2))
         para += p.write(p.set(jc='center', spacing=[5, 0]), run=r.picture(12, rId='%s_distribution' % 'EGFR', posOffset=[0, 0], align=['center', '']))
         para += p.write() * 5
@@ -158,16 +159,17 @@ def write_chapter2(index):
     para += p.h4(cat=cats[0], spacing=[0, 0], color=white)
     chs = [
         {
-            'title': p.h4(cat=cats[1], spacing=[0, 1]),
+            'title': p.h4(cat=cats[1], spacing=[0, 1]), 'note_before': 0,
             'img_id': 'msi',
             'func': write_immun_tip1,
             'note': '注：INdel比例仅为MSI检测的17个参数之一',
+            'before': 11,
             'infos': [
                 {'title': '结果说明：', 'text': '该结果是通过肿瘤全外显子组数据，利用了一种基于TCGA（癌症基因图谱计划）数据集和引入多个突变特征开发的机器学习算法进行MSI（微卫星不稳定）状态评估方法得到的。该评估方法与传统方法相比，具有97.7%的准确性，是一种可靠的MSI检测方法。'},
                 {'title': '检测意义：', 'text': 'FDA批准PD1抗体keytruda用于所有的MSI高不稳定的实体肿瘤。MSI高不稳定的肿瘤PD1治疗的客观缓解率在不同癌种和试验中稍有不用，大致在40-50%之间。MSI-H在结直肠癌、的分布。MSI是MMR（错配修复系统）的一个反2类型肿瘤细胞具有非常高的突变MSI-H/dMMR肿瘤更可能有效。'},
             ] },
         {
-            'title': p.h4(cat=cats[2]),
+            'title': p.h4(cat=cats[2]), 'before': 0, 'note_before': 10,
             'img_id': 'tmb',
             'func': write_immun_tip2,
             'note': '注：NSCLC未经选择人群PD抗体有效率，具吸烟史为22%，无吸烟史为10%',
@@ -180,16 +182,19 @@ def write_chapter2(index):
     for ch in chs:
         para += write_chapter21(ch)
     para += p.h4(cat=cats[3])
-    trs = [
-        {'text': ['基因', '多肽', '亲和力（突变/正常）', '突变点（克隆组成）', 'HLA分子']},
-    ]
+    ws = [1600, 1600, 2400, 2400, 1600]
+    trs = write_thead51(['基因', '多肽', '亲和力（突变/正常）', '突变点（克隆组成）', 'HLA分子'], ws=ws)
     neoantigen = get_neoantigen()
     for n in neoantigen[:15]:
-        trs.append({'text': [n['GeneSymbol'], n['MutPeptide'], '/'.join([n['MutAFF'], n['RefAFF']]), n['Mut'], n['HLA']]})
-    # trs += [{'text': ['fff'] * 5}] *5
-    borders=['top', 'bottom', 'left', 'right']
-    pPr = p.set(spacing=[0.5, 0.5])
-    para += table.write_jy1(trs, [1600, 1600, 2400, 2400, 1600], tc_borders=borders, th_borders=borders, th_color=gray, cell_color=gray_lighter, tc_pPr=pPr, th_pPr=pPr)
+        pos = n['Pos'].split(':')
+        chr = pos[0].strip()
+        start = pos[1].strip()
+        q = get_quantum_cellurity(chr, start)
+        if len(q) > 0:
+            q = '(%s)' % q
+        item = [n['GeneSymbol'], n['MutPeptide'], '/'.join([n['MutAFF'], n['RefAFF']]), n['Mut'] +q, n['HLA']]
+        trs += write_tr51(item, ws)
+    para += table.write(trs, ws)
     para += p.write(r.text('注：仅显示部分重要新抗原信息', size=8.5))
     para += write_explain({'title': '结果说明：', 'text': '新抗原是指因肿瘤基因突变所导致的能够被该患者免疫系统HLA分子所识别，有潜力能够激活患者免疫系统的新生抗原，这是一组异常多或者特异性细胞治疗最核心的信息。新抗原预测一般通过外显子组测序得到该患者所有的息和HLA分子信息，预测各个突变位点与该患者HLA分子结合的行转录组检测，会明显降低新抗原预测的准确性。'})
     para += p.write(p.set(sect_pr=set_page('A4', header='rIdHeader%d' % index)))
@@ -220,9 +225,11 @@ def write_chapter2(index):
     para += p.write(r.picture(cy=10, rId='2.4.3.1', align=['center', ''], posOffset=[0, 0.5]))
     para += p.write(para_set) * 19
     para += p.write(para_set, r.text('肿瘤免疫表型理论是由Mellman在肿瘤免疫周期的基础上，进一步根据最新的研究成果，细化发展出来的一套肿瘤免疫分型体系。该分型体系根据相应的生物学机制，将肿瘤分成免疫沙漠型（棕色）、免疫豁免型（蓝色）和炎症型（红色）三种，并进一步根据宿主基因、微生物组、环境因素、治疗药物和癌症共五个维度，将影响免疫原性的多种研究进展整合成如下图所示，与免疫治疗疗效和免疫原性相关的癌症-免疫设定点。'))
-    para += p.write(r.picture(cy=8, rId='2.4.3.2', posOffset=[2, 0.5]))
+    para += p.write(para_set) * 7
+    para += p.write(r.picture(cy=8, rId='2.4.3.2', posOffset=[2, 0]))
     para += p.write(para_set) * 4
     para += p.write(p.set(ind=[24.5, 0]), r.text('癌症免疫设定点是指产生有效癌症免疫原性所需克服的阈值，为指导免疫治疗临床应用和研究提供一个系统性框架。该设定点可以理解为理解为刺激因子、抑制因子和TCR结合信号（T细胞抗原受体与新抗原、癌症相关抗原等癌症抗原的亲和力）的平衡。癌症免疫治疗主要是针对肿瘤部位，通过增加的刺激因子、减少抑制因子或者增加TCR结合信号这三种方式进行的。'))
+    para += p.write(p.set(ind=[24.5, 0])) * 2
     para += p.h4('4、免疫检查位点抗体疗联合传统治疗研究进展')
     para += p.write(para_set, r.text('免疫检查位点抗体单药治疗虽然在临床治疗中显示出广泛的抗癌效果，不同癌种的总体有效率基本在20%左右，即使通过多种标志物进行预测可一定程度上减少无效人群，但其获益人群一样有限。从肿瘤免疫过程上看，将免疫阻隔型和免疫沙漠型的“冷”肿瘤，转变成免疫炎症型的“热”肿瘤，扩大免疫检查位点抗体的获益人群，可以通过联合治疗的方式进行。对PDL1、MSI、TMB等各类型标志物预测检查位点抗体单药治疗效获益可能性较低的患者，最好进行检查位点抗体与其他治疗方式的联合治疗。多项研究发现放疗、化疗和靶向治疗等传统治疗联合免疫检查位点抗体治疗能够获得惊人的效果，中位生存期、无疾病进展生存期和有效率等疗效指标翻倍的情况。同时，值得注意的是，联合治疗会成倍甚至多倍的提高毒副反应。基于对肿瘤免疫过程理解的加深，特异性针对特定肿瘤免疫过程的免疫治疗是联合治疗的更优选择。'))
     para += p.h4('5、新型免疫治疗手段研究进展')
@@ -265,7 +272,7 @@ def write_chapter3(index, trs, chem_items):
     para = ''
     para += p.h4(cat=cats[0], spacing=[0, 0], color=white)
     para += p.h4(cat=cats[1], spacing=[0, 1])
-    para += write_chemotherapy(trs, [800, 2400, 2400, 2400])
+    para += write_chemotherapy(trs, [10200/4] * 4)
     para += p.write()
     para += write_explain({'title': '结果说明：', 'text': '该疗效预测汇总仅根据以下证据进行汇总。疗效预测证据主要来自CIVic数据库，并根据专家人工对相关证据进行梳理取舍。毒副作用证据及部分由基因多态性提供的疗效证据则来自于药物基因组数据库PharmGKB。采取该数据库二级以上的证据，并结合部分三级证据（不具备二级以上证据的情况下）。由于化学治疗的疗效影响因素较多，各个生物标志物的预测能力有限，且多个证据之间缺乏合理的证据平衡方式。目前初步采取多个证据之间目前采取均权投票的方式，即默认多个生物标志物的预测能力完全一致，仅根据各个证据的量进行评估,当相反证据量一致时，将证据级别纳入考量。'})
     para += p.h4(cat=cats[2])
@@ -276,7 +283,6 @@ def write_chapter3(index, trs, chem_items):
 
 def write_chapter4(index):
     cats = get_catalog()[12: 13 + 6]
-    print cats[0]['title']
     para = ''
     para += p.h4(cat=cats[0], spacing=[0, 0], color=white)
     para += p.h4(cat=cats[1], spacing=[0, 1]) + write_chapter41()
@@ -296,7 +302,7 @@ def write_chapter5(index):
     para = p.h4(cat=cats[0], spacing=[0, 0], color=white)
     para += p.h4(cat=cats[1], spacing=[0, 1]) + write_chapter51()
     para += p.h4(cat=cats[2])
-    para += p.write(r.picture(12, rId='cnvanno_cicos', posOffset=[1.64, 1.49]))
+    para += p.write(r.picture(13.5, rId='cnvanno_cicos', posOffset=[0, 1], align=['center', '']))
     para += p.write(p.set(sect_pr=set_page('A4', header='rIdHeader%d' % index)))
     para += p.write(p.set(sect_pr=set_page()))
     para += p.h4(cat=cats[3]) + write_chapter53()
@@ -315,21 +321,24 @@ def write_backcover():
 
     imgs = [
         [
-            {'id': 'logo', 'posOffset': 1, 'text': '北京皑医科技有限公司    '},
+            {'id': 'logo', 'posOffset': 0.11, 'text': '北京皑医科技有限公司     '},
             {'id': 'location', 'posOffset': 5.17, 'text': '北京市中关村科技园区大兴生物医药基地绿地启航3号楼1003'},
         ],
         [
-            {'id': 'website', 'posOffset': 1, 'text': 'https://aiyi.link          '},
-            {'id': 'phone', 'posOffset': 5, 'text': '010-86399801'}
+            {'id': 'website', 'posOffset': 0, 'text': 'https://aiyi.link          '},
+            {'id': 'phone', 'posOffset': 5.17, 'text': '010-86399801'}
         ]
     ]
     for i in range(len(imgs)):
         infos = imgs[i]
         run = ''
         for info in infos:
-            run += r.picture(cy=0.6, rId=info['id'], text_wrapping='inline')
+            y = 0.2
+            if i == 1:
+                y = 0.24
+            run += r.picture(cy=0.6, rId=info['id'], posOffset=[info['posOffset'], y])
             run += r.text(info['text'], 9, space=True)
-        para += p.write(p.set(spacing=[0, 0]), run)
+        para += p.write(p.set(spacing=[0.5, 0]), run)
     para += set_page(header='rIdHeader8', footer='rIdFooter1')
     return para
 
@@ -339,7 +348,7 @@ def write_explains(content):
     for text in content.split('\n'):
         texts = text.split('：')
         if len(texts) > 1:
-            para += write_explain({'title': '%s：' % texts[0], 'text': texts[1]})
+            para += write_explain({'title': '%s：' % texts[0], 'text': '：'.join(texts[1:])})
         else:
             para += p.write(r.text(text))
     return para
@@ -357,7 +366,7 @@ def write_chapter13(cat, index):
     para += p.write(p.set(ind=['firstLine', 2]), r.text('原癌基因指正常功能情况下，在细胞信号传导等多个层面扮演重要角色，但是发生激活突变后会促进癌症发生发展的基因。激活突变一般情况下发生在原癌基因经常发生突变的热点位置上，如下图的PIK3CA和IDH1基因，且突变以错义突变为主。'))
     para += p.h4('（3）抑癌基因和失活突变')
     para += p.write(p.set(ind=['firstLine', 2]), r.text('抑癌基因指正常功能下，扮演着DNA修复等抑制癌症发生发展过程的基因。抑癌基因发生失活突变会导致身体抑制癌症的功能降低。抑癌突变一般情况下热点突变较少，可发生在基因近乎任何区域，如下图的RB1和VHL基因，且会出现更多的截断突变。'))
-    para += p.write(p.set(jc='center'), run=r.picture(13.34, rId='1.3.3'))
+    para += p.write(p.set(jc='center'), run=r.picture(13.34, rId='1.3.3', align=['center', '']))
     para += p.write() * 7
     para += p.h4('3.肿瘤数据解读证据级别说明')
     para += p.write(p.set(ind=['firstLine', 2]), r.text('通过二代测序技术，特别是本报告采用的组学检测技术，每个肿瘤患者会找到几十个、几百个甚至于几千个肿瘤基因变异。不同基因变异具有不同的临床指导意义。美国临床肿瘤协会（ASCO）、美国病理学家联合学会会（CAP）和分子病理协会（AMP）共同发布了相关的标准和指南。该指南首先把变异根据临床意义等级分成四类：等级Ⅰ，强临床意义的变异；等级Ⅱ，潜在临床意义的变异；等级Ⅲ，不清楚临床意义的变异；等级Ⅳ，良性和可能良性的变异。其中，又根据变异的证据级别，等级Ⅰ和等级Ⅱ的变异进一步细化分成Level A、B、C、D四个级别。'))
@@ -373,8 +382,8 @@ def write_chapter13(cat, index):
 def write_chapter21(ch):
     para = ch['title']
     para += ch['func']('center')
-    para += p.write(p.set(jc='center', spacing=[5.5, 0]), run=r.picture(cy=7.3 * 0.5, rId=ch['img_id'], posOffset=[0, 0], align=['center', '']))
-    para += p.write(p.set(jc='center'), r.text(ch['note'], size=8.5))
+    para += p.write(p.set(jc='center', spacing=[ch['before'], 0]), run=r.picture(cx=10.93, cy=7.3 * 0.5 * 1.5, rId=ch['img_id'], posOffset=[0, 1], align=['center', '']))
+    para += p.write(p.set(jc='center', spacing=[ch['note_before'], 0]), r.text(ch['note'], size=8.5))
     for i in ch['infos']:
         para += write_explain(i)
     return para
@@ -439,7 +448,7 @@ def write_chapter43():
             tr1 += '%s(拷贝数%s),' % (item['text'], item['copynumber'])
             tr2 = 'PD1等免疫检查位点抗体可能有超进展风险'
     trs = [tr1.rstrip(','), tr2]
-    para = write_immun(trs, jc='center')
+    para = write_immun(trs, jc='center', w=2800*1.8)
     para += p.write()
     para += write_43(items)
     para += p.write()
@@ -482,10 +491,10 @@ def write_chapter45():
     data = [tr1, tr2]
     para = write_immun(data, jc='center', w=5000)
     para += p.write()
-    para += p.write(p.set(spacing=[2, 0]), r.picture(16, rId='4.5.1signature', posOffset=[0, 0.1], align=['center', '']))
-    para += p.write() * 9
-    para += write_evidence(items[1:], titles=items[0])
-    para += p.write(r.br('page'))
+    para += p.write(p.set(spacing=[2, 0]), r.picture(17.5, rId='4.5.1signature', posOffset=[0, 0.1], align=['center', '']))
+    para += p.write() * 6
+    para += write_evidence(items[1:], titles=items[0], ws=[1500, 1200, 2400, 4700])
+    # para += p.write(r.br('page'))
     para += p.write(p.set(spacing=[2, 0]), r.picture(7.5, rId='4.5.2signature_pie', posOffset=[0, 0.6]))
     para += write_explain({"title": '结果说明：', 'text': '体细胞突变存在于人体的所有细胞中并且贯穿整个生命。它们是多种突变过程的结果，包括DNA复制机制内在的轻微错误，外源或内源诱变剂暴露，DNA酶促修饰和DNA修复缺陷。不同的突变过程产生独特的突变类型组合，称为“突变特征”。在过去的几年中，大规模的分析研究揭示了许多人类癌症类型的突变特征。目前这组突变特征是基于对40种不同类型的人类癌症中的10,952个外显子组和1,048个全基因组的分析得到的。使用六个取代亚型显示每个标记的概况：C> A，C> G，C> T，T> A，T> C和T> G，进而向前先后各延伸一个碱基，每个碱基有4种可能，所以，总共就有96个三核苷酸的突变类型。现在已经明确的，总共有30种明确注释的“突变特征”，每种特征都有对应的发生机制，如吸烟、错配修复缺陷、同源重组修复缺陷等。'}, ind=[23, 0])
     return para
@@ -493,28 +502,24 @@ def write_chapter45():
 
 def write_chapter51():
     para = ''
-    ws = [1800, 1800, 1600, 1600, 1800]
+    ws = [2400, 1800, 1600, 1600, 2400]
     pPr = p.set(jc='left', spacing=[0.5, 0.5])
     titles = ['基因突变（肿瘤细胞克隆组成）', '变异类型', '所在结构域', '功能预测', '驱动基因类型及致癌性']
     data = filter_db(impact='HIGH')
     trs = write_thead51(titles, pPr=pPr, ws=ws)
     for k in range(len(data)):
-        tcs = ''
-        size = 9
         item1 = data[k]
         gene = item1['Hugo_Symbol']
         variant = item1['HGVSp_Short']
         domain = get_domain(gene, variant, item1['HGVSc'])
+        if len(domain) == 0:
+            domain = '无'
         cellurity = get_quantum_cellurity(item1['Chromosome'], item1['Start_Position'])
-        col1 = '%s %s %s' % (gene, variant, cellurity)
+        col1 = '%s %s (%s)' % (gene, variant, cellurity)
         col5 = get_gene_MoA(gene)
         item = [col1, item1['Variant_Classification'], domain, '有害突变', col5]
-        for i in range(len(item)):
-            t = item[i]
-            run = r.text(t, size=size, weight=0)
-            tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=['top', 'bottom', 'left', 'right'], color=gray_lighter))
-        trs += tr.write(tcs)
-    para += table.write(trs, ws=ws, bdColor=gray_lighter)
+        trs += write_tr51(item, ws)
+    para += table.write(trs, ws=ws)
     para += p.write()
     return para
 
@@ -529,7 +534,8 @@ def write_chapter53():
         },
         {
             'title': 'PI3K/AKT/mTOR信号通路变异情况',
-            'img_id': 'hsa04150.mTOR_signaling_pathway',
+            'img_id': 'hsa04151.PI3K-Akt_signaling_pathway',
+            'img_id2': 'hsa04150.mTOR_signaling_pathway',
         },
         {
             'title': '细胞凋亡信号通路变异情况',
@@ -556,6 +562,9 @@ def write_chapter53():
         for ch1 in chapters:
             if title in ch1['title']:
                 ch['img_id'] = ch1['img_id']
+                if 'img_id2' in ch1:
+                    ch['img_id2'] = ch1['img_id2']
+
         for j in range(3, gene_list53.ncols):
             v = gene_list53.cell_value(i, j)
             if v.strip() != '':
@@ -586,7 +595,11 @@ def write_chapter5311(ch, index):
     if 'img_id' in ch:
         para += con1
         para += p.write(r.text('（2）KEGG完整信号通路基因突变注释图'))
-        para += p.write(r.picture(rId=ch['img_id'], zoom=0.22, posOffset=[0, 0.5]))
+        if 'img_id2' in ch:
+            para += p.write(r.picture(rId=ch['img_id'], zoom=0.22, posOffset=[0.5, 0.5]))
+            para += p.write(r.picture(rId=ch['img_id2'], zoom=0.12, posOffset=[12, 2.5]))
+        else:
+            para += p.write(r.picture(rId=ch['img_id'], zoom=0.22, posOffset=[0, 0.5], align=['center', '']))
         para += con1
         if index < 10:
             para += p.write(p.set(sect_pr=set_page()))
@@ -623,7 +636,6 @@ def write_evidences(item):
         {'rId': 'Oncokb', 'cx': 3, 'cy': 1, 'posy': 1, 'evidence': evidence_oncokb},
         {'rId': 'CGI', 'cx': 5.74, 'cy': 1.11, 'evidence': evidence_cgi},
         {'rId': 'CIVic', 'cx': 4.23, 'cy': 1.8, 'evidence': evidence_civic},
-        {'rId': 'logo', 'text': '其他', 'cx': 1.35, 'cy': 1.28},
     ]
     para = ''
     index = 2
@@ -634,11 +646,12 @@ def write_evidences(item):
             evidences = item[rId.upper()]
             if len(evidences) > 0:
                 text = rId if 'text' not in info else info['text']
-                run = r.text('（%d） ' % (i + 1), 12, space=True, weight=True)
+                run = r.text('（%d） ' % index, 12, space=True, weight=True)
                 run += r.picture(cy=0.5, rId=info['rId'], text_wrapping='inline')
-                run += r.text(' %s数据库证据' % (text), 12, space=True, weight=True)
+                run += r.text(' %s数据库证据' % text, 12, space=True, weight=True)
                 para += p.write(p.set(spacing=[1.5, 1.5]), run)
                 para += write_evidence(evidences)
+                # print index,
                 index += 1
     return para, index
 
@@ -690,7 +703,7 @@ def write_db_info():
 def write_gene_info(gene_item, index):
     gene = gene_item['gene']
     para = p.h4('（%d）基因说明:%s，%s' % (index, gene, gene_item['gene_MoA']))
-    pPr = p.set(line=15, ind=[4, 4])
+    pPr = p.set(line=15, ind=[1, 1])
     size = 9
     for item in gene_list12:
         if item['hugoSymbol'] == gene:
@@ -706,7 +719,7 @@ def write_gene_info(gene_item, index):
                 para += p.write(pPr, r.text(text, size))
 
             description = item['description']
-            summary = item['description']
+            summary = item['summary']
             if len(summary) > 0:
                 para += p.write(pPr, r.text(summary, size))
             if len(description) > 0:
@@ -717,7 +730,7 @@ def write_gene_info(gene_item, index):
 def write_patient_info(data):
     para = p.h4('基本信息')
     trs = ''
-    ws = [2000, 2000, 3000, 2000]
+    ws = [2300, 2300, 3300, 2300]
     pPr = p.set(jc='left', spacing=[1, 1])
     ps = [
         '姓名: %s' % data['name'],
@@ -738,43 +751,33 @@ def write_patient_info(data):
             ts = tr2[i].split(':')
             run = r.text(ts[0].strip() + ': ', size=size, weight=0)
             run += r.text(ts[1].strip(), size=size, weight=1)
-            tcs2 += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=[], fill=gray))
+            tcs2 += tc.write(p.write(pPr, run), tc.set(w=ws[i], fill=gray, tcBorders=[]))
         trs += tr.write(tcs2)
-    para += table.write(trs, ws=ws, tblBorders=[])
+    para += table.write(trs, ws=ws, bdColor=gray, insideColor=white)
     return para
 
 
 # part1 靶向治疗提示
 def write_target_tip(title, items):
     n = len(title)
-    ws = [9000 / n] * n
-    pPr = p.set(jc='left', spacing=[0.5, 0.5])
+    ws = [10200 / n] * n
     trs = write_thead51(title, ws=ws)
     for k in range(len(items)):
-        tcs2 = ''
-        size = 9
         item1 = items[k]
         item = [item1['col1']]
         for level in level_names:
             item.append(item1[level])
         if len(item) < n:
             item.append(item1['gene_MoA'])
-        for i in range(n):
-            texts = item[i]
-            para = ''
-            for t in texts.split('\n'):
-                run = r.text(t, size=size)
-                para += p.write(pPr, run)
-            tcs2 += tc.write(para, tc.set(w=ws[i], color=gray))
-        trs += tr.write(tcs2)
-    return table.write(trs, ws=ws, tblBorders=[])
+        trs += write_tr51(item, ws)
+    return table.write(trs, ws=ws, bdColor=gray)
 
 
 def write_immun_tip():
     para = p.h4('免疫治疗提示') + con1 + con2
-    para += write_immun_tip1() + p.write(p.set(line=2, rule='exact'), r.br())
+    para += write_immun_tip1('left') + p.write(p.set(line=2, rule='exact'), r.br())
     # para += con2
-    para += write_immun_tip2() + con2
+    para += write_immun_tip2('left') + con2
     return para
 
 
@@ -819,7 +822,9 @@ def write_evidence4(index):
 
 def write_evidence(data, **kwargs):
     trs = ''
-    ws = [2150] * 4
+    ws = [9800/4] * 4
+    if 'ws' in kwargs:
+        ws = kwargs['ws']
     pPr = p.set(jc='left', spacing=[0.5, 0.5])
     if 'titles' not in kwargs:
         titles = ['', '生物标志物', '药物', '证据类型', '匹配程度', '证据来源']
@@ -836,17 +841,18 @@ def write_evidence(data, **kwargs):
                 t = '; '.join(['%s(%s级)' % (tt['drug'], tt['level']) for tt in t])
             run = r.text(t, size=size)
             fill = gray if k == 0 else 'auto'
-            tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=[], fill=fill))
+            bdColor = white if k == 0 else gray
+            tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=borders, fill=fill, color=bdColor))
         if len(tcs) > 0:
             trs += tr.write(tcs)
             if k > 0:
                 # print len(item)
-                run = r.text(titles[4], size=size)
-                tc5 = tc.write(p.write(pPr, run), tc.set(w=ws[0], tcBorders=[], fill=gray))
+                run = r.text(titles[5], size=size)
+                tc5 = tc.write(p.write(pPr, run), tc.set(w=ws[0], tcBorders=borders, fill=gray, color=gray))
                 run1 = r.text(item[4], size=size)
-                tc5 += tc.write(p.write(pPr, run1), tc.set(w=6000, tcBorders=[], fill='auto', gridSpan=3))
+                tc5 += tc.write(p.write(pPr, run1), tc.set(w=6000, tcBorders=borders, fill='auto', gridSpan=3, color=gray))
                 trs += tr.write(tc5)
-    return table.write(trs, ws=ws, tblBorders=[])
+    return table.write(trs, ws=ws, bdColor=gray)
 
 
 def write_explain(i, ind=[0, 0]):
@@ -856,7 +862,6 @@ def write_explain(i, ind=[0, 0]):
 
 def write_chemotherapy(trs, ws):
     trs2 = ''
-    borders=['top', 'bottom', 'left', 'right']
     for k in range(len(trs)):
         size = 10
         items = trs[k]
@@ -867,12 +872,12 @@ def write_chemotherapy(trs, ws):
                 item = ';'.join(uniq_list(item))
                 if item == '':
                     item = '无'
-            fill, weight, jc = 'auto', 0, 'left'
+            fill, weight, jc, color = 'auto', 0, 'left', gray
             if k == 0 or j == 0:
-                fill, weight, jc = gray, 1, 'center'
+                fill, weight, jc, color = gray, 1, 'center', white
             pPr = p.set(jc=jc, spacing=[0.5, 0.5])
             run = r.text(item, size=size, weight=weight)
-            tcs += tc.write(p.write(pPr, run), tc.set(w=ws[k], fill=fill, color=gray_lighter, tcBorders=borders))
+            tcs += tc.write(p.write(pPr, run), tc.set(w=ws[k], fill=fill, color=color, tcBorders=borders))
         trs2 += tr.write(tcs)
     table_str = table.write(trs2, ws=ws, bdColor=gray)
     return table_str
@@ -884,6 +889,8 @@ def write_gene_list3(genes, width=9000):
     pPr = p.set(jc=jc, line=12, rule='auto', spacing=[0.5, 0.5])
     col = 5
     ws = [width / col] * col
+    if len(genes) < col:
+        genes += [''] * (col - len(genes))
     row = int(math.ceil(float(len(genes)) / col))
     for k in range(row):
         tcs = ''
@@ -892,10 +899,13 @@ def write_gene_list3(genes, width=9000):
             this_index = k * col + j
             if this_index < len(genes):
                 item = genes[this_index]
-                gene = item['gene']
-                para = p.write(pPr, r.text('%s %s(%s)' % (gene, item['rs'], item['genotype']), size))
-                para += p.write(pPr, r.text(item['summary'], size))
-                tcs += tc.write(para, tc.set(w=ws[k], fill=fill, color=gray_lighter, tcBorders=[], line_type='double'))
+                try:
+                    gene = item['gene']
+                    para = p.write(pPr, r.text('%s %s(%s)' % (gene, item['rs'], item['genotype']), size))
+                    para += p.write(pPr, r.text(item['summary'], size))
+                    tcs += tc.write(para, tc.set(w=ws[k], fill=fill, color=white, tcBorders=borders))
+                except:
+                    tcs += tc.write(p.write(pPr), tc.set(w=ws[k], fill=white, color=white, tcBorders=[]))
         trs2 += tr.write(tcs)
     table_str = table.write(trs2, ws=ws, bdColor=blue, tblBorders=[], border_size=8)
     return table_str
@@ -903,7 +913,6 @@ def write_gene_list3(genes, width=9000):
 
 def write_genotype(gts, ws):
     trs2 = ''
-    borders = ['top', 'bottom', 'left', 'right']
     for j in range(len(gts)):
         size = 9
         tcs = ''
@@ -912,17 +921,20 @@ def write_genotype(gts, ws):
         if j == 0:
             gridSpan = 2
             text = '%s %s (%s)' % (gt['gene'], gt['rs'], '证据级别%s' % gt['level'])
-            trs2 += tr.write(tc.write(p.write(p.set(jc='center', spacing=[0.5, 0.5]), r.text(text, size=size, weight=1)), tc.set(w=sum(ws), fill=gray, color=gray_lighter, tcBorders=borders, gridSpan=gridSpan)))
+            trs2 += tr.write(tc.write(p.write(p.set(jc='center', spacing=[0.5, 0.5]), r.text(text, size=size, weight=1)), tc.set(w=sum(ws), fill=gray, color=white, tcBorders=borders, gridSpan=gridSpan)))
         for k in range(2):
             key = 'introduction'
             fill = 'auto'
+            jc='left'
+            color = gray
             if k == 0:
                 fill, jc, key = gray, 'center', 'genotype'
+                color = white
             pPr = p.set(jc=jc, spacing=[0.5, 0.5])
             run = r.text(gt[key], size=size, weight=weight)
-            tcs += tc.write(p.write(pPr, run), tc.set(w=ws[k], fill=fill, color=gray_lighter, tcBorders=borders))
+            tcs += tc.write(p.write(pPr, run), tc.set(w=ws[k], fill=fill, color=color, tcBorders=borders))
         trs2 += tr.write(tcs)
-    table_str = table.write(trs2, ws=ws, bdColor=gray_lighter)
+    table_str = table.write(trs2, ws=ws, bdColor=gray)
     return table_str + p.write()
 
 
@@ -973,7 +985,7 @@ def write_43(genes, **kwargs):
         if fill != gray:
             color = white
         para = p.write(pPr, r.text(item['text'], color=color, size=9))
-        tcs += tc.write(para, tc.set(w=ws[j], fill=fill, tcBorders=[], line_type='double'))
+        tcs += tc.write(para, tc.set(w=ws[j], fill=fill, tcBorders=borders, color=white))
     trs2 = tr.write(tcs, tr.set(trHeight=800))
     return table.write(trs2, ws=ws, tblBorders=[])
 
@@ -997,7 +1009,7 @@ def write_genes(gene_list, col, whith, table_jc='center'):
                     color = white
                     var_text = p.write(pPr, r.text('突变', color=color, size=9))
                 para = p.write(pPr, r.text(text, color=color, size=9)) + var_text
-                tcs += tc.write(para, tc.set(w=ws[j], fill=fill, line_type='double'))
+                tcs += tc.write(para, tc.set(w=ws[j], fill=fill, tcBorders=borders, color=white))
         trs2 += tr.write(tcs, tr.set(trHeight=580))
     table_str = table.write(trs2, ws=ws, tblBorders=[], jc=table_jc)
     return table_str
@@ -1016,7 +1028,7 @@ def write_genes4(genes, col, whith, table_jc='center'):
         tcs = ''
         if 'title' in gene:
             para = p.write(pPr, r.text(gene['title'], color=white, size=9))
-            tcs += tc.write(para, tc.set(w=ws[k], fill=gene['color'], line_type='double'))
+            tcs += tc.write(para, tc.set(w=ws[k], fill=gene['color'], color=white, tcBorders=borders))
         for j in range(len(gene_list)):
             item = gene_list[j]
             fill = get_var(item)
@@ -1030,8 +1042,8 @@ def write_genes4(genes, col, whith, table_jc='center'):
                     oranges += 1
                 var_text = p.write(pPr, r.text('突变', color=color, size=9))
             para = p.write(pPr, r.text(text, color=color, size=9)) + var_text
-            tcs += tc.write(para, tc.set(w=ws[j], fill=fill, line_type='double'))
-        trs2 += tr.write(tcs, tr.set(trHeight=580))
+            tcs += tc.write(para, tc.set(w=ws[j], fill=fill, color=white, tcBorders=borders))
+        trs2 += tr.write(tcs, tr.set(trHeight=620))
     table_str = table.write(trs2, ws=ws, tblBorders=[], jc=table_jc)
     return table_str, reds, oranges
 
@@ -1039,19 +1051,32 @@ def write_genes4(genes, col, whith, table_jc='center'):
 def write_thead51(titles, **kwargs):
     ws = [1800, 1600, 1600, 1600, 1800]
     pPr = p.set(jc='left', spacing=[0.5, 0.5])
-    tcBorders = ['top', 'bottom', 'left', 'right']
     if 'pPr' in kwargs:
         pPr = kwargs['pPr']
     if 'ws' in kwargs:
         ws = kwargs['ws']
-    if 'tcBorders' in kwargs:
-        tcBorders = kwargs['tcBorders']
     tcs = ''
     size = 10
     for i in range(len(titles)):
         t = titles[i]
         run = r.text(t, size=size, weight=0)
-        tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=tcBorders, fill=gray, color=gray_lighter))
+        tcs += tc.write(p.write(pPr, run), tc.set(w=ws[i], tcBorders=borders, fill=gray, color=white))
+    return tr.write(tcs)
+
+
+def write_tr51(item, ws):
+    pPr = p.set(jc='left', spacing=[0.5, 0.5])
+    tcs = ''
+    size = 9
+    for i in range(len(item)):
+        t = item[i]
+        run = r.text(t, size=size, weight=0)
+        texts = item[i]
+        para = ''
+        for t in texts.split('\n'):
+            run = r.text(t, size=size)
+            para += p.write(pPr, run)
+        tcs += tc.write(para, tc.set(w=ws[i], tcBorders=borders, color=gray))
     return tr.write(tcs)
 
 

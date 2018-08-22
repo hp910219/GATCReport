@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传数据文件</title>
+</head>
+<body>
+<form>
+    <input id="file" name="file" type="file" />
+    <input id="token" name="token" type="hidden" />
+</form>
+<script>
+    $("#file").on("change", function(){
+        var formData = new FormData();
+        formData.append("file", $("#file")[0].files);
+        formData.append("token", $("#token").val());
+        $.ajax({
+            url: "http://uploadUrl",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response){
+                // 根据返回结果指定界面操作
+            }
+        });
+    });
+</script>
+</body>
+</html>

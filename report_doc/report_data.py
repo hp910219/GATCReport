@@ -20,13 +20,14 @@ orange = 'F14623'
 colors = ['2C3792', '3871C1', '50ADE5', '37AB9C', '27963C', '40B93C', '80CC28']
 level_names = ['A', 'B', 'C', 'D']
 db_names = ['Oncokb', 'civic', 'CGI']
+borders = ['top', 'right', 'bottom', 'left']
 # 因为数据库的权威性  oncokb>civic>cgi
 
 real_level = FetchRealLevel()
 my_file = File()
 immune_suggestion = my_file.read(r'immune_suggestion.txt', dict_name=r'data', sheet_name='immune_suggestion')
 chem_durg_list = my_file.read('base/chem_durg_list.tsv', dict_name='data')  # category	drug	cancer
-variant_knowledge = my_file.read(u'化疗多态位点证据列表.xlsx', dict_name='data', sheet_name='Sheet1')
+variant_knowledge = my_file.read(u'base/化疗多态位点证据列表.xlsx', dict_name='data', sheet_name='Sheet1')
 rs_geno = my_file.read('data/rs.geno.update.tsv', to_json=False)
 hla = my_file.read('hla.tsv', dict_name='data')
 variant_anno1 = my_file.read('variant_anno.maf', dict_name='data', sep='\t', to_json=False)
@@ -156,12 +157,15 @@ def format_time(t=None, frm="%Y-%m-%d %H:%M:%S"):
 
 def get_page_titles():
     title_cn, title_en = u'多组学临床检测报告', 'AIomics1'
-    title = '%s附录目录%s%s' % (title_cn, ' ' * 62,  title_en)
+    title = '%s附录目录%s%s' % (title_cn, ' ' * 75,  title_en)
     title1 = '%s%s%s' % (title_cn, ' ' * (69+18),  title_en)
     titles = [title, title1]
     cats = get_catalog()
     for i in [0, 4, 9, 12, 19]:
-        titles.append('%s%s%s' % (cats[i]['title'], ' ' * (69+20),  title_en))
+        n = 69 + 20
+        if test_chinese(cats[i]['title']) == 11:
+            n -= 8
+        titles.append('%s%s%s' % (cats[i]['title'], ' ' * n,  title_en))
     return titles
 
 
@@ -209,15 +213,17 @@ def get_EGFR():
     gene = 'EGFR'
     item1 = {'gene': gene, 'fill': gray, 'text': 'EGFR无突变', 'copynumber': 0}
     items = filter_db(gene)
+    is_match, copynumber, status = get_copynumber(gene, 'gain')
     for item in items:
         impact = item['IMPACT'].strip().upper()
         variant_type = item['Variant_Type']
         if impact == 'HIGH':
             if reset_status(variant_type) == 'gain':
-                is_match, copynumber, status = get_copynumber(gene, 'gain')
                 if is_match:
                     return {'gene': gene, 'fill': red, 'text': 'EGFRT突变合并扩增', 'copynumber': copynumber}
                 return {'gene': gene, 'fill': gray, 'text': 'EGFR无扩增', 'copynumber': copynumber}
+        if is_match:
+            return {'gene': gene, 'fill': red, 'text': 'EGFR基因扩增', 'copynumber': copynumber}
     return item1
 
 
@@ -410,7 +416,7 @@ def get_drug_db(var):
                     if drug_item2['drug'] == drug_item1['drug']:
                         drug_item2['db_name'] = db_name1
                         drug_item2['level'] = drug_item1['level']
-                        var = get_drug_evidence(drug_item2, var, db_name2.upper())
+                var = get_drug_evidence(drug_item1, var, db_name1.upper())
     drug_items = get_drug_level(drug_items)
     # print item['A']
     # print item['C']
@@ -454,15 +460,16 @@ def get_copynumber(gene, status=None):
     return False, 0, status
 
 
-def get_quantum_cellurity(chr, pos):
+def get_quantum_cellurity(chr, pos, is_print=False):
     for item in quantum_cellurity:
         if isinstance(chr, float):
             chr = str(int(chr))
         if isinstance(pos, float):
             pos = str(int(pos))
         # print chr, pos
-        # print item['Start'], pos, item['Chr'].lstrip('chr'), chr, type(pos), type(item['Start']), type(chr)
-        if item['Chr'].lstrip('chr') == str(chr) and item['Start'] == pos:
+        if is_print:
+            print item['Start'], pos, item['Chr'].lstrip('chr'), chr, type(pos), type(item['Start']), type(chr)
+        if item['Chr'].lstrip('chr') == str(chr) and str(item['Start']) == str(pos):
             return '%.2f%%' % (float(item['Cellularity']) * 100)
     return ''
 
@@ -783,7 +790,7 @@ def get_domain(gene, var_p, var_c):
     if len(items) != 1:
         items2 = filter(lambda x: x['gene'] == gene and x['protein'] == var_p, CGI_mutation_analysis)
         if len(items2) == 1:
-            return items2[0]['Pfam_domain']
+            return items2[0]['Pfam_domain'].strip()
     else:
-        return items[0]['Pfam_domain']
+        return items[0]['Pfam_domain'].strip()
     return ''

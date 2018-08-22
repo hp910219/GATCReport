@@ -344,8 +344,9 @@ class Run:
             zoom = cy / cy1
         elif cy == 0:
             zoom = cx / cx1
-        cx = cx1 * zoom
-        cy = cy1 * zoom
+        if cx * cy == 0:
+            cx = cx1 * zoom
+            cy = cy1 * zoom
         p = ['positionH', 'positionV']
         postition = ''
         srcRect = ''
@@ -498,6 +499,9 @@ class Table:
             tblPr += '<w:tblBorders>'
             for b in tblBorders:
                 tblPr += '<w:%s w:val="single" w:sz="%d" w:space="0" w:color="%s"/>' % (b, border_size, bdColor)
+            if 'insideColor'in kwargs:
+                tblPr += '<w:%s w:val="single" w:sz="%d" w:space="0" w:color="%s"/>' % ('insideH', border_size, kwargs['insideColor'])
+                tblPr += '<w:%s w:val="single" w:sz="%d" w:space="0" w:color="%s"/>' % ('insideV', border_size, kwargs['insideColor'])
             tblPr += '</w:tblBorders>'
         if not('is_fixed' in kwargs and kwargs['is_fixed'] is False):
             tblPr += '<w:tblLayout w:type="fixed"/>'
@@ -581,9 +585,9 @@ class Table:
                         para += p.write(pPr, r.text(t))
                     tcs2 += tc.write(para, tc.set(w=ws1[i], tcBorders=tcBorders1, gridSpan=gridSpan[i], vAlign=vAlign, fill=fill, color=cell_color))
             trs += tr.write(set=trPr, tcs=tcs2)
-            bdColor = cell_color
-            if 'bdColor' in kwargs:
-                bdColor = kwargs['bdColor']
+        bdColor = cell_color
+        if 'bdColor' in kwargs:
+            bdColor = kwargs['bdColor']
         return self.write(trs, ws=ws, tblBorders=table_borders, bdColor=bdColor)
 
 
@@ -621,13 +625,16 @@ class Tc:
             line_type = kwargs['line_type']
         if len(tcBorders) > 0:
             tcBorders_str = '<w:tcBorders>'
+            # <w:bottom w:val="single" w:sz="12" w:space="0" w:color="auto"/>
             for b in tcBorders:
-                tcBorders_str += '<w:%s w:val="%s" w:sz="4" w:space="0" w:color="%s"/>' % (line_type, b, color)
+                tcBorders_str += '<w:%s w:val="%s" w:sz="8" w:space="0" w:color="%s"/>' % (b, line_type, color)
             tcBorders_str += '</w:tcBorders>'
         tcPr = '<w:tcPr><w:tcW w:w="%d" w:type="dxa"/>' % w
         if gridSpan != 0:
             tcPr += '<w:gridSpan w:val="%d"/>' % gridSpan
-        tcPr += vMerge + tcBorders_str + '<w:shd w:val="clear" w:color="auto" w:fill="%s"/><w:vAlign w:val="%s"/></w:tcPr>' % (fill, vAlign)
+        tcPr += vMerge + tcBorders_str
+        tcPr += '<w:shd w:val="clear" w:color="auto" w:fill="%s"/>' % (fill)
+        tcPr += '<w:vAlign w:val="%s"/></w:tcPr>' % vAlign
         return tcPr
 
 
@@ -781,7 +788,7 @@ def write_pkg_parts(imgs, body,  none='none', show_page=True, title='', **kwargs
     return pkg_parts0
 
 
-def write_cat(cat, para, pos='9736', spacing=[0, 0]):
+def write_cat(cat, para, pos='12000', spacing=[0, 0]):
     r = Run()
     p = Paragraph()
     hyperlink = HyperLink()
