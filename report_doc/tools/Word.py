@@ -492,6 +492,8 @@ class Table:
 
     def write(self, trs='', ws=[], tblBorders=['top', 'left', 'bottom', 'right'], jc='center', bdColor='auto', **kwargs):
         tblPr = '<w:tblPr><w:tblW w:w="%d" w:type="dxa"/><w:jc w:val="%s"/>' % (sum(ws), jc)
+        if 'ind' in kwargs:
+            tblPr += '<w:tblInd w:w="%d" w:type="dxa"/>' % (int(kwargs['ind'] * 567))
         border_size = 4
         if 'border_size' in kwargs:
             border_size = kwargs['border_size']

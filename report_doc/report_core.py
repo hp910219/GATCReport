@@ -779,25 +779,25 @@ def write_target_tip(title, items):
 
 def write_immun_tip():
     para = p.h4('免疫治疗提示') + con1 + con2
-    para += write_immun_tip1('left') + p.write(p.set(line=2, rule='exact'), r.br())
-    para += write_immun_tip2('left') + con2
+    para += write_immun_tip1('left', ind=0.2) + p.write(p.set(line=2, rule='exact'), r.br())
+    para += write_immun_tip2('left', ind=0.2) + con2
     return para
 
 
-def write_immun(data, jc, h0=900, w=2800):
+def write_immun(data, jc, h0=900, w=2800, ind=0):
     trs2 = write_tr1(data[0]) + write_tr2(data[1])
-    table_str = table.write(trs2, ws=[w], jc=jc, bdColor=blue)
+    table_str = table.write(trs2, ws=[w], jc=jc, bdColor=blue, ind=ind)
     return table_str
 
 
-def write_immun_tip1(jc='center'):
+def write_immun_tip1(jc='center', ind=0):
     data1 = get_immu('MSI')[1:]
-    return write_immun(data1, jc, w=3600)
+    return write_immun(data1, jc, w=3600, ind=ind)
 
 
-def write_immun_tip2(jc='center'):
+def write_immun_tip2(jc='center', ind=0):
     data2 = get_immu('TMB')[1:]
-    return write_immun(data2, jc, w=3200)
+    return write_immun(data2, jc, w=3200, ind=ind)
 
 
 def write_evidence4(index):
@@ -881,7 +881,7 @@ def write_gene_list3(genes, width=9000):
     col = 5
     ws = [width / col] * col
     if len(genes) < col:
-        genes += [''] * (col - len(genes))
+        ws = [width/col] * len(genes)
     row = int(math.ceil(float(len(genes)) / col))
     for k in range(row):
         tcs = ''
@@ -890,15 +890,12 @@ def write_gene_list3(genes, width=9000):
             this_index = k * col + j
             if this_index < len(genes):
                 item = genes[this_index]
-                try:
-                    gene = item['gene']
-                    para = p.write(pPr, r.text('%s %s(%s)' % (gene, item['rs'], item['genotype']), size))
-                    para += p.write(pPr, r.text(item['summary'], size))
-                    tcs += tc.write(para, tc.set(w=ws[k], fill=fill, color=white, tcBorders=borders))
-                except:
-                    tcs += tc.write(p.write(pPr), tc.set(w=ws[k], fill=white, color=white, tcBorders=[]))
+                gene = item['gene']
+                para = p.write(pPr, r.text('%s %s(%s)' % (gene, item['rs'], item['genotype']), size))
+                para += p.write(pPr, r.text(item['summary'], size))
+                tcs += tc.write(para, tc.set(w=ws[k], fill=fill, color=white, tcBorders=borders))
         trs2 += tr.write(tcs)
-    table_str = table.write(trs2, ws=ws, bdColor=blue, tblBorders=[], border_size=8)
+    table_str = table.write(trs2, ws=ws, bdColor=blue, tblBorders=[], border_size=8, jc='left', ind=1.23)
     return table_str
 
 
