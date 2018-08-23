@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python
 # Create Date 2017/9/29 0029
-
+import os
 import json
 import xlrd
 import csv
@@ -19,7 +19,10 @@ class File:
         self.__description__ = '文件相关， 包括读文件，写文件， 下载文件'
 
     def read(self, file_name, sheet_name='', read_type='r', dict_name='', to_json=True, **kwargs):
-        url = base_dir + "/" + dict_name + "/" + file_name
+        if os.path.exists(dict_name + "/" + file_name):
+            url = dict_name + "/" + file_name
+        else:
+            url = base_dir + "/" + dict_name + "/" + file_name
         file_type = file_name.split('.')[-1]
         if file_type in ['xlsx', 'xls']:
             data = xlrd.open_workbook(url)
