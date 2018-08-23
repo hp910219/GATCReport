@@ -2,12 +2,12 @@
 # !/usr/bin/python
 # Create Date 2017/9/29 0029
 
-import os
 import json
 import xlrd
 import csv
+from config import base_dir
 __author__ = 'huohuo'
-base_dir = os.getcwd()
+
 # base_dir = 'D:\\pythonproject\\report'
 if __name__ == "__main__":
     pass

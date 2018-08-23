@@ -6,7 +6,7 @@ import time
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
+from config import data_dir
 from report_doc.tools.File import File
 from report_doc.tools.Word import uniq_list, bm_index0
 from report_doc.tools.get_real_level import FetchRealLevel
@@ -25,27 +25,13 @@ borders = ['top', 'right', 'bottom', 'left']
 
 real_level = FetchRealLevel()
 my_file = File()
-immune_suggestion = my_file.read(r'immune_suggestion.txt', dict_name=r'data', sheet_name='immune_suggestion')
+
+# 静态的数据：
 chem_durg_list = my_file.read('base/chem_durg_list.tsv', dict_name='data')  # category	drug	cancer
 variant_knowledge = my_file.read(u'base/化疗多态位点证据列表.xlsx', dict_name='data', sheet_name='Sheet1')
-rs_geno = my_file.read('data/rs.geno.update.tsv', to_json=False)
-hla = my_file.read('hla.tsv', dict_name='data')
-variant_anno1 = my_file.read('variant_anno.maf', dict_name='data', sep='\t', to_json=False)
-# print variant_anno1[0]
-# item1['Chromosome'], item1['Start_Position']
 gene_list12 = my_file.read('base/1.2gene_list.json', dict_name='data')
 gene_list53 = my_file.read('base/5.3gene_list.xlsx', dict_name='data', sheet_name='Sheet2')
-neoantigen = my_file.read('neoantigen.tsv', dict_name='data')
-cnv_copynumber = my_file.read('cnv.copynumber.table.tsv', dict_name='data/cnv')
-quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name='data')
-evidence_oncokb = my_file.read('evidence/OncoKB_evidence.csv', dict_name='data')
-evidence_cgi = my_file.read('evidence/CGI_evidence.csv', dict_name='data')
-evidence_civic = my_file.read('evidence/civic_evidence.csv', dict_name='data')
-signature_etiology = my_file.read('signature_etiology.csv', dict_name='data/signature')
 gene_MoA = my_file.read('base/gene_MoA.tsv', dict_name='data')
-recent_study = my_file.read('recent_study', dict_name='data')
-CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name='data')
-
 evidence4 = []
 for index in range(5):
     evidence_path = 'data/base/4.%d.evidence.txt' % index
@@ -54,6 +40,23 @@ for index in range(5):
     else:
         evidence = []
     evidence4.append(evidence)
+
+# 动态的数据：
+immune_suggestion = my_file.read(r'immune_suggestion.txt', dict_name=data_dir)
+rs_geno = my_file.read('rs.geno.update.tsv', to_json=False, dict_name=data_dir)
+hla = my_file.read('hla.tsv', dict_name=data_dir)
+variant_anno1 = my_file.read('variant_anno.maf', dict_name=data_dir, sep='\t', to_json=False)
+neoantigen = my_file.read('neoantigen.tsv', dict_name=data_dir)
+cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir)
+quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name=data_dir)
+evidence_oncokb = my_file.read('evidence/OncoKB_evidence.csv', dict_name=data_dir)
+evidence_cgi = my_file.read('evidence/CGI_evidence.csv', dict_name=data_dir)
+evidence_civic = my_file.read('evidence/civic_evidence.csv', dict_name=data_dir)
+signature_etiology = my_file.read('signature/signature_etiology.csv', dict_name=data_dir)
+recent_study = my_file.read('recent_study', dict_name=data_dir)
+CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
+
+
 
 
 def test_chinese(contents):
@@ -291,7 +294,7 @@ def cmp_target_tip(x, y):
 
 
 def get_target_tip(items, items2, diagnose, db_name):
-    db_items = my_file.read('%s_evidence.csv' % db_name, dict_name='data/evidence')
+    db_items = my_file.read('evidence/%s_evidence.csv' % db_name, dict_name=data_dir)
     i = 0
     for db_item in db_items:
         # 各数据库证据级别对应关系 https://mubu.com/doc/3LSWugo_cE

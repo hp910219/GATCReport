@@ -1,22 +1,32 @@
 # -*- coding:UTF-8 -*-
 import os
 import sys
-from flask import Flask, send_from_directory, render_template
+from flask import Flask, send_from_directory, render_template, request, jsonify
 from report_doc.report_core import get_report_core
-from report_doc.tools.File import File, base_dir
+from report_doc.tools.File import File
+from config import base_dir
 reload(sys)
 sys.setdefaultencoding('utf-8')
 out_file = 'TCRseq_results.xlsx'
 dir_name = base_dir
 result_dir = os.path.join(dir_name, 'results')
+template_folder = os.path.join(dir_name, 'templates')
+print base_dir
 
-app = Flask(__name__, template_folder='/templates')
+app = Flask(__name__, template_folder=template_folder)
 my_file = File()
 
 
-@app.route('/<html_path>/')
-def render_html(html_path):
-    return render_template(html_path + '.html')
+@app.route('/upload/', methods=['POST'])
+def upload():
+    print request.data
+    print request.json
+    return jsonify({'upload': 'dsfg'})
+
+
+@app.route('/upload_file/')
+def render_html():
+    return render_template('upload_file.html')
 
 
 @app.route('/')
@@ -37,5 +47,6 @@ def download_docx():
 if __name__ == '__main__':
     report_title_cn = u'多组学临床检测报告'
     report_title_en = 'AIomics1'
-    # print 'http://127.0.0.1:4563/upload_file/'
-    app.run(port=1234, debug=False)
+    port = 1234
+    print 'http://127.0.0.1:%d/upload_file/' % port
+    app.run(port=port, debug=False)

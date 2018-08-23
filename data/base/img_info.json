@@ -334,5 +334,12 @@
         "rId": "tip0", 
         "url": "\\images\\tip0.png", 
         "w": 1.52
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\static\\images\\arrow-upload-icon.png", 
+        "h": 2.88, 
+        "rId": "arrow-upload-icon", 
+        "url": "\\static\\images\\arrow-upload-icon.png", 
+        "w": 2.88
     }
 ]
