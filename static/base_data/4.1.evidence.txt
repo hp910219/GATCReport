@@ -1,0 +1,27 @@
+DDR基因（除染色体重塑相关基因PBRM1、ARID1、BRD7和POLE4、POLD1之外的34个基因）明确致病突变泌尿上皮癌患者PD1抗体治疗反应率为80%
+
+Sixty patients with urothelial cancer enrolled in prospective trials of anti-PD-1/PD-L1 antibodies metinclusion criteria.Any DDR and known or likely deleterious DDR mutations were identified in 28 (47%) and 15 (25%) patients, respectively. The presence of any DDR alteration was associated with a higher response rate (67.9% v 18.8%; P , .001). A higher response rate was observed in patients whose tumors harbored known or likely deleterious DDR alterations (80%) compared with DDR alterations of unknown significance (54%) and in those whose tumors were wild-type for DDR genes (19%; P , .001).（Teo M Y et al.[J]. Journal of Clinical Oncology, 2018: JCO）
+
+肾癌患者PD1抗体治疗临床有效的患者具有更高的PBRM1突变率
+
+ To identify genomic alterations in ccRCC that correlate with response to anti-PD-1 monotherapy, we performed whole exome sequencing of metastatic ccRCC from 35 patients. We found that clinical benefit was associated with loss-of-function mutations in the PBRM1 gene (p=0.012), which encodes a subunit of a SWI/SNF chromatin remodeling complex (the PBAF subtype). We confirmed this finding in an independent validation cohort of 63 ccRCC patients treated with PD-(L)1 blockade therapy alone or in combination with anti-CTLA-4 therapies (p=0.0071). （Miao D,  et al. [J]. Science, 2018: eaan5951.）
+
+黑素素瘤小鼠模型中证明PBAF复合物相关基因（PBRM1、ARID2和BRD7）的失活与T细胞杀伤作用相关
+
+Many human cancers are resistant to immunotherapy for reasons that are poorly understood. We used a genome-scale CRISPR/Cas9 screen to identify mechanisms of tumor cell resistance to killing by cytotoxic T cells, the central effectors of anti-tumor immunity. Inactivation of >100 genes sensitized mouse B16F10 melanoma cells to killing by T cells, including Pbrm1, Arid2 and Brd7, which encode components of the PBAF form of the SWI/SNF chromatin remodeling complex. Loss of PBAF function increased tumor cell sensitivity to interferon-γ, resulting in enhanced secretion of chemokines that recruit effector T cells. Treatment-resistant tumors became responsive to immunotherapy when Pbrm1 was inactivated. In many human cancers, expression of PBRM1 and ARID2 inversely correlated with expression of T cell cytotoxicity genes, and Pbrm1-deficient murine melanomas were more strongly infiltrated by cytotoxic T cells.（Pan D, Jiang P, et al. [J]. Science, 2018: eaao1710.）
+
+卵巢癌动物模型中证明染色体重塑相关基因ARID1A失活提升免疫检查位点抗体释放的治疗性抗肿瘤免疫原性
+
+ARID1A inactivation compromised MMR and increased mutagenesis. ARID1A deficiency correlated with microsatellite instability genomic signature and a predominant C> T mutation pattern and increased mutation load across multiple human cancer types. Tumors formed by an ARID1A-deficient ovarian cancer cell line in syngeneic mice displayed increased mutation load, elevated numbers of tumor-infiltrating lymphocytes, and PD-L1expression. Notably, treatment with anti-PD-L1 antibody reduced tumor burden and prolonged survival of mice bearing ARID1A-deficient but not ARID1A-wild-type ovarian tumors.Together, these results suggest ARID1A deficiency contributes to impaired MMR and mutator phenotype in cancer, and may cooperate with immune checkpoint blockade therapy.（Shen J,et al. Nat Med. 2018）
+
+一例POLE胚系变异的脑胶质瘤患者对PD1抗体治疗影像学客观反应的案例报道
+
+Case report of a patient with glioblastoma multiforme and POLE germline mutation. The patient was treated with pembrolizumab and lymphocyte infiltration was noted after resection of a spinal metastasis. An objective radiographic response was noted in the intracranial lesion. A high neoantigen load was identified.（Johanns et al., 2016, Cancer Discov）
+
+一例POLE突变的子宫内膜癌患者对PD1治疗对PD1抗体治疗超预期反应（维持14个月）的案例报道
+
+Case report of a patient with endometrial cancer and exceptional response to pembrolizumab (maintained at 14 months). POLE mutations V411L (exonuclease domain) and R114* were identified in the primary tumor as well as a resected lymph node metastasis. The tumor harbored a high mutational load as assessed by panel sequencing. Analysis of TCGA RNA-seq data revealed an association between POLE mutations and high immune marker expression.（Mehnert et al., 2016, J. Clin. Invest.）
+
+34例NSCLC患者回顾性研究发现POLE4、POLD1突变与PD1抗体治疗临床获益相关
+
+In a retrospective study of 34 non-small cell lung cancer patients, four lung adenocarcinoma patients with POLE4 or POLD1 deleterious mutation (as determined by Polyphen or SIFT), treated with pembrolizumab monotherapy, were associated with a durable clinical benefit; POLE4 or POLD1 deleterious mutation were not identified in patients who did not experience a durable clinical benefit.（RIzvi et al., 2015, Science）

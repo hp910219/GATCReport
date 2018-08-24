@@ -1,0 +1,352 @@
+[
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\hotspot\\EGFR_distribution.jpg", 
+        "h": 7.28, 
+        "rId": "EGFR_distribution", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\hotspot\\EGFR_distribution.jpg", 
+        "w": 18.16
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\hotspot\\EGFR_p.E747_R747delLRE.png", 
+        "h": 3.0, 
+        "rId": "EGFR_p.E747_R747delLRE", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\hotspot\\EGFR_p.E747_R747delLRE.png", 
+        "w": 19.56
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\hotspot\\EGFR_struct.png", 
+        "h": 3.0, 
+        "rId": "EGFR_struct", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\hotspot\\EGFR_struct.png", 
+        "w": 19.56
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\msi.png", 
+        "h": 34.56, 
+        "rId": "msi", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\msi.png", 
+        "w": 69.12
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04010.MAPK signaling pathway.png", 
+        "h": 41.68, 
+        "rId": "hsa04010.MAPK_signaling_pathway", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04010.MAPK signaling pathway.png", 
+        "w": 53.68
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04150.mTOR signaling pathway.png", 
+        "h": 27.84, 
+        "rId": "hsa04150.mTOR_signaling_pathway", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04150.mTOR signaling pathway.png", 
+        "w": 52.64
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04151.PI3K-Akt signaling pathway.png", 
+        "h": 38.800000000000004, 
+        "rId": "hsa04151.PI3K-Akt_signaling_pathway", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04151.PI3K-Akt signaling pathway.png", 
+        "w": 50.480000000000004
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04210.Apoptosis.png", 
+        "h": 41.800000000000004, 
+        "rId": "hsa04210.Apoptosis", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04210.Apoptosis.png", 
+        "w": 63.32
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04310.Wnt signaling pathway.png", 
+        "h": 33.32, 
+        "rId": "hsa04310.Wnt_signaling_pathway", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04310.Wnt signaling pathway.png", 
+        "w": 45.160000000000004
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04340.Hedgehog signaling pathway.png", 
+        "h": 35.08, 
+        "rId": "hsa04340.Hedgehog_signaling_pathway", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04340.Hedgehog signaling pathway.png", 
+        "w": 38.04
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04350.TGF-beta signaling pathway.png", 
+        "h": 31.240000000000002, 
+        "rId": "hsa04350.TGF-beta_signaling_pathway", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04350.TGF-beta signaling pathway.png", 
+        "w": 43.04
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04630.Jak-STAT signaling pathway.png", 
+        "h": 19.48, 
+        "rId": "hsa04630.Jak-STAT_signaling_pathway", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\pathway\\hsa04630.Jak-STAT signaling pathway.png", 
+        "w": 49.28
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\signature\\signature.png", 
+        "h": 192.0, 
+        "rId": "signature", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\signature\\signature.png", 
+        "w": 192.0
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\data\\signature\\signature_pie.png", 
+        "h": 96.0, 
+        "rId": "signature_pie", 
+        "url": "D:\\pythonproject\\GATCReport\\data\\signature\\signature_pie.png", 
+        "w": 192.0
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\cover1.png", 
+        "h": 5.04, 
+        "rId": "cover1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\cover1.png", 
+        "w": 8.32
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\cover2.png", 
+        "h": 8.16, 
+        "rId": "cover2", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\cover2.png", 
+        "w": 58.4
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\logo.png", 
+        "h": 3.44, 
+        "rId": "logo", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\logo.png", 
+        "w": 2.04
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part1\\1.3.3.png", 
+        "h": 12.36, 
+        "rId": "1.3.3", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part1\\1.3.3.png", 
+        "w": 25.8
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part1\\1.3.4.1.png", 
+        "h": 12.96, 
+        "rId": "1.3.4.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part1\\1.3.4.1.png", 
+        "w": 21.32
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part1\\1.3.4.2.png", 
+        "h": 11.4, 
+        "rId": "1.3.4.2", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part1\\1.3.4.2.png", 
+        "w": 20.8
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part1\\cgi.png", 
+        "h": 1.68, 
+        "rId": "cgi", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part1\\cgi.png", 
+        "w": 8.68
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part1\\civic.png", 
+        "h": 2.72, 
+        "rId": "civic", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part1\\civic.png", 
+        "w": 6.4
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part1\\oncokb.png", 
+        "h": 2.64, 
+        "rId": "oncokb", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part1\\oncokb.png", 
+        "w": 9.36
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part1\\pharmGKB.png", 
+        "h": 1.0, 
+        "rId": "pharmGKB", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part1\\pharmGKB.png", 
+        "w": 4.2
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.2.png", 
+        "h": 16.32, 
+        "rId": "2.4.2", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.2.png", 
+        "w": 21.8
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.3.1.png", 
+        "h": 18.92, 
+        "rId": "2.4.3.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.3.1.png", 
+        "w": 24.72
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.3.2.png", 
+        "h": 12.4, 
+        "rId": "2.4.3.2", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.3.2.png", 
+        "w": 10.200000000000001
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.5.1.png", 
+        "h": 50.08, 
+        "rId": "2.4.5.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.5.1.png", 
+        "w": 30.64
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.5.2.png", 
+        "h": 59.32, 
+        "rId": "2.4.5.2", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part2\\2.4.5.2.png", 
+        "w": 84.08
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part2\\location.png", 
+        "h": 2.52, 
+        "rId": "location", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part2\\location.png", 
+        "w": 1.84
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part2\\phone.png", 
+        "h": 2.84, 
+        "rId": "phone", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part2\\phone.png", 
+        "w": 2.44
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part2\\website.png", 
+        "h": 2.88, 
+        "rId": "website", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part2\\website.png", 
+        "w": 2.6
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part4\\4.5.1signature.png", 
+        "h": 64.0, 
+        "rId": "4.5.1signature", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part4\\4.5.1signature.png", 
+        "w": 192.0
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part4\\4.5.2signature_pie.png", 
+        "h": 70.4, 
+        "rId": "4.5.2signature_pie", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part4\\4.5.2signature_pie.png", 
+        "w": 74.4
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.1.1.jpeg", 
+        "h": 76.4, 
+        "rId": "5.3.1.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.1.1.jpeg", 
+        "w": 62.24
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.10.1.jpeg", 
+        "h": 78.32000000000001, 
+        "rId": "5.3.10.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.10.1.jpeg", 
+        "w": 62.36
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.11.1.jpeg", 
+        "h": 57.0, 
+        "rId": "5.3.11.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.11.1.jpeg", 
+        "w": 62.24
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.2.1.jpeg", 
+        "h": 156.72, 
+        "rId": "5.3.2.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.2.1.jpeg", 
+        "w": 124.56
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.3.1.jpeg", 
+        "h": 62.32, 
+        "rId": "5.3.3.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.3.1.jpeg", 
+        "w": 62.28
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.4.1.jpeg", 
+        "h": 52.120000000000005, 
+        "rId": "5.3.4.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.4.1.jpeg", 
+        "w": 62.2
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.5.1.jpeg", 
+        "h": 79.12, 
+        "rId": "5.3.5.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.5.1.jpeg", 
+        "w": 124.24000000000001
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.6.1.jpeg", 
+        "h": 142.92000000000002, 
+        "rId": "5.3.6.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.6.1.jpeg", 
+        "w": 182.68
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.7.1.jpeg", 
+        "h": 170.52, 
+        "rId": "5.3.7.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.7.1.jpeg", 
+        "w": 171.20000000000002
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.8.1.jpeg", 
+        "h": 63.6, 
+        "rId": "5.3.8.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.8.1.jpeg", 
+        "w": 126.72
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.9.1.jpeg", 
+        "h": 80.04, 
+        "rId": "5.3.9.1", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\part5\\5.3.9.1.jpeg", 
+        "w": 125.32000000000001
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\pdf\\cnvanno_cicos.png", 
+        "h": 25.92, 
+        "rId": "cnvanno_cicos", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\pdf\\cnvanno_cicos.png", 
+        "w": 25.92
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\pdf\\tmb.png", 
+        "h": 20.16, 
+        "rId": "tmb", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\pdf\\tmb.png", 
+        "w": 20.16
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\protocol.png", 
+        "h": 65.88, 
+        "rId": "protocol", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\protocol.png", 
+        "w": 99.36
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\images\\tip0.png", 
+        "h": 2.4, 
+        "rId": "tip0", 
+        "url": "D:\\pythonproject\\GATCReport\\images\\tip0.png", 
+        "w": 1.52
+    }, 
+    {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\static\\images\\arrow-upload-icon.png", 
+        "h": 2.88, 
+        "rId": "arrow-upload-icon", 
+        "url": "D:\\pythonproject\\GATCReport\\static\\images\\arrow-upload-icon.png", 
+        "w": 2.88
+    }
+]

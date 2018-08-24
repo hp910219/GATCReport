@@ -6,14 +6,13 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-from report_doc.tools.File import base_dir
-from report_doc.tools.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink
-from report_doc.tools.Word import write_pkg_parts, write_cat, get_img_info
+from jy_word.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink, Relationship
+from jy_word.Word import write_cat, write_pkg_parts, get_img
 from report_doc.report_data import *
 
-my_file = File()
+my_file = File(base_dir)
 
-r = Run()
+r = Run(img_info_path)
 hyperlink = HyperLink()
 r.family_en = 'Times New Roman'
 p = Paragraph()
@@ -52,7 +51,8 @@ def get_report_core(title_cn, title_en, data):
     img_info = get_img_info(base_dir, is_refresh=True)
     body = write_body(title_cn, title_en, data)
     titles = get_page_titles()
-    pkgs1 = write_pkg_parts(img_info, body, title=titles)
+    pages = write_pages(titles)
+    pkgs1 = write_pkg_parts(img_info, body, other=pages)
     return pkgs1
 
 
@@ -235,16 +235,16 @@ def write_chapter2(index):
     para += p.h4('5、新型免疫治疗手段研究进展')
     para += p.write(para_set, r.text('免疫治疗是癌症治疗有史以来最激动人心的治疗领域，甚至有的医生认为，癌症免疫治疗让人类真正真正看到了癌症被治愈的希望。随着PD1抗体在各癌种中的攻城略地，新型的免疫治疗手段也展现出未来的王者之相。'))
     para += p.h5('（1）个性化癌症治疗疫苗')
+    para += p.write(para_set, r.text('癌症疫苗，这种通过主动免疫去扩大肿瘤特异性T细胞反应的治疗方式，一直被认为是癌症免疫治疗的有效手段。尽管大家能够清晰看到癌症疫苗的合理性，但是，过去在临床方面的尝试都是不成功的。不同患者之间的肿瘤抗原具有强烈的多样性，因此，个性化癌症疫苗的发展是必要的。随着二代测序和生物信息工具的逐步完善，癌症疫苗的核心环节，新抗原预测逐渐成熟，该技术在最近的研究中取得突破性的进展，且由于安全性较好，是最值得跟进参与的新型癌症免疫治疗手段之一。'))
     para += p.write(r.picture(cy=12, rId='2.4.5.1', align=['center', '']))
     para += p.write(para_set) * 21
-    para += p.write(para_set, r.text('癌症疫苗，这种通过主动免疫去扩大肿瘤特异性T细胞反应的治疗方式，一直被认为是癌症免疫治疗的有效手段。尽管大家能够清晰看到癌症疫苗的合理性，但是，过去在临床方面的尝试都是不成功的。不同患者之间的肿瘤抗原具有强烈的多样性，因此，个性化癌症疫苗的发展是必要的。随着二代测序和生物信息工具的逐步完善，癌症疫苗的核心环节，新抗原预测逐渐成熟，该技术在最近的研究中取得突破性的进展，且由于安全性较好，是最值得跟进参与的新型癌症免疫治疗手段之一。'))
     para += p.h5('（2）免疫检查位点抑')
     para += p.write(para_set, r.text('肿瘤免疫检查位点不仅仅PD1和CTLA-4，还有至少几十种免疫检查位点。目前该领域，IDO抑制剂、LAG3抑制剂在早期临床试验中显示出相当好的疗效，与PD1联合用药的情况下，部分结果甚至成倍提升有效率，其中IDO抑制剂，已经进入三期临床临床试验（注：IDO抑制剂Epacadostat与Keytruda联用的关键三期临床试验ECHO-301失败）。'))
     para += p.h5('（3）CAR-T和TCR-T治疗')
     para += p.write(para_set, r.text('CAR-T和TCR-T都属于细胞治疗的范畴，主要通过对患者自身的T细胞进行工程化改造，让其能够发挥肿瘤细胞的杀灭功能。CAR-T，又称嵌合抗原受体T细胞治疗，是通过人工合成的受体使患者自身的T细胞能够进行肿瘤细胞识别，进而发挥肿瘤细胞杀伤效果。由于CAR-T细胞在实体瘤中的浸润能力相对较差，目前临床主要应用于血液肿瘤中。随着技术进展，如通过提升CAR-T中对增强T细胞浸润能力相关基因的表达，未来应该也能够在实体瘤治疗中发挥重要作用。TCR-T，又称T细胞识别受体（TCR）工程化改造T细胞治疗，是通过将对特定抗原亲和力强的TCR移植到患者自身的T细胞上使患者自身的T细胞发挥肿瘤细胞杀伤效果。其中特异性TCR-T，是指针对患者特异的新抗原进行设计的TCR-T治疗方式，是未来最有价值的癌症治疗手段，相比通过个性化疫苗诱导形成肿瘤杀伤T细胞，从原理上来说，特异性TCR-T治疗属于更靠后的免疫周期中的环节，可能具有更好的治疗效果。'))
     para += p.h5('（4）溶瘤病毒')
     para += p.write(para_set, r.text('溶瘤病毒是一群倾向于感染和杀伤肿瘤细胞的病毒。溶瘤病毒治疗是指将本身对身体伤害较低的溶瘤病毒经工程化改造减毒处理和治疗效果提升后，感染肿瘤患者的治疗方式。这种治疗思路和方法，是多年前发现和临床实践过的方法，且2005年中国CFDA批准了一种溶瘤腺病毒。但是，单药治疗效果有限，并未引起广泛关注。随着PD1抗体治疗的普及，临床研究发现，溶瘤病毒联合PD1治疗能够大幅度提高PD1抗体治疗的有效率，2015年，溶瘤病毒治疗T-Vec批准用于黑色素瘤。溶瘤病毒在提高PDL1表达、逆转肿瘤相关免疫抑制等多个层面，均能够与PD1抗体治疗形成非常好的协同效果。'))
-    para += p.write(r.picture(cy=10, rId='2.4.5.2', align=['center', ''], posOffset=[0, 2.8]))
+    para += p.write(r.picture(cy=10, rId='2.4.5.2', align=['center', ''], posOffset=[0, 1]))
     para += p.write(p.set(sect_pr=set_page('A4', header='rIdHeader%d' % index)))
     return para
 
@@ -310,6 +310,8 @@ def write_chapter5(index):
     para += p.write(p.set(ind=['firstLine', 2]), r.text('本检测报告共涉及两个样本，肿瘤组织样本和外周血。本次检测使用安捷伦捕获外显子捕获探针Sureslect Human All Exon V6，目标测序数据量为肿瘤组织样本80G，外周血样本样本10G，实际数据量为肿瘤组织90.1G，外周血样本12.6G。经分析，肿瘤组织的预测肿瘤细胞纯度为81.93%，经初步分析共获得体细胞SNV 2257个，体细胞Indel303个，蛋白质编码区域突变838个，可能影响导致拷贝数变化的基因区域207个。'))
     para += p.write(p.set(jc='right', spacing=[3, 0]), r.text(format_time(frm="%Y-%m-%d")))
     para += p.write(p.set(sect_pr=set_page()))
+    para += p.write(r.picture(21, rId='protocol', posOffset=[0, 1], align=['center', '']))
+    para += p.write(p.set(sect_pr=set_page(header='rIdHeader8', footer='rIdFooter1')))
     return para
 
 
@@ -334,11 +336,13 @@ def write_backcover():
         run = ''
         for info in infos:
             y = 0.2
+            before = 0.5
             if i == 1:
                 y = 0.26
+                before = 0.3
             run += r.picture(cy=0.6, rId=info['id'], posOffset=[info['posOffset'], y])
             run += r.text(info['text'], 9, space=True)
-        para += p.write(p.set(spacing=[0.5, 0]), run)
+        para += p.write(p.set(spacing=[before, 0]), run)
     para += set_page(header='rIdHeader8', footer='rIdFooter1')
     return para
 
@@ -1085,3 +1089,22 @@ def write_tr2(data, jc='center', w=4000):
         para += p.write(pPr, r.text(t, size=10, color=blue))
     tcs2 = tc.write(para, tc.set(w=w, fill=white, color=blue))
     return tr.write(tcs2)
+
+
+def write_pages(title):
+    relationship = Relationship()
+    pkg_parts, relationshipss = '', ''
+    p = Paragraph()
+    r = Run(img_info_path)
+    title += ['']
+    img = get_img(img_info_path, 'logo')
+    for i in range(len(title)):
+        h_index = 'header%d' % (i + 1)
+        if i == len(title) - 1:
+            paras, rel = '', ''
+        else:
+            paras = p.write(p.set(pStyle='a7'), r.text(title[i], 9, color='00ADEF') + r.picture(img['w'] * 0.4, img['h'] * 0.4, '1', posOffset=[-1, -0.66]))
+            rel = relationship.write_rel('1', target_name='media/logo.png')
+        pkg_parts += relationship.about_page(h_index, paras, page_type='header', rels=rel)
+        relationshipss += relationship.write_rel(h_index, 'header')
+    return pkg_parts, relationshipss

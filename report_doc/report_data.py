@@ -6,10 +6,11 @@ import time
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
-from config import data_dir
-from report_doc.tools.File import File
-from report_doc.tools.Word import uniq_list, bm_index0
-from report_doc.tools.get_real_level import FetchRealLevel
+from jy_word.Word import bm_index0, crop_img, get_imgs, uniq_list
+from jy_word.File import File
+from jy_word.pdf2img import pdf2img
+from config import img_info_path, pdf_path, base_dir, data_dir
+from report_doc.get_real_level import FetchRealLevel
 
 gray = 'E9E9E9'
 gray_lighter = 'EEEEEE'
@@ -24,17 +25,17 @@ borders = ['top', 'right', 'bottom', 'left']
 # 因为数据库的权威性  oncokb>civic>cgi
 
 real_level = FetchRealLevel()
-my_file = File()
+my_file = File(base_dir)
 
 # 静态的数据：
-chem_durg_list = my_file.read('base/chem_durg_list.tsv', dict_name='data')  # category	drug	cancer
-variant_knowledge = my_file.read(u'base/化疗多态位点证据列表.xlsx', dict_name='data', sheet_name='Sheet1')
-gene_list12 = my_file.read('base/1.2gene_list.json', dict_name='data')
-gene_list53 = my_file.read('base/5.3gene_list.xlsx', dict_name='data', sheet_name='Sheet2')
-gene_MoA = my_file.read('base/gene_MoA.tsv', dict_name='data')
+chem_durg_list = my_file.read('static/base_data/chem_durg_list.tsv')  # category	drug	cancer
+variant_knowledge = my_file.read(u'static/base_data/化疗多态位点证据列表.xlsx', sheet_name='Sheet1')
+gene_list12 = my_file.read('static/base_data/1.2gene_list.json')
+gene_list53 = my_file.read('static/base_data/5.3gene_list.xlsx', sheet_name='Sheet2')
+gene_MoA = my_file.read('static/base_data/gene_MoA.tsv')
 evidence4 = []
 for index in range(5):
-    evidence_path = 'data/base/4.%d.evidence.txt' % index
+    evidence_path = 'static/base_data/4.%d.evidence.txt' % index
     if os.path.exists(evidence_path):
         evidence = my_file.read(evidence_path, dict_name='').split('\n')
     else:
@@ -55,8 +56,6 @@ evidence_civic = my_file.read('evidence/civic_evidence.csv', dict_name=data_dir)
 signature_etiology = my_file.read('signature/signature_etiology.csv', dict_name=data_dir)
 recent_study = my_file.read('recent_study', dict_name=data_dir)
 CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
-
-
 
 
 def test_chinese(contents):
@@ -170,6 +169,21 @@ def get_page_titles():
             n -= 8
         titles.append('%s%s%s' % (cats[i]['title'], ' ' * n,  title_en))
     return titles
+
+
+def get_img_info(path, is_refresh=False):
+    crop_img(r'%s\signature\signature.png' % data_dir, r'%s\images\part4\4.5.1signature.png' % base_dir)
+    crop_img(r'%s\signature\signature_pie.png' % data_dir, r'%s\images\part4\4.5.2signature_pie.png' % base_dir)
+    pdf2img(r'%s\tmb.pdf' % data_dir, out_path=r'%s\tmb.png' % pdf_path)
+    pdf2img(r'%s\cnv\cnvanno_cicos.pdf' % data_dir, out_path=r'%s\cnvanno_cicos.png' % pdf_path)
+
+    if is_refresh:
+        img_info = get_imgs(path)
+        img_info = uniq_list(img_info)
+        my_file.write(img_info_path, img_info)
+    else:
+        img_info = my_file.read(img_info_path)
+    return img_info
 
 
 def get_immu(source):

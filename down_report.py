@@ -3,8 +3,8 @@ import os
 import sys
 from flask import Flask, send_from_directory, render_template, request, jsonify
 from report_doc.report_core import get_report_core
-from report_doc.tools.File import File
-from config import base_dir
+from jy_word.File import File
+from config import base_dir, data_dir
 reload(sys)
 sys.setdefaultencoding('utf-8')
 out_file = 'TCRseq_results.xlsx'
@@ -14,7 +14,7 @@ template_folder = os.path.join(dir_name, 'templates')
 print base_dir
 
 app = Flask(__name__, template_folder=template_folder)
-my_file = File()
+my_file = File(base_dir)
 
 
 @app.route('/upload/', methods=['POST'])
@@ -31,7 +31,7 @@ def render_html():
 
 @app.route('/')
 def download_docx():
-    patient_infos = my_file.read('patient_info.tsv', dict_name='data')
+    patient_infos = my_file.read('patient_info.tsv', dict_name=data_dir)
     patient_info = patient_infos[0]
     user_name = patient_info['name']
     file_name = u'results/%s检测报告.doc' % user_name
@@ -48,5 +48,5 @@ if __name__ == '__main__':
     report_title_cn = u'多组学临床检测报告'
     report_title_en = 'AIomics1'
     port = 1234
-    print 'http://127.0.0.1:%d/upload_file/' % port
+    # print 'http://127.0.0.1:%d/upload_file/' % port
     app.run(port=port, debug=False)

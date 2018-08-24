@@ -4,8 +4,10 @@
 __author__ = 'huohuo'
 import os
 
-base_dir = os.getcwd()
-data_dir = 'data'
+base_dir = os.path.dirname(__file__)
+img_info_path = 'static/base_data/img_info.json'
+data_dir = os.path.join(base_dir, 'data')
+pdf_path = os.path.join(base_dir, 'images', 'pdf')
 
 if __name__ == "__main__":
     pass

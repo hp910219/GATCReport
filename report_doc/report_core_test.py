@@ -1,14 +1,12 @@
 #! /usr/bin/env python
 # coding: utf-8
 __author__ = 'huo'
-import math
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-from report_doc.tools.File import base_dir
-from report_doc.tools.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink
-from report_doc.tools.Word import write_pkg_parts, write_cat, get_img_info
+from report_doc.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink
+from report_doc.Word import write_pkg_parts
 from report_doc.report_data import *
 
 my_file = File()
