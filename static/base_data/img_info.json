@@ -343,6 +343,13 @@
         "w": 1.52
     }, 
     {
+        "absolute_url": "D:\\pythonproject\\GATCReport\\report_doc\\test\\ex.png", 
+        "h": 59.32, 
+        "rId": "ex", 
+        "url": "D:\\pythonproject\\GATCReport\\report_doc\\test\\ex.png", 
+        "w": 84.08
+    }, 
+    {
         "absolute_url": "D:\\pythonproject\\GATCReport\\static\\images\\arrow-upload-icon.png", 
         "h": 2.88, 
         "rId": "arrow-upload-icon", 

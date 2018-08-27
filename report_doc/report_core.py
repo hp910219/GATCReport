@@ -782,9 +782,14 @@ def write_target_tip(title, items):
 
 
 def write_immun_tip():
-    para = p.h4('免疫治疗提示') + con1 + con2
-    para += write_immun_tip1('left', ind=0.2) + p.write(p.set(line=2, rule='exact'), r.br())
-    para += write_immun_tip2('left', ind=0.2) + con2
+    para = p.h4('免疫治疗提示')
+    data1 = get_immu('MSI')[1:]
+    trs1 = write_tr1(data1[0]) + write_tr2(data1[1])
+    para += table.write(trs1, ws=[3600], jc='left', bdColor=blue, ind=0, tblp=True, tblpX=1.8, leftFromText=0.4, rightFromText=0.4)
+    data2 = get_immu('TMB')[1:]
+    trs2 = write_tr1(data2[0]) + write_tr2(data2[1])
+    para += table.write(trs2, ws=[3200], jc='left', bdColor=blue, ind=0, tblp=True, tblpX=9.5, leftFromText=0.4, rightFromText=0.4)
+    para += p.write() * 6
     return para
 
 
@@ -1108,3 +1113,6 @@ def write_pages(title):
         pkg_parts += relationship.about_page(h_index, paras, page_type='header', rels=rel)
         relationshipss += relationship.write_rel(h_index, 'header')
     return pkg_parts, relationshipss
+
+
+
