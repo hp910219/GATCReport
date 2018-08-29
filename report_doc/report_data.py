@@ -44,7 +44,7 @@ for index in range(5):
 
 # 动态的数据：
 immune_suggestion = my_file.read(r'immune_suggestion.txt', dict_name=data_dir)
-rs_geno = my_file.read('rs.geno.update.tsv', to_json=False, dict_name=data_dir)
+rs_geno = my_file.read('rs.geno.update.tsv', to_json=False, dict_name=data_dir)[1:]
 hla = my_file.read('hla.tsv', dict_name=data_dir)
 variant_anno1 = my_file.read('variant_anno.maf', dict_name=data_dir, sep='\t', to_json=False)
 neoantigen = my_file.read('neoantigen.tsv', dict_name=data_dir)
@@ -487,7 +487,10 @@ def get_quantum_cellurity(chr, pos, is_print=False):
         if is_print:
             print item['Start'], pos, item['Chr'].lstrip('chr'), chr, type(pos), type(item['Start']), type(chr)
         if item['Chr'].lstrip('chr') == str(chr) and str(item['Start']) == str(pos):
-            return '%.2f%%' % (float(item['Cellularity']) * 100)
+            f = float(item['Cellularity'])
+            if f > 1:
+                f = 1.0
+            return '%.2f%%' % (f * 100)
     return ''
 
 
