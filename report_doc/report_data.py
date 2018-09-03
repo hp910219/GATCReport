@@ -9,7 +9,7 @@ sys.setdefaultencoding('utf-8')
 from jy_word.Word import bm_index0, crop_img, get_imgs, uniq_list
 from jy_word.File import File
 from jy_word.pdf2img import pdf2img
-from config import img_info_path, pdf_path, base_dir, data_dir
+from config import img_info_path, pdf_path, base_dir, data_dir, images_dir, variant_knowledge_name
 from report_doc.get_real_level import FetchRealLevel
 
 gray = 'E9E9E9'
@@ -29,7 +29,7 @@ my_file = File(base_dir)
 
 # 静态的数据：
 chem_durg_list = my_file.read('static/base_data/chem_durg_list.tsv')  # category	drug	cancer
-variant_knowledge = my_file.read(u'static/base_data/化疗多态位点证据列表.xlsx', sheet_name='Sheet1')
+variant_knowledge = my_file.read(u'static/base_data/%s.xlsx' % variant_knowledge_name, sheet_name='Sheet1')
 gene_list12 = my_file.read('static/base_data/1.2gene_list.json')
 gene_list53 = my_file.read('static/base_data/5.3gene_list.xlsx', sheet_name='Sheet2')
 gene_MoA = my_file.read('static/base_data/gene_MoA.tsv')
@@ -54,7 +54,8 @@ evidence_oncokb = my_file.read('evidence/OncoKB_evidence.csv', dict_name=data_di
 evidence_cgi = my_file.read('evidence/CGI_evidence.csv', dict_name=data_dir)
 evidence_civic = my_file.read('evidence/civic_evidence.csv', dict_name=data_dir)
 signature_etiology = my_file.read('signature/signature_etiology.csv', dict_name=data_dir)
-recent_study = my_file.read('recent_study', dict_name=data_dir)
+recent_study = my_file.read('recent_study.txt', dict_name=data_dir)
+# recent_study = my_file.read('recent_study', dict_name=data_dir)
 CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
 
 
@@ -178,7 +179,8 @@ def get_img_info(path, is_refresh=False):
     pdf2img(r'%s\cnv\cnvanno_cicos.pdf' % data_dir, out_path=r'%s\cnvanno_cicos.png' % pdf_path)
 
     if is_refresh:
-        img_info = get_imgs(path)
+        img_info = get_imgs(images_dir)
+        img_info += get_imgs(path)
         img_info = uniq_list(img_info)
         my_file.write(img_info_path, img_info)
     else:
@@ -396,11 +398,10 @@ def get_drug_level(drug_items):
         drugs1 = filter(lambda x: x['level'] == level1, drug_items)
         for j in range(i + 1, len(level_names)):
             level2 = level_names[j]
-            drugs2 = filter(lambda x: x['level'] == level2, drug_items)
             for drug in drugs1:
                 drug2 = {'drug': drug['drug'], 'level': level2, 'db_name': drug['db_name']}
-                if drug2 in drugs2:
-                    drugs2.remove(drug2)
+                if drug2 in drug_items:
+                    drug_items.remove(drug2)
     return drug_items
 
 
@@ -433,8 +434,14 @@ def get_drug_db(var):
                     if drug_item2['drug'] == drug_item1['drug']:
                         drug_item2['db_name'] = db_name1
                         drug_item2['level'] = drug_item1['level']
-                var = get_drug_evidence(drug_item1, var, db_name1.upper())
+                # var = get_drug_evidence(drug_item1, var, db_name1.upper())
     drug_items = get_drug_level(drug_items)
+    drug_items = get_drug_level(drug_items)
+    for i in range(len(db_names)):
+        db_name1 = db_names[i]
+        drug_items1 = filter(lambda x: x['db_name'].lower() == db_name1.lower(), drug_items)
+        for drug_item1 in drug_items1:
+            var = get_drug_evidence(drug_item1, var, db_name1.upper())
     # print item['A']
     # print item['C']
     # print var.keys()
@@ -445,11 +452,13 @@ def get_drug_db(var):
         drugs = filter(lambda x: x['level'] == level, drug_items)
         for drug in drugs:
             # get_drug_evidence(drug, evidence)
-            x_drug = drug['drug'].strip()
+            x_drug = '%s' % drug['drug'].strip()
             if x_drug.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
                 # x_drug = '%s===%s===%s' % (x_drug, x1['db_name'], x1['level'])
-                if x_drug not in value:
-                    value.append(x_drug)
+                # x_drug1 = '%s==%s==%s' % (x_drug, drug['db_name'], drug['level'])
+                x_drug1 = x_drug
+                if x_drug1 not in value:
+                    value.append(x_drug1)
         value = sorted(value)
         var[level] = ';'.join(value)
     return var

@@ -48,7 +48,7 @@ page_br = p.write(r.br('page'))
 
 # ##################下载报告所需方法######################
 def get_report_core(title_cn, title_en, data):
-    img_info = get_img_info(base_dir, is_refresh=True)
+    img_info = get_img_info(data_dir, is_refresh=True)
     body = write_body(title_cn, title_en, data)
     titles = get_page_titles()
     pages = write_pages(titles)
@@ -145,8 +145,8 @@ def write_chapter1(data, index):
         para += p.h4('（%d）基因突变保守结构域分布情况' % (index1 + 1))
         para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.8, rId='EGFR_struct', posOffset=[0, 0], align=['center', '']))
         para += p.h4('（%d）基因突变各癌肿分布情况' % (index1 + 2))
-        para += p.write(p.set(jc='center', spacing=[5, 0]), run=r.picture(12, rId='%s_distribution' % 'EGFR', posOffset=[0, 0], align=['center', '']))
-        para += p.write() * 5
+        para += p.write(p.set(jc='center', spacing=[5, 0]), run=r.picture(cy=6, rId='%s_distribution' % 'EGFR', posOffset=[0, 0], align=['center', '']))
+        para += p.write() * 6
     para += page_br
     para += write_chapter13(cats[3], index)
     return para
