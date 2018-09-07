@@ -275,7 +275,20 @@ def get_target_tips(diagnose):
     items = []
     items2 = []
     for db_name in db_names:
-        get_target_tip(items, items2, diagnose, db_name)
+        if db_name == 'cgi':
+            db_items = evidence_cgi
+            func = reset_cgi
+        elif db_name == 'CIVic':
+            func = reset_civic
+            db_items = evidence_civic
+        elif db_name == 'OncoKB':
+            func = reset_oncokb
+            db_items = evidence_oncokb
+        else:
+            func = None
+            db_items = []
+        if func is not None:
+            get_target_tip(items, items2, diagnose, db_items, func)
     vars = []
     for item2 in items2:
         var = {'col1': item2}
@@ -317,8 +330,7 @@ def cmp_target_tip(x, y):
     return cmp1 * (-1)
 
 
-def get_target_tip(items, items2, diagnose, db_name):
-    db_items = my_file.read('evidence/%s_evidence.csv' % db_name, dict_name=data_dir)
+def get_target_tip(items, items2, diagnose, db_items, func):
     i = 0
     for db_item in db_items:
         # 各数据库证据级别对应关系 https://mubu.com/doc/3LSWugo_cE
@@ -328,14 +340,7 @@ def get_target_tip(items, items2, diagnose, db_name):
         # level(  "civic", "D: Preclinical evidence", "Ewing Sarcoma", "肺癌")
         # @霍  癌种是diseasename 列
         # level ( “oncokb”,  “R1”， “Non-Small Cell Lung Cancer”，  "肺癌")
-        if db_name == 'cgi':
-            reset_item = reset_cgi(db_item)
-        elif db_name == 'CIVic':
-            reset_item = reset_civic(db_item)
-        elif db_name == 'OncoKB':
-            reset_item = reset_oncokb(db_item)
-        else:
-            reset_item = None
+        reset_item = func(db_item)
         if reset_item is not None:
             gene = reset_item['gene']
             i += 1
