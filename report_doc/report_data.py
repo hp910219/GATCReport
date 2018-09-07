@@ -8,7 +8,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from jy_word.Word import bm_index0, crop_img, get_imgs, uniq_list
 from jy_word.File import File
-from config import img_info_path, base_dir, data_dir, images_dir, variant_knowledge_name
+from config import img_info_path, base_dir, data_dir, images_dir, variant_knowledge_name, variant_knowledge_index
 from report_doc.get_real_level import FetchRealLevel
 
 gray = 'E9E9E9'
@@ -26,7 +26,7 @@ borders = ['top', 'right', 'bottom', 'left']
 real_level = FetchRealLevel()
 my_file = File(base_dir)
 # 静态的数据：
-chem_durg_list = my_file.read('static/base_data/chem_durg_list.tsv')  # category	drug	cancer
+chem_durg_list = my_file.read('static/base_data/chem_durg_list%d.tsv' % variant_knowledge_index)  # category	drug	cancer
 variant_knowledge = my_file.read(u'static/base_data/%s.xlsx' % variant_knowledge_name, sheet_name='Sheet1')
 gene_list12 = my_file.read('static/base_data/1.2gene_list.json')
 gene_list53 = my_file.read('static/base_data/5.3gene_list.xlsx', sheet_name='Sheet2')
@@ -394,6 +394,7 @@ def get_drug(col1, reset_item, diagnose):
     drug = reset_item['drug']
     col6 = get_gene_MoA(gene)  # 原癌都是激活，抑癌都是失活。
     item = {'col1': col1, 'gene': gene, 'gene_MoA': ''.join(col6), 'gene_MoA1': col6[0], 'db_name': db_name}
+    item['responsive'] = reset_item['responsive']
     item[db_name.upper()] = reset_item['evidence_detail']
     this_level = real_level.level(db_name.lower(), reset_item['level'], reset_item['cancer_type'], diagnose)
     item[db_name.upper()].append(this_level)
@@ -402,7 +403,7 @@ def get_drug(col1, reset_item, diagnose):
     for x1 in drug.split(','):
         xx1 = x1.split('(')[0].strip()
         if xx1.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
-            x2 = {'drug': xx1, 'db_name': db_name, 'level': this_level}
+            x2 = {'drug': xx1, 'db_name': db_name, 'level': this_level, 'responsive': reset_item['responsive']}
             if x2 not in drug1:
                 drug1.append(x2)
     item[db_name.upper()][2] = drug1
@@ -418,8 +419,8 @@ def get_drug_level(drug_items):
         for j in range(i + 1, len(level_names)):
             level2 = level_names[j]
             for drug in drugs1:
-                drug2 = {'drug': drug['drug'], 'level': level2, 'db_name': drug['db_name']}
-                if drug2 in drug_items:
+                drugs2 = filter(lambda x: x['drug'] == drug['drug'] and x['level'] == level2, drug_items)
+                for drug2 in drugs2:
                     drug_items.remove(drug2)
     return drug_items
 
@@ -466,11 +467,12 @@ def get_drug_db(var):
         drugs = filter(lambda x: x['level'] == level, drug_items)
         for drug in drugs:
             # get_drug_evidence(drug, evidence)
+            responsive = drug['responsive']
             x_drug = '%s' % drug['drug'].strip()
             if x_drug.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
                 # x_drug = '%s===%s===%s' % (x_drug, x1['db_name'], x1['level'])
                 # x_drug1 = '%s==%s==%s' % (x_drug, drug['db_name'], drug['level'])
-                x_drug1 = x_drug
+                x_drug1 = '%s(%s)' % (x_drug, responsive)
                 if x_drug1 not in value:
                     value.append(x_drug1)
         value = sorted(value)
@@ -539,8 +541,7 @@ def get_data3(drugs):
         cell = new_item['cell']
         cell_value = '%s%s' % (item['category'], new_item['drug'])
         row, col = cell[0], cell[1]
-        # print row, col
-        if not (row == 0 and col == 0):
+        if not (row == 0 or col == 0):
             trs[row][col].append(cell_value)
         new_items.append(new_item)
     return new_items, trs
@@ -588,13 +589,10 @@ def get_data31(item):
     # 当相反证据量数量一致时，根据证据级别确定（证据级别的等级 1A＞1B＞2A＞2B＞3）
     if good == bad:
         if col != 3:
-            aaa = compare_level3(curative_effects[1], curative_effects[2], 'good', 'bad')
-            if aaa == 'bad':
-                col = 2
+            col = compare_level3(curative_effects[1], curative_effects[2], 'good', 'bad')
+    if low == high > 0:
         if row != 3:
-            bbb = compare_level3(venoms[1], venoms[2], 'low', 'high')
-            if bbb == 'high':
-                row = 2
+            row = compare_level3(venoms[1], venoms[2], 'low', 'high')
     item['cell'] = row, col
     item['venoms'] = venoms
     item['curative_effects'] = curative_effects
@@ -679,6 +677,7 @@ def reset_status(status):
 
 
 def reset_cgi(item):
+    # 敏感（responsive）的药物标蓝；耐药（resistance）
     db_name = 'CGI'
     # 各数据库证据级别对应关系 https://mubu.com/doc/3LSWugo_cE
     # [数据库名, level, 肿瘤类型, 标准化肿瘤类型(汉语)]
@@ -712,7 +711,15 @@ def reset_cgi(item):
     cancer_type, evidence = item['TESTED_TUMOR'], item['EVIDENCE']
     evidence_type = ', '.join([cancer_type, evidence, item['EFFECT']])
     # 基因 生物标志物 药物 证据类型 匹配程度 证据来源
+    # 敏感（responsive）的药物标蓝；耐药（resistance）
+    if item['EFFECT'].lower() == 'responsive':
+        responsive = 'responsive'
+    elif item['EFFECT'].lower() in ['resistance', 'resistant']:
+        responsive = 'resistance'
+    else:
+        responsive = item['EFFECT']
     return {
+        'responsive': responsive,
         'gene': gene,
         'vars': vars,
         'db_name': db_name,
@@ -757,7 +764,15 @@ def reset_civic(item):
     evidence_type = ', '.join([item['disease_name'], evidence_level, item['clinical_significance'], item['evidence_direction'], item['rating']]) # 证据类型
     match_degree = '完全匹配'  # 匹配程度
     pmids = '%s(%s)' % (item['evidence_description'], item['pubmed_id'])  # 证据来源
+    # 敏感（responsive）的药物标蓝；耐药（resistance）
+    if item['clinical_significance'].lower() == 'sensitivity':
+        responsive = 'responsive'
+    elif item['clinical_significance'].lower().startswith('resistance') or item['clinical_significance'].lower().startswith('resistant'):
+        responsive = 'resistance'
+    else:
+        responsive = item['clinical_significance']
     return {
+        'responsive': responsive,
         'gene': gene,
         'vars': vars,
         'db_name': db_name,
@@ -794,7 +809,13 @@ def reset_oncokb(item):
             vars = [variant_name]
     Level, cancer_type = item['Level'], item['Cancer Type']  # 证据类型
     evidence_type = ', '.join([transfer_level(Level), cancer_type])
+    # 敏感（responsive）的药物标蓝；耐药（resistance）
+    if item['Level'].lower() == 'r1':
+        responsive = 'responsive'
+    else:
+        responsive = 'resistance'
     return {
+        'responsive': responsive,
         'gene': gene,
         'vars': vars,
         'db_name': db_name,
@@ -876,14 +897,20 @@ def get_domain(gene, var_p, var_c):
 
 def compare_level3(list1, list2, tip1, tip2):
     # 当相反证据量数量一致时，根据证据级别确定（证据级别的等级 1A＞1B＞2A＞2B＞3）
-    for eq in ['1A', '1B', '2A', '2B', '3']:
+    eqs = ['1A', '1B', '2A', '2B', '3']
+    for i in range(len(eqs)):
+        eq = eqs[i]
         aa = filter(lambda x: x['level'] == eq, list1)
-        if len(aa) > 0:
-            return tip1
-        bb = filter(lambda x: x['level'] == eq, list2)
-        if len(bb) > 0:
-            return tip2
-    return tip1
+        for j in range(0, i+1):
+            eq1 = eqs[j]
+            bb = filter(lambda x: x['level'] == eq1, list2)
+            if len(aa) * len(bb) > 0:
+                return 3
+            if len(aa) > 0:
+                return 1
+            if len(bb) > 0:
+                return 2
+    return 3
 
 
 

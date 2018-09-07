@@ -7,7 +7,7 @@ import sys
 from jy_word.File import File
 
 base_dir = os.path.dirname(__file__)
-data_dir_name = '100303v3'
+data_dir_name = '100304v3'
 data_dir = os.path.join(base_dir, data_dir_name)
 if len(sys.argv) > 1:
     data_dir = sys.argv[1]
@@ -19,12 +19,14 @@ my_file = File(base_dir)
 patient_info = my_file.read('patient_info.tsv', dict_name=data_dir)[0]
 disease_name = patient_info['diagnose']
 variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '骨肉瘤除外硬纤维瘤和肌纤维母细胞瘤']
-variant_knowledge_name = '化疗多态位点证据列表%s' % variant_knowledge_names[0]
+variant_knowledge_index = 0
+variant_knowledge_name = '化疗多态位点证据列表%s' % variant_knowledge_names[variant_knowledge_index]
 for v in variant_knowledge_names:
     if disease_name in v:
         variant_knowledge_name = '化疗多态位点证据列表%s' % v
         break
-print disease_name, variant_knowledge_name, data_dir
+    variant_knowledge_index += 1
+print disease_name, variant_knowledge_name, data_dir, variant_knowledge_index
 # print '\t'.join('CRLF2, JAK1, JAK2, JAK3, SOCS1, STAT1, STAT2, STAT3, STAT4, STAT5A, STAT5B, STAT6'.split(', '))
 
 if __name__ == "__main__":

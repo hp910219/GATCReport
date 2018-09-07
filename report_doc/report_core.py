@@ -777,7 +777,7 @@ def write_target_tip(title, items):
             item.append(item1[level])
         if len(item) < n:
             item.append(item1['gene_MoA'])
-        trs += write_tr51(item, ws)
+        trs += write_tr51(item, ws, 'target')
     return table.write(trs, ws=ws, bdColor=gray, tblBorders=borders)
 
 
@@ -1075,7 +1075,7 @@ def write_thead51(titles, **kwargs):
     return tr.write(tcs)
 
 
-def write_tr51(item, ws):
+def write_tr51(item, ws, c=''):
     pPr = p.set(jc='left', spacing=[0.5, 0.5])
     tcs = ''
     size = 9
@@ -1083,7 +1083,17 @@ def write_tr51(item, ws):
         texts = item[i]
         para = ''
         for t in texts.split('\n'):
-            run = r.text(t, size=size)
+            if c == 'target' and t > 0:
+                run = ''
+                for tt in t.split(';'):
+                    ttt = tt.split('(')
+                    if len(ttt) > 1 and ttt[1].rstrip(')') == 'responsive':
+                        run += r.text(ttt[0], size=size, color=blue)
+                    else:
+                        run += r.text(tt.replace('resistance', '耐药'), size=size)
+                    run += r.text(';', size=size)
+            else:
+                run = r.text(t, size=size)
             para += p.write(pPr, run)
         tcs += tc.write(para, tc.set(w=ws[i], tcBorders=borders, color=gray))
     return tr.write(tcs)
