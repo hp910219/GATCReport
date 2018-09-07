@@ -5,7 +5,7 @@ from flask import Flask, send_from_directory, render_template, request, jsonify
 from report_doc.report_core import get_report_core
 from report_doc.report_core_test import get_children
 from jy_word.File import File
-from config import base_dir, data_dir
+from config import base_dir, patient_info
 reload(sys)
 sys.setdefaultencoding('utf-8')
 out_file = 'TCRseq_results.xlsx'
@@ -32,8 +32,6 @@ def render_html():
 
 @app.route('/')
 def download_docx():
-    patient_infos = my_file.read('patient_info.tsv', dict_name=data_dir)
-    patient_info = patient_infos[0]
     user_name = patient_info['name']
     file_name = u'results/%s检测报告.doc' % user_name
     print u'%s begin.' % file_name

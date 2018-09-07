@@ -26,7 +26,6 @@ borders = ['top', 'right', 'bottom', 'left']
 
 real_level = FetchRealLevel()
 my_file = File(base_dir)
-
 # 静态的数据：
 chem_durg_list = my_file.read('static/base_data/chem_durg_list.tsv')  # category	drug	cancer
 variant_knowledge = my_file.read(u'static/base_data/%s.xlsx' % variant_knowledge_name, sheet_name='Sheet1')
@@ -45,7 +44,10 @@ for index in range(5):
 # 动态的数据：
 immune_suggestion = my_file.read(r'immune_suggestion.txt', dict_name=data_dir)
 rs_geno = my_file.read('rs.geno.update.tsv', to_json=False, dict_name=data_dir)[1:]
-hla = my_file.read('hla.tsv', dict_name=data_dir)
+f = open(os.path.join(data_dir, 'hla.tsv'))
+c = f.read().strip('\n')
+f.close()
+hla = c.split('\t')
 variant_anno1 = my_file.read('variant_anno.maf', dict_name=data_dir, sep='\t', to_json=False)
 neoantigen = my_file.read('neoantigen.tsv', dict_name=data_dir)
 cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir)
@@ -54,8 +56,7 @@ evidence_oncokb = my_file.read('evidence/OncoKB_evidence.csv', dict_name=data_di
 evidence_cgi = my_file.read('evidence/CGI_evidence.csv', dict_name=data_dir)
 evidence_civic = my_file.read('evidence/civic_evidence.csv', dict_name=data_dir)
 signature_etiology = my_file.read('signature/signature_etiology.csv', dict_name=data_dir)
-recent_study = my_file.read('recent_study.txt', dict_name=data_dir)
-# recent_study = my_file.read('recent_study', dict_name=data_dir)
+recent_study = my_file.read('recent_study', dict_name=data_dir)
 CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
 
 
@@ -101,12 +102,17 @@ def filter_db(gene=None, var=None, impact=None):
             var_db = line[36]
             impact_db = line[keys.index('IMPACT')]
             is_match = gene == gene_db
+            match_tip = ''
             if var is not None:
                 is_match = is_match and var_db == var
+                if not is_match and var.strip() != '' and var_db.strip() != '':
+                    if var.lower() in var_db.lower() or var_db.lower() in var.lower():
+                        is_match = True
+                        match_tip = '模糊匹配， %s , %s' % (var, var_db)
             if impact is not None:
                 is_match = impact == impact_db
             if is_match:
-                info = {}
+                info = {'match_tip': match_tip}
                 for j in range(len(keys)):
                     key = keys[j]
                     value = line[j]
@@ -160,12 +166,12 @@ def format_time(t=None, frm="%Y-%m-%d %H:%M:%S"):
 
 def get_page_titles():
     title_cn, title_en = u'多组学临床检测报告', 'AIomics1'
-    title = '%s附录目录%s%s' % (title_cn, ' ' * 75,  title_en)
-    title1 = '%s%s%s' % (title_cn, ' ' * (69+18),  title_en)
+    title = '%s附录目录%s%s' % (title_cn, ' ' * 64,  title_en)
+    title1 = '%s%s%s' % (title_cn, ' ' * (64+12),  title_en)
     titles = [title, title1]
     cats = get_catalog()
     for i in [0, 4, 9, 12, 19]:
-        n = 69 + 20
+        n = 64 + 14
         if test_chinese(cats[i]['title']) == 11:
             n -= 8
         titles.append('%s%s%s' % (cats[i]['title'], ' ' * n,  title_en))
@@ -175,8 +181,8 @@ def get_page_titles():
 def get_img_info(path, is_refresh=False):
     crop_img(r'%s\signature\signature.png' % data_dir, r'%s\images\part4\4.5.1signature.png' % base_dir)
     crop_img(r'%s\signature\signature_pie.png' % data_dir, r'%s\images\part4\4.5.2signature_pie.png' % base_dir)
-    pdf2img(r'%s\tmb.pdf' % data_dir, out_path=r'%s\tmb.png' % pdf_path)
-    pdf2img(r'%s\cnv\cnvanno_cicos.pdf' % data_dir, out_path=r'%s\cnvanno_cicos.png' % pdf_path)
+    # pdf2img(r'%s\tmb.pdf' % data_dir, out_path=r'%s\tmb.png' % pdf_path)
+    # pdf2img(r'%s\cnv\cnvanno_cicos.pdf' % data_dir, out_path=r'%s\cnvanno_cicos.png' % pdf_path)
 
     if is_refresh:
         img_info = get_imgs(images_dir)
@@ -340,6 +346,7 @@ def get_target_tip(items, items2, diagnose, db_name):
                         cellurity = get_quantum_cellurity(maf_item['Chromosome'], maf_item['Start_Position'])
                         col1 = '%s %s\n%s\n(%s肿瘤亚克隆)' % (gene, get_exon(maf_item), maf_item['HGVSp_Short'], cellurity)
                         item = get_drug(col1, reset_item, diagnose)
+                        item['var'] = v
                         items.append(item)
                         if col1 not in items2:
                             items2.append(col1)
@@ -363,6 +370,7 @@ def get_target_tip(items, items2, diagnose, db_name):
                     col1 = u'%s%s(拷贝数%s)' % (gene, status, copynumber)
                 if is_match and len(col1) > 0:
                     item = get_drug(col1, reset_item, diagnose)
+                    item['var'] = ''
                     items.append(item)
                     if col1 not in items2:
                         items2.append(col1)
@@ -406,14 +414,14 @@ def get_drug_level(drug_items):
 
 
 def get_drug_evidence(drug_item, var, key):
-    evidence = var[key]
-    evidence1 = []
-    for e in evidence:
+    evidence1 = var[key]
+    evidence2 = []
+    for e in evidence1:
         for d in e[2]:
             if d['drug'] != drug_item['drug']:
-                if e not in evidence1:
-                    evidence1.append(e)
-    var[key] = evidence1
+                if e not in evidence2:
+                    evidence2.append(e)
+    var[key] = evidence2
     return var
 
 
@@ -442,9 +450,6 @@ def get_drug_db(var):
         drug_items1 = filter(lambda x: x['db_name'].lower() == db_name1.lower(), drug_items)
         for drug_item1 in drug_items1:
             var = get_drug_evidence(drug_item1, var, db_name1.upper())
-    # print item['A']
-    # print item['C']
-    # print var.keys()
     if len(drug_items) == 0 :
         return None
     for level in level_names:
@@ -521,9 +526,11 @@ def get_data3(drugs):
         new_item['genes'] = genes
         new_item = get_data31(new_item)
         cell = new_item['cell']
-        cell_value = '%s(%s)' % (item['category'], item['drug'])
+        cell_value = '%s' % (item['category'])
         row, col = cell[0], cell[1]
-        trs[row][col].append(cell_value)
+        # print row, col
+        if not (row == 0 and col == 0):
+            trs[row][col].append(cell_value)
         new_items.append(new_item)
     return new_items, trs
 
@@ -621,18 +628,20 @@ def get_gene_MoA(gene):
     # Act : 原癌；Lof：抑癌， 其他： 未知
     for item in gene_MoA:
         if item['gene'] == gene:
-            if item['gene_MoA'] == 'Act':
+            if item['gene_MoA'].lower() == 'Act'.lower():
                 return '原癌基因激活突变'
-            if item['gene_MoA'] == 'Lof':
+            if item['gene_MoA'].lower() == 'Lof'.lower():
                 return '抑癌基因失活变异'
     return '未知'
 
 
 def reset_status(status):
-    if status.lower() in ['amplification', 'gain', 'amp']:
-        return 'gain', '扩增'
-    if status.lower() in ['loss', 'deletions', 'deletion', 'del']:
-        return 'loss', '缺失'
+    for a in ['amplification', 'gain', 'amp']:
+        if status.lower().startswith(a):
+            return 'gain', '扩增'
+    for b in ['loss', 'deletions', 'deletion', 'del']:
+        if status.lower().startswith(b):
+            return 'loss', '缺失'
     return status, '未知'
 
 
@@ -657,9 +666,16 @@ def reset_cgi(item):
         if len(biomaker) == 4:
             exon = biomaker[2]
             status = biomaker[3]
-        if len(biomaker) == 2:
+        elif len(biomaker) == 2:
             # D:\pythonproject\report\data\cnv\cnv.copynumber.table.tsv
             status = biomaker[1]
+        sample_alteration = item['SAMPLE_ALTERATION'].split(',')
+        for s in sample_alteration:
+            ss = s.strip().split('MUT')
+            if len(ss) > 1:
+                var = ss[1].lstrip().lstrip('*').lstrip().lstrip('(').strip().rstrip(')')
+                if var not in vars:
+                    vars.append(var)
     cancer_type, evidence = item['TESTED_TUMOR'], item['EVIDENCE']
     evidence_type = ', '.join([cancer_type, evidence, item['EFFECT']])
     # 基因 生物标志物 药物 证据类型 匹配程度 证据来源
@@ -702,6 +718,7 @@ def reset_civic(item):
             exon = 'E%s' % variant_names[1]
             status_en, status_cn = reset_status(variant_names[2])
         else:
+            # status_en, status_cn = reset_status(variant_name.split('-')[0])
             vars = [variant_name]
     evidence_level = item['evidence_level']
     evidence_type = ', '.join([item['disease_name'], evidence_level, item['clinical_significance'], item['evidence_direction'], item['rating']]) # 证据类型
