@@ -19,7 +19,7 @@ red = 'ED1C24'
 orange = 'F14623'
 colors = ['2C3792', '3871C1', '50ADE5', '37AB9C', '27963C', '40B93C', '80CC28']
 level_names = ['A', 'B', 'C', 'D']
-db_names = ['OncoKB', 'CIVic', 'CGI']
+db_names = ['OncoKB', 'CIVic', 'cgi']
 borders = ['top', 'right', 'bottom', 'left']
 # 因为数据库的权威性  oncokb>civic>cgi
 
