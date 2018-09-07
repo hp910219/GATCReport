@@ -8,8 +8,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from jy_word.Word import bm_index0, crop_img, get_imgs, uniq_list
 from jy_word.File import File
-from jy_word.pdf2img import pdf2img
-from config import img_info_path, pdf_path, base_dir, data_dir, images_dir, variant_knowledge_name
+from config import img_info_path, base_dir, data_dir, images_dir, variant_knowledge_name
 from report_doc.get_real_level import FetchRealLevel
 
 gray = 'E9E9E9'
@@ -182,9 +181,6 @@ def get_page_titles():
 def get_img_info(path, is_refresh=False):
     crop_img(r'%s\signature\signature.png' % data_dir, r'%s\images\part4\4.5.1signature.png' % base_dir)
     crop_img(r'%s\signature\signature_pie.png' % data_dir, r'%s\images\part4\4.5.2signature_pie.png' % base_dir)
-    # pdf2img(r'%s\tmb.pdf' % data_dir, out_path=r'%s\tmb.png' % pdf_path)
-    # pdf2img(r'%s\cnv\cnvanno_cicos.pdf' % data_dir, out_path=r'%s\cnvanno_cicos.png' % pdf_path)
-
     if is_refresh:
         img_info = get_imgs(images_dir)
         img_info += get_imgs(path)
