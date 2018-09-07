@@ -9,7 +9,7 @@ from jy_word.File import File
 base_dir = os.path.dirname(__file__)
 data_dir_name = '100303v3'
 img_info_path = 'static/base_data/img_info%s.json' % data_dir_name
-data_dir = os.path.join(base_dir, '100303v3')
+data_dir = os.path.join(base_dir, data_dir_name)
 # data_dir = os.path.join(base_dir, 'test000')
 # data_dir = os.path.join(base_dir, 'data')
 images_dir = os.path.join(base_dir, 'images')
