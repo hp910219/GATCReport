@@ -54,7 +54,7 @@ cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir
 quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name=data_dir)
 evidence_oncokb = my_file.read('evidence/OncoKB_evidence.csv', dict_name=data_dir)
 evidence_cgi = my_file.read('evidence/cgi_evidence.csv', dict_name=data_dir)
-evidence_civic = my_file.read('evidence/civic_evidence.csv', dict_name=data_dir)
+evidence_civic = my_file.read('evidence/CIVic_evidence.csv', dict_name=data_dir)
 signature_etiology = my_file.read('signature/signature_etiology.csv', dict_name=data_dir)
 recent_study = my_file.read('recent_study', dict_name=data_dir)
 CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
