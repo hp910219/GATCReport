@@ -3,11 +3,13 @@
 # Create Date 2018/8/23 0023
 __author__ = 'huohuo'
 import os
+import sys
 from jy_word.File import File
-
 
 base_dir = os.path.dirname(__file__)
 data_dir_name = '100303v3'
+if len(sys.argv) > 1:
+    data_dir_name = sys.argv[1]
 img_info_path = 'static/base_data/img_info%s.json' % data_dir_name
 data_dir = os.path.join(base_dir, data_dir_name)
 # data_dir = os.path.join(base_dir, 'test000')
@@ -23,7 +25,7 @@ for v in variant_knowledge_names:
     if disease_name in v:
         variant_knowledge_name = '化疗多态位点证据列表%s' % v
         break
-print disease_name, variant_knowledge_name
+print disease_name, variant_knowledge_name, data_dir
 # print '\t'.join('CRLF2, JAK1, JAK2, JAK3, SOCS1, STAT1, STAT2, STAT3, STAT4, STAT5A, STAT5B, STAT6'.split(', '))
 
 if __name__ == "__main__":
