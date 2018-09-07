@@ -328,7 +328,7 @@ def get_target_tip(items, items2, diagnose, db_name):
         # level(  "civic", "D: Preclinical evidence", "Ewing Sarcoma", "肺癌")
         # @霍  癌种是diseasename 列
         # level ( “oncokb”,  “R1”， “Non-Small Cell Lung Cancer”，  "肺癌")
-        if db_name == 'CGI':
+        if db_name == 'cgi':
             reset_item = reset_cgi(db_item)
         elif db_name == 'CIVic':
             reset_item = reset_civic(db_item)

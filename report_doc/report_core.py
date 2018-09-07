@@ -652,7 +652,7 @@ def write_evidences(item):
             evidences = item[rId.upper()]
             if len(evidences) > 0:
                 run = r.text('（%d） ' % index, 12, space=True, weight=True)
-                run += r.picture(cy=0.5, rId=rId, text_wrapping='inline')
+                run += r.picture(cy=0.5, rId=rId.lower(), text_wrapping='inline')
                 run += r.text(' %s数据库证据' % rId, 12, space=True, weight=True)
                 para += p.write(p.set(spacing=[1.5, 1.5]), run)
                 para += write_evidence(evidences)

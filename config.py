@@ -8,11 +8,11 @@ from jy_word.File import File
 
 base_dir = os.path.dirname(__file__)
 data_dir_name = '100303v3'
-
-img_info_path = 'static/base_data/img_info%s.json' % data_dir_name
 data_dir = os.path.join(base_dir, data_dir_name)
 if len(sys.argv) > 1:
     data_dir = sys.argv[1]
+    data_dir_name = data_dir.split('/')[-1].split('.')[0]
+img_info_path = 'static/base_data/img_info%s.json' % data_dir_name
 images_dir = os.path.join(base_dir, 'images')
 pdf_path = os.path.join(base_dir, 'images', 'pdf')
 my_file = File(base_dir)
