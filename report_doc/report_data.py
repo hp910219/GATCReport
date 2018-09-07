@@ -179,8 +179,11 @@ def get_page_titles():
 
 
 def get_img_info(path, is_refresh=False):
-    crop_img(r'%s/%s/signature/signature.png' % (base_dir, data_dir), r'%s/images/part4/4.5.1signature.png' % base_dir)
-    crop_img(r'%s/%s/signature/signature_pie.png' % (base_dir, data_dir), r'%s/images/part4/4.5.2signature_pie.png' % base_dir)
+    part4 = r'%s/images/part4' % base_dir
+    if not os.path.exists(part4):
+        os.makedirs(part4)
+    crop_img(r'%s/%s/signature/signature.png' % (base_dir, data_dir), r'%s/4.5.1signature.png' % part4)
+    crop_img(r'%s/%s/signature/signature_pie.png' % (base_dir, data_dir), r'%s/4.5.2signature_pie.png' % part4)
     if is_refresh:
         img_info = get_imgs(images_dir)
         img_info += get_imgs(path)
