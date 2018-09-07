@@ -24,6 +24,7 @@ for v in variant_knowledge_names:
         variant_knowledge_name = '化疗多态位点证据列表%s' % v
         break
 print disease_name, variant_knowledge_name
+# print '\t'.join('CRLF2, JAK1, JAK2, JAK3, SOCS1, STAT1, STAT2, STAT3, STAT4, STAT5A, STAT5B, STAT6'.split(', '))
 
 if __name__ == "__main__":
     pass

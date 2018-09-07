@@ -139,17 +139,17 @@ def write_chapter1(data, index):
         var_name = '%s_%s' % (gene, item['col1'].split('\n')[1].strip().replace('*', 'X'))
         para += p.write(p.set(shade=red, line=24, ind=[0.7, 0]), r.text('%d. 变异：%s' % (i + 1, item['col1']), color=white, space=True))
         para += p.h4('（1）该基因变异所处保守结构域位置')
-        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cy=2.7, rId='%s_struct' % gene, posOffset=[0, 0], align=['center', ''])) + p.write()
+        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.7, rId=var_name, posOffset=[0, 0], align=['center', ''])) + p.write()
         para1, index1 = write_evidences(item)
         para += para1
         para += write_gene_info(item, index1)
         para += p.h4('（%d）基因突变保守结构域分布情况' % (index1 + 1))
-        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.7, rId=var_name, posOffset=[0, 0], align=['center', ''])) + p.write()
-        para += p.h4('（%d）基因突变各癌肿分布情况' % (index1 + 2))
+        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.7, rId='%s_struct' % gene, posOffset=[0, 0], align=['center', ''])) + p.write()
+        para += p.h4('（%d）基因突变各癌种分布情况' % (index1 + 2))
         para += p.write(p.set(jc='center', spacing=[5, 0]), run=r.picture(cy=6, rId='%s_distribution' % gene, posOffset=[0, 0], align=['center', '']))
         if i < len(target_tips) - 1:
             para += p.write() * 7
-    para += page_br + page_br
+    para += p.write(p.set(sect_pr=set_page()))
     para += write_chapter13(cats[3], index)
     return para
 
@@ -168,7 +168,7 @@ def write_chapter2(index):
             'before': 11,
             'infos': [
                 {'title': '结果说明：', 'text': '该结果是通过肿瘤全外显子组数据，利用了一种基于TCGA（癌症基因图谱计划）数据集和引入多个突变特征开发的机器学习算法进行MSI（微卫星不稳定）状态评估方法得到的。该评估方法与传统方法相比，具有97.7%的准确性，是一种可靠的MSI检测方法。'},
-                {'title': '检测意义：', 'text': 'FDA批准PD1抗体keytruda用于所有的MSI高不稳定的实体肿瘤。MSI高不稳定的肿瘤PD1治疗的客观缓解率在不同癌种和试验中稍有不用，大致在40-50%之间。MSI-H在结直肠癌、的分布。MSI是MMR（错配修复系统）的一个反2类型肿瘤细胞具有非常高的突变MSI-H/dMMR肿瘤更可能有效。'},
+                {'title': '检测意义：', 'text': 'FDA批准PD1抗体keytruda用于所有的MSI高不稳定的实体肿瘤。MSI高不稳定的肿瘤PD1治疗的客观缓解率在不同癌种和试验中稍有不用，大致在40-50%之间。MSI-H在结直肠癌、胃癌、子宫内膜癌中较多，其他多种癌种都有一定量的分布。MSI是MMR（错配修复系统）的一个反映标志，MMR是人体细胞DNA修复的一种方式之一，MMR缺陷导致DNA出错的概率大规模提升，进而导致该类型肿瘤细胞具有非常高的突变量，而高的突变负荷进一步导致肿瘤细胞高概率采用PD1等通路的免疫逃逸机制。因此，PD1抗体对MSI-H/dMMR肿瘤更可能有效。'},
             ] },
         {
             'title': p.h4(cat=cats[2]), 'before': 0, 'note_before': 10,
@@ -198,7 +198,7 @@ def write_chapter2(index):
         trs += write_tr51(item, ws)
     para += table.write(trs, ws, bdColor=gray)
     para += p.write(r.text('注：仅显示部分重要新抗原信息', size=8.5))
-    para += write_explain({'title': '结果说明：', 'text': '新抗原是指因肿瘤基因突变所导致的能够被该患者免疫系统HLA分子所识别，有潜力能够激活患者免疫系统的新生抗原，这是一组异常多或者特异性细胞治疗最核心的信息。新抗原预测一般通过外显子组测序得到该患者所有的息和HLA分子信息，预测各个突变位点与该患者HLA分子结合的行转录组检测，会明显降低新抗原预测的准确性。'})
+    para += write_explain({'title': '结果说明：', 'text': '新抗原是指因肿瘤基因突变所导致的能够被该患者免疫系统HLA分子所识别，有潜力能够激活患者免疫系统的新生抗 原，这是一组异常多肽片段。新抗原预测信息能够作为癌症个性化治疗疫苗或者特异性细胞治疗最核心的信息。新抗原预测一般 通过外显子组测序得到该患者所有的编码区域基因突变，进一步通过外显子组或者转录组获得该患者的HLA分型，根据基因突变信息和HLA分子信息，预测各个突变位点与该患者HLA分子结合的亲和力，并进一步通过转录组测序筛选其中表达的新抗原。本次未行转录组检测，会明显降低新抗原预测的准确性。'})
     para += p.write(p.set(sect_pr=set_page('A4', header='rIdHeader%d' % index)))
     para += p.h4(cat=cats[4])
     para += p.h4('1、免疫治疗与肿瘤免疫')
@@ -259,7 +259,7 @@ def write_chapter3(index, trs, chem_items):
         item = chem_items[i]
         cell = item['cell']
         row, col = cell[0], cell[1]
-        c2 += p.h4('%d.%s' % (i+1, item['category']))
+        c2 += p.h4('%d.%s%s' % (i+1, item['category'], item['drug']))
         data = [item['tr1'], '%s%s，%s' % (item['category'], trs[0][col], trs[row][0])]
         c2 += write_immun(data, jc='center', w=5000)
         c2 += p.write()
@@ -309,10 +309,11 @@ def write_chapter5(index):
     para += p.write(p.set(sect_pr=set_page()))
     para += p.h4(cat=cats[3]) + write_chapter53()
     para += p.h4(cat=cats[4])
-    para += p.write(p.set(ind=['firstLine', 2]), r.text('本检测报告共涉及两个样本，肿瘤组织样本和外周血。本次检测使用安捷伦捕获外显子捕获探针Sureslect Human All Exon V6，目标测序数据量为肿瘤组织样本80G，外周血样本样本10G，实际数据量为肿瘤组织90.1G，外周血样本12.6G。经分析，肿瘤组织的预测肿瘤细胞纯度为81.93%，经初步分析共获得体细胞SNV 2257个，体细胞Indel303个，蛋白质编码区域突变838个，可能影响导致拷贝数变化的基因区域207个。'))
-    para += p.write(p.set(jc='right', spacing=[3, 0]), r.text(format_time(frm="%Y-%m-%d")))
-    para += p.write(p.set(sect_pr=set_page()))
-    para += p.write(r.picture(21, rId='protocol', posOffset=[0, 1], align=['center', '']))
+    for c in company.split('\n'):
+        para += p.write(p.set(spacing=[0, 1], ind=['firstLine', 2]), r.text(c))
+    para += p.write(p.set(ind=[38.5, 0], spacing=[3, 0]), r.text('北京皑医科技有限公司'))
+    para += p.write(p.set(ind=[38.5, 0], spacing=[1, 0]), r.text('盖章：'))
+    para += p.write(p.set(ind=[38.5, 0], spacing=[1, 0]), r.text(format_time(frm="%Y-%m-%d")))
     para += p.write(p.set(sect_pr=set_page(header='rIdHeader8', footer='rIdFooter1')))
     return para
 
@@ -430,11 +431,7 @@ def write_chapter42():
     para = write_hla(hla)
     para += p.write()
     para += write_explain({'title': '结果说明：', 'text': 'HLA分型与免疫治疗疗效高度相关。HLA(human lymphocyte antigen ，人类淋巴细胞抗原)，是编码人类的主要组织相容性复合体（MHC）的基因。HLA是免疫系统区分自身和异体物质的基础。HLA主要包括HLA Ⅰ类分子和Ⅱ分子。HLAⅠ类分子又进一步细化分成A、B、C三个基因。特定的超型，如HLA-B44，与免疫检查点抗体治疗疗效好相关；HLA-B66（包括HLA-B*15：01），与免疫检查点抗体治疗疗效差相关。HLA Ⅰ类三个基因均杂合，免疫检查点抗体治疗反应更好。HLA杂合缺失的基因相关的新抗原可能在个性化治疗疫苗或者特异性细胞治疗中无效。'})
-    para += p.write(p.set(spacing=[0.5, 1]), r.text('相关循证医学证据：'))
-    para += p.write(p.set(spacing=[0, 0.2], shade=gray), r.text('1535例晚期癌症患者接受免疫检查点抗体治疗的HLA Ⅰ类分子分型整合分析', weight=1))
-    para += p.write(p.set(spacing=[0, 1], shade=gray), r.text('（A）HLAⅠ类分子三个基因位置至少一个杂合的患者，总生存较短，风险比较高（队列1：杂合282名，至少一个纯合87名，HR=1.4（1.02-1.9），P=0.036；队列2：杂合899名，至少一个纯合267名，HR=1.31（1.03-1.7），P=0.028）；'))
-    para += p.write(p.set(spacing=[0, 1], shade=gray), r.text('（B）黑色素瘤患者中，B44超型的患者，总生存较长，风险比较低（队列1：HLA-B44（+）55名；HLA-B44（-）109名，HR=0.5（0.32-0.76），P=0.001；队列2：HLA-B44（+）44名；HLA-B44（-）106名，HR=0.32（0.09-1.1），P=0.05）；'))
-    para += p.write(p.set(spacing=[0, 1], shade=gray), r.text('（C）黑色素瘤患者中，B62超型（包括HLA-B*15：01）的患者，总生存较短，风险比较高。整合分析中，两个队列324名黑色素瘤患者中，B62超型患者风险比较高（HR=2.29 (1.40–3.74) P=0.0007）；类似于B62超型的B*15:01风险比较高（HLA-B*15:01（+）142名，HLA-B*15:01（-）22名，HR=2.21 (1.33–3.70)，P=0.002）（Chowell D,et al. [J]. Science, 2018, 359(6375): 582-587.）'))
+    para += write_evidence4(2)
     return para
 
 
@@ -520,7 +517,7 @@ def write_chapter51():
             domain = '无'
         cellurity = get_quantum_cellurity(item1['Chromosome'], item1['Start_Position'])
         col1 = '%s %s (%s)' % (gene, variant, cellurity)
-        col5 = get_gene_MoA(gene)
+        col5 = ''.join(get_gene_MoA(gene))
         item = [col1, item1['Variant_Classification'], domain, '有害突变', col5]
         trs += write_tr51(item, ws)
     para += table.write(trs, ws=ws, bdColor=gray)
@@ -583,13 +580,13 @@ def write_chapter5311(ch, index):
     para = p.write(r.text(ch['title']))
     para += con1
     para += p.write()
+    # print ch['title'], '5.3.%d.1' % (index + 1)
     para += p.write(r.picture(cx=7.8, rId='5.3.%d.1' % (index + 1)) + r.br())
     title = '' if 'img_id' not in ch else '（1）'
     para += p.write(r.text('%s通路涉及重点基因变异情况：' % title))
     para += write_genes((ch['genes']), 5, 5000, 'right')
     row = int(math.ceil(float(len(ch['genes'])) / 5))
     if row > 5:
-    #     # para += p.write() * 3
         para += con2 + con1
     para += write_explains(ch['para'])
     if row > 5:
@@ -646,24 +643,16 @@ def write_hla(data, w=4000):
 
 
 def write_evidences(item):
-    infos = [
-        {'rId': 'Oncokb', 'cx': 3, 'cy': 1, 'posy': 1},
-        {'rId': 'CGI', 'cx': 5.74, 'cy': 1.11},
-        {'rId': 'CIVic', 'cx': 4.23, 'cy': 1.8},
-    ]
     para = ''
     index = 2
-    for i in range(len(infos)):
-        info = infos[i]
-        rId = info['rId']
+    for i in range(len(db_names)):
+        rId = db_names[i]
         if rId.upper() in item:
             evidences = item[rId.upper()]
             if len(evidences) > 0:
-                print len(evidences)
-                text = rId if 'text' not in info else info['text']
                 run = r.text('（%d） ' % index, 12, space=True, weight=True)
-                run += r.picture(cy=0.5, rId=info['rId'], text_wrapping='inline')
-                run += r.text(' %s数据库证据' % text, 12, space=True, weight=True)
+                run += r.picture(cy=0.5, rId=rId, text_wrapping='inline')
+                run += r.text(' %s数据库证据' % rId, 12, space=True, weight=True)
                 para += p.write(p.set(spacing=[1.5, 1.5]), run)
                 para += write_evidence(evidences)
                 # print index,
@@ -717,7 +706,7 @@ def write_db_info():
 
 def write_gene_info(gene_item, index):
     gene = gene_item['gene']
-    para = p.h4('（%d）基因说明:%s，%s' % (index, gene, gene_item['gene_MoA']))
+    para = p.h4('（%d）基因说明:%s，%s' % (index, gene, gene_item['gene_MoA1']))
     pPr = p.set(line=15, ind=[1, 1])
     size = 9
     for item in gene_list12:
@@ -817,16 +806,17 @@ def write_immun_tip2(jc='center', ind=0):
 
 
 def write_evidence4(index):
-    para = p.write(p.set(spacing=[0.5, 1]), r.text('相关循证医学证据：'))
-    evidence = evidence4[index]
-    for i in range(len(evidence)):
+    para = p.write(p.set(spacing=[0.5, 1]), r.text('相关循证医学证据：', weight=1))
+    evidence41 = evidence4[index]
+    for i in range(len(evidence41)):
+        text = evidence41[i]
         weight = 0
-        if len(evidence[i]) < 100:
+        if len(text) < 135:
             weight = 1
         if i % 4 == 0:
-            para += p.write(p.set(spacing=[0, 0.2], shade=gray), r.text(evidence[i], 9.5, weight=weight))
+            para += p.write(p.set(spacing=[0, 0.2], shade=gray), r.text(text, 9.5, weight=weight))
         if i % 4 == 2:
-            para += p.write(p.set(spacing=[0, 1], shade=gray), r.text(evidence[i], 9.5, weight=weight))
+            para += p.write(p.set(spacing=[0, 1], shade=gray), r.text(text, 9.5, weight=weight))
     return para
 
 

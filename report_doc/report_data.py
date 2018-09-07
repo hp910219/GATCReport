@@ -31,6 +31,7 @@ chem_durg_list = my_file.read('static/base_data/chem_durg_list.tsv')  # category
 variant_knowledge = my_file.read(u'static/base_data/%s.xlsx' % variant_knowledge_name, sheet_name='Sheet1')
 gene_list12 = my_file.read('static/base_data/1.2gene_list.json')
 gene_list53 = my_file.read('static/base_data/5.3gene_list.xlsx', sheet_name='Sheet2')
+company = my_file.read('static/base_data/5.company.txt', sheet_name='Sheet2')
 gene_MoA = my_file.read('static/base_data/gene_MoA.tsv')
 evidence4 = []
 for index in range(5):
@@ -284,6 +285,7 @@ def get_target_tips(diagnose):
             if item1['col1'] == item2:
                 var['gene'] = item1['gene']
                 var['gene_MoA'] = item1['gene_MoA']
+                var['gene_MoA1'] = item1['gene_MoA1']
                 for key in db_names:
                     key = key.upper()
                     if key in item1:
@@ -382,7 +384,7 @@ def get_drug(col1, reset_item, diagnose):
     db_name = reset_item['db_name']
     drug = reset_item['drug']
     col6 = get_gene_MoA(gene)  # 原癌都是激活，抑癌都是失活。
-    item = {'col1': col1, 'gene': gene, 'gene_MoA': col6, 'db_name': db_name}
+    item = {'col1': col1, 'gene': gene, 'gene_MoA': ''.join(col6), 'gene_MoA1': col6[0], 'db_name': db_name}
     item[db_name.upper()] = reset_item['evidence_detail']
     this_level = real_level.level(db_name.lower(), reset_item['level'], reset_item['cancer_type'], diagnose)
     item[db_name.upper()].append(this_level)
@@ -413,16 +415,15 @@ def get_drug_level(drug_items):
     return drug_items
 
 
-def get_drug_evidence(drug_item, var, key):
-    evidence1 = var[key]
+def get_drug_evidence(drug_items, evidence1):
     evidence2 = []
     for e in evidence1:
         for d in e[2]:
-            if d['drug'] != drug_item['drug']:
-                if e not in evidence2:
-                    evidence2.append(e)
-    var[key] = evidence2
-    return var
+            for drug_item in drug_items:
+                if d['drug'] == drug_item['drug']:
+                    if e not in evidence2:
+                        evidence2.append(e)
+    return evidence2
 
 
 def get_drug_db(var):
@@ -448,8 +449,7 @@ def get_drug_db(var):
     for i in range(len(db_names)):
         db_name1 = db_names[i]
         drug_items1 = filter(lambda x: x['db_name'].lower() == db_name1.lower(), drug_items)
-        for drug_item1 in drug_items1:
-            var = get_drug_evidence(drug_item1, var, db_name1.upper())
+        var[db_name1.upper()] = get_drug_evidence(drug_items1, var[db_name1.upper()])
     if len(drug_items) == 0 :
         return None
     for level in level_names:
@@ -520,13 +520,15 @@ def get_data3(drugs):
         new_item = {}
         category = item['category']
         new_item['category'] = category
+        drug = item['drug'].strip()
+        item['drug'] = '' if drug == '' else ('(%s)' % drug)
         new_item['drug'] = item['drug']
         rs_list, genes = get_variant_knowledge(category)
         new_item['rs_list'] = rs_list
         new_item['genes'] = genes
         new_item = get_data31(new_item)
         cell = new_item['cell']
-        cell_value = '%s' % (item['category'])
+        cell_value = '%s%s' % (item['category'], new_item['drug'])
         row, col = cell[0], cell[1]
         # print row, col
         if not (row == 0 and col == 0):
@@ -565,6 +567,9 @@ def get_data31(item):
     item['cell'] = row, col
     item['venoms'] = venoms
     item['curative_effects'] = curative_effects
+    # 判断逻辑问题：
+    # 根据证据的数量确定推荐的方向，这种情况下，证据的权重一致；
+    # 当相反证据量数量一致时，根据证据级别确定（证据级别的等级 1A＞1B＞2A＞2B＞3）
     tr1 = '疗效预测方面共纳入%d个证据，其中%d个预测疗效好，%d个预测疗效差；' % (curative_effects[1] + curative_effects[2], curative_effects[1], curative_effects[2])
     tr1 += '毒副作用预测共纳入%d个证据，其中%d个预测毒副作用低，%d个预测毒副作用高' % (venoms[1] + venoms[2], venoms[1], venoms[2])
     item['tr1'] = tr1
@@ -629,10 +634,10 @@ def get_gene_MoA(gene):
     for item in gene_MoA:
         if item['gene'] == gene:
             if item['gene_MoA'].lower() == 'Act'.lower():
-                return '原癌基因激活突变'
+                return ['原癌基因', '激活突变']
             if item['gene_MoA'].lower() == 'Lof'.lower():
-                return '抑癌基因失活变异'
-    return '未知'
+                return ['抑癌基因', '失活变异']
+    return ['未知', '']
 
 
 def reset_status(status):
@@ -818,9 +823,8 @@ def get_variant_knowledge(category):
                 if len(rs_geno1) > 0:
                     if item not in genes:
                         genes.append(item)
-                if item1 not in rs_list:
-                    rs_list.append(item1)
-                # print item['rs']
+                    if item1 not in rs_list:
+                        rs_list.append(item1)
                 items.append(item)
     for rs_item in rs_list:
         rs_list1 = []
