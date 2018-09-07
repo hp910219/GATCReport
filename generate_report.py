@@ -7,7 +7,6 @@ from config import base_dir, patient_info
 reload(sys)
 sys.setdefaultencoding('utf-8')
 result_dir = os.path.join(base_dir, 'results')
-template_folder = os.path.join(base_dir, 'templates')
 my_file = File(base_dir)
 
 if __name__ == '__main__':
