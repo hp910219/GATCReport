@@ -188,11 +188,15 @@ def get_img_info(path, is_refresh=False):
     if is_refresh:
         img_info = get_imgs(images_dir)
         img_info += get_imgs(path)
-        img_info = uniq_list(img_info)
-        my_file.write(img_info_path, img_info)
+        img_info2 = []
+        for info in img_info:
+            is_exists = len(filter(lambda x: x['rId'] == info['rId'], img_info2))
+            if is_exists == 0:
+                img_info2.append(info)
+        my_file.write(img_info_path, img_info2)
     else:
-        img_info = my_file.read(img_info_path)
-    return img_info
+        img_info2 = my_file.read(img_info_path)
+    return img_info2
 
 
 def get_immu(source):
