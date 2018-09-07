@@ -9,6 +9,7 @@ sys.setdefaultencoding('utf-8')
 from jy_word.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink, Relationship
 from jy_word.Word import write_cat, write_pkg_parts
 from report_doc.report_data import *
+from report_doc.get_gene_info import get_gene_info
 
 my_file = File(base_dir)
 
@@ -279,7 +280,7 @@ def write_chapter3(index, trs, chem_items):
     para += write_explain({'title': '结果说明：', 'text': '该疗效预测汇总仅根据以下证据进行汇总。疗效预测证据主要来自CIVic数据库，并根据专家人工对相关证据进行梳理取舍。毒副作用证据及部分由基因多态性提供的疗效证据则来自于药物基因组数据库PharmGKB。采取该数据库二级以上的证据，并结合部分三级证据（不具备二级以上证据的情况下）。由于化学治疗的疗效影响因素较多，各个生物标志物的预测能力有限，且多个证据之间缺乏合理的证据平衡方式。目前初步采取多个证据之间目前采取均权投票的方式，即默认多个生物标志物的预测能力完全一致，仅根据各个证据的量进行评估,当相反证据量一致时，将证据级别纳入考量。'})
     para += p.h4(cat=cats[2])
     para += c2
-    para += p.write(p.set(sect_pr=set_page('A4', header='rIdHeader%d' % index, page_margin=page_margin)))
+    para += p.write(p.set(sect_pr=set_page('A4', header='rIdHeader%d' % index, page_margin=[4, 1.5, 2.54, 1.5, 1.5, 1.75])))
     return para
 
 
@@ -709,25 +710,28 @@ def write_gene_info(gene_item, index):
     para = p.h4('（%d）基因说明:%s，%s' % (index, gene, gene_item['gene_MoA1']))
     pPr = p.set(line=15, ind=[1, 1])
     size = 9
-    for item in gene_list12:
-        if item['hugoSymbol'] == gene:
-            if 'geneAliases' in item:
-                if len(item['geneAliases']) > 0:
-                    para += p.write(pPr, r.text('Also known as %s' % ', '.join(item['geneAliases']), size))
-            text = ''
-            if 'curatedIsoform' in item:
-                text += 'Isoform: %s' % item['curatedIsoform']
-            if 'curatedRefSeq' in item:
-                text += 'Isoform: %s' % item['curatedRefSeq']
-            if len(text) > 0:
-                para += p.write(pPr, r.text(text, size))
-
-            description = item['description']
-            summary = item['summary']
-            if len(summary) > 0:
-                para += p.write(pPr, r.text(summary, size))
-            if len(description) > 0:
-                para += p.write(pPr, r.text(description, size))
+    try:
+        item = get_gene_info(gene)
+    except:
+        item = None
+        print gene
+    if item is not None:
+        if 'geneAliases' in item:
+            if len(item['geneAliases']) > 0:
+                para += p.write(pPr, r.text('Also known as %s' % ', '.join(item['geneAliases']), size))
+        text = ''
+        if 'curatedIsoform' in item:
+            text += 'Isoform: %s' % item['curatedIsoform']
+        if 'curatedRefSeq' in item:
+            text += 'RefSeq: %s' % item['curatedRefSeq']
+        if len(text) > 0:
+            para += p.write(pPr, r.text(text, size))
+        description = item['description']
+        summary = item['summary']
+        if len(summary) > 0:
+            para += p.write(pPr, r.text(summary, size))
+        if len(description) > 0:
+            para += p.write(pPr, r.text(description, size))
     return para
 
 
@@ -811,12 +815,15 @@ def write_evidence4(index):
     for i in range(len(evidence41)):
         text = evidence41[i]
         weight = 0
-        if len(text) < 135:
+        if len(text) < 171:
             weight = 1
+        after = 0
         if i % 4 == 0:
-            para += p.write(p.set(spacing=[0, 0.2], shade=gray), r.text(text, 9.5, weight=weight))
+            after = 0.2
         if i % 4 == 2:
-            para += p.write(p.set(spacing=[0, 1], shade=gray), r.text(text, 9.5, weight=weight))
+            after = 1
+        if after > 0:
+            para += p.write(p.set(spacing=[0, after], shade=gray), r.text(text, 9.5, weight=weight))
     return para
 
 
@@ -904,7 +911,7 @@ def write_gene_list3(genes, width=9000):
             if this_index < len(genes):
                 item = genes[this_index]
                 gene = item['gene']
-                para = p.write(pPr, r.text('%s %s(%s)' % (gene, item['rs'], item['genotype']), size))
+                para = p.write(pPr, r.text('%s%s %s(%s)' % (gene, item['level'], item['rs'], item['genotype']), size))
                 para += p.write(pPr, r.text(item['summary'], size))
                 tcs += tc.write(para, tc.set(w=ws[k], fill=fill, color=white, tcBorders=borders))
         trs2 += tr.write(tcs)

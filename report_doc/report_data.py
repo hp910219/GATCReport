@@ -53,7 +53,7 @@ neoantigen = my_file.read('neoantigen.tsv', dict_name=data_dir)
 cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir)
 quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name=data_dir)
 evidence_oncokb = my_file.read('evidence/OncoKB_evidence.csv', dict_name=data_dir)
-evidence_cgi = my_file.read('evidence/CGI_evidence.csv', dict_name=data_dir)
+evidence_cgi = my_file.read('evidence/cgi_evidence.csv', dict_name=data_dir)
 evidence_civic = my_file.read('evidence/civic_evidence.csv', dict_name=data_dir)
 signature_etiology = my_file.read('signature/signature_etiology.csv', dict_name=data_dir)
 recent_study = my_file.read('recent_study', dict_name=data_dir)
@@ -534,8 +534,8 @@ def get_data3(drugs):
 
 
 def get_data31(item):
-    venoms = [0] * 4
-    curative_effects = [0] * 4
+    venoms = [[], [], [], []]
+    curative_effects = [[], [], [], []]
     for item1 in item['genes']:
         summary = item1['summary'].split('、')
         venom = summary[0]  # 毒副作用
@@ -547,27 +547,46 @@ def get_data31(item):
                 curative_effect = summary[0]
                 venom = '毒副作用未知'
         if '好' in curative_effect:
-            curative_effects[1] += 1
+            curative_effects[1].append(item1)
         elif '差' in curative_effect:
-            curative_effects[2] += 1
+            curative_effects[2].append(item1)
         else:
-            curative_effects[3] += 1
+            curative_effects[3].append(item1)
 
         if '低' in venom:
-            venoms[1] += 1
+            venoms[1].append(item1)
         elif '高' in venom:
-            venoms[2] += 1
+            venoms[2].append(item1)
         else:
-            venoms[3] += 1
-    row, col = venoms.index(max(venoms)), curative_effects.index(max(curative_effects))
-    item['cell'] = row, col
-    item['venoms'] = venoms
-    item['curative_effects'] = curative_effects
+            venoms[3].append(item1)
+
+    venoms_num = [len(x) for x in venoms]
+    curative_effects_num = [len(x) for x in curative_effects]
+    good = len(curative_effects[1])
+    bad = len(curative_effects[2])
+    unknown1 = len(curative_effects[3])
+    low = len(venoms[1])
+    high = len(venoms[2])
+    unknown2 = len(venoms[3])
+    row, col = venoms_num.index(max(venoms_num)), curative_effects_num.index(max(curative_effects_num))
+
     # 判断逻辑问题：
     # 根据证据的数量确定推荐的方向，这种情况下，证据的权重一致；
     # 当相反证据量数量一致时，根据证据级别确定（证据级别的等级 1A＞1B＞2A＞2B＞3）
-    tr1 = '疗效预测方面共纳入%d个证据，其中%d个预测疗效好，%d个预测疗效差；' % (curative_effects[1] + curative_effects[2], curative_effects[1], curative_effects[2])
-    tr1 += '毒副作用预测共纳入%d个证据，其中%d个预测毒副作用低，%d个预测毒副作用高' % (venoms[1] + venoms[2], venoms[1], venoms[2])
+    if good == bad:
+        if col != 3:
+            aaa = compare_level3(curative_effects[1], curative_effects[2], 'good', 'bad')
+            if aaa == 'bad':
+                col = 2
+        if row != 3:
+            bbb = compare_level3(venoms[1], venoms[2], 'low', 'high')
+            if bbb == 'high':
+                row = 2
+    item['cell'] = row, col
+    item['venoms'] = venoms
+    item['curative_effects'] = curative_effects
+    tr1 = '疗效预测方面共纳入%d个证据，其中%d个预测疗效好，%d个预测疗效差；' % (good + bad, good, bad)
+    tr1 += '毒副作用预测共纳入%d个证据，其中%d个预测毒副作用低，%d个预测毒副作用高' % (low+high, low, high)
     item['tr1'] = tr1
     return item
 
@@ -840,3 +859,18 @@ def get_domain(gene, var_p, var_c):
     else:
         return items[0]['Pfam_domain'].strip()
     return ''
+
+
+def compare_level3(list1, list2, tip1, tip2):
+    # 当相反证据量数量一致时，根据证据级别确定（证据级别的等级 1A＞1B＞2A＞2B＞3）
+    for eq in ['1A', '1B', '2A', '2B', '3']:
+        aa = filter(lambda x: x['level'] == eq, list1)
+        if len(aa) > 0:
+            return tip1
+        bb = filter(lambda x: x['level'] == eq, list2)
+        if len(bb) > 0:
+            return tip2
+    return tip1
+
+
+
