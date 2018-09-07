@@ -19,7 +19,7 @@ red = 'ED1C24'
 orange = 'F14623'
 colors = ['2C3792', '3871C1', '50ADE5', '37AB9C', '27963C', '40B93C', '80CC28']
 level_names = ['A', 'B', 'C', 'D']
-db_names = ['OncoKB', 'civic', 'CGI']
+db_names = ['OncoKB', 'CIVic', 'CGI']
 borders = ['top', 'right', 'bottom', 'left']
 # 因为数据库的权威性  oncokb>civic>cgi
 
@@ -182,6 +182,7 @@ def get_img_info(path, is_refresh=False):
     part4 = r'%s/images/part4' % base_dir
     if not os.path.exists(part4):
         os.makedirs(part4)
+    # data_dir = '100303v3'
     crop_img(r'%s/%s/signature/signature.png' % (base_dir, data_dir), r'%s/4.5.1signature.png' % part4)
     crop_img(r'%s/%s/signature/signature_pie.png' % (base_dir, data_dir), r'%s/4.5.2signature_pie.png' % part4)
     if is_refresh:
@@ -329,7 +330,7 @@ def get_target_tip(items, items2, diagnose, db_name):
         # level ( “oncokb”,  “R1”， “Non-Small Cell Lung Cancer”，  "肺癌")
         if db_name == 'CGI':
             reset_item = reset_cgi(db_item)
-        elif db_name == 'civic':
+        elif db_name == 'CIVic':
             reset_item = reset_civic(db_item)
         elif db_name == 'OncoKB':
             reset_item = reset_oncokb(db_item)
