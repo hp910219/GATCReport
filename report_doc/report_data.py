@@ -8,7 +8,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from jy_word.Word import bm_index0, crop_img, get_imgs, uniq_list
 from jy_word.File import File
-from config import img_info_path, base_dir, data_dir, images_dir, variant_knowledge_name, variant_knowledge_index
+from config import img_info_path, base_dir, data_dir, images_dir
 from report_doc.get_real_level import FetchRealLevel
 
 gray = 'E9E9E9'
@@ -25,6 +25,23 @@ borders = ['top', 'right', 'bottom', 'left']
 
 real_level = FetchRealLevel()
 my_file = File(base_dir)
+
+# 初始化
+patient_info = my_file.read('patient_info.tsv', dict_name=data_dir)[0]
+disease_name = patient_info['diagnose']
+evidence_dir = os.path.join(data_dir, 'evidence')
+variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '骨肉瘤除外硬纤维瘤和肌纤维母细胞瘤']
+variant_knowledge_index = 0
+variant_knowledge_name = '化疗多态位点证据列表%s' % variant_knowledge_names[variant_knowledge_index]
+for index, v in enumerate(variant_knowledge_names):
+    if disease_name in v:
+        variant_knowledge_name = '化疗多态位点证据列表%s' % v
+        variant_knowledge_index = index
+        break
+tmb_tip = '注：NSCLC未经选择人群PD抗体有效率，具吸烟史为22%，无吸烟史为10%'
+if disease_name in '结直肠癌':
+    tmb_tip = '注：MSS微卫星稳定结直肠癌患者PD1抗体有效率为0%；MSI-H微卫星不稳定结直肠癌患者有效率为29.6%。'
+print disease_name, variant_knowledge_name, data_dir, variant_knowledge_index
 # 静态的数据：
 chem_durg_list = my_file.read('static/base_data/chem_durg_list%d.tsv' % variant_knowledge_index)  # category	drug	cancer
 variant_knowledge = my_file.read(u'static/base_data/%s.xlsx' % variant_knowledge_name, sheet_name='Sheet1')
@@ -52,10 +69,6 @@ variant_anno1 = my_file.read('variant_anno.maf', dict_name=data_dir, sep='\t', t
 neoantigen = my_file.read('neoantigen.tsv', dict_name=data_dir)
 cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir)
 quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name=data_dir)
-evidence_oncokb = my_file.read('evidence/OncoKB_evidence.csv', dict_name=data_dir)
-evidence_cgi = my_file.read('evidence/cgi_evidence.csv', dict_name=data_dir)
-evidence_civic = my_file.read('evidence/CIVic_evidence.csv', dict_name=data_dir)
-signature_etiology = my_file.read('signature/signature_etiology.csv', dict_name=data_dir)
 recent_study = my_file.read('recent_study', dict_name=data_dir)
 CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
 
@@ -182,9 +195,8 @@ def get_img_info(path, is_refresh=False):
     part4 = r'%s/images/part4' % base_dir
     if not os.path.exists(part4):
         os.makedirs(part4)
-    # data_dir = '100303v3'
-    crop_img(r'%s/%s/signature/signature.png' % (base_dir, data_dir), r'%s/4.5.1signature.png' % part4)
-    crop_img(r'%s/%s/signature/signature_pie.png' % (base_dir, data_dir), r'%s/4.5.2signature_pie.png' % part4)
+    crop_img(r'%s/signature.png' % (data_dir), r'%s/4.5.1signature.png' % part4)
+    crop_img(r'%s/signature_pie.png' % (data_dir), r'%s/4.5.2signature_pie.png' % part4)
     if is_refresh:
         img_info = get_imgs(images_dir)
         img_info += get_imgs(path)
@@ -241,7 +253,7 @@ def get_var(gene):
 def get_EGFR():
     # efgr 只有突变， 只有扩增时， 都无时，合并？
     gene = 'EGFR'
-    item1 = {'gene': gene, 'fill': gray, 'text': 'EGFR无突变', 'copynumber': 0}
+    item1 = {'gene': gene, 'fill': gray, 'text': 'EGFR无突变无扩增', 'copynumber': 0}
     items = filter_db(gene)
     is_match, copynumber, status = get_copynumber(gene, 'gain')
     for item in items:
@@ -278,21 +290,14 @@ def get_target_tips(diagnose):
     # 因为数据库的权威性  oncokb>civic>cgi
     items = []
     items2 = []
-    for db_name in db_names:
-        if db_name == 'cgi':
-            db_items = evidence_cgi
-            func = reset_cgi
-        elif db_name == 'CIVic':
-            func = reset_civic
-            db_items = evidence_civic
-        elif db_name == 'OncoKB':
-            func = reset_oncokb
-            db_items = evidence_oncokb
-        else:
-            func = None
-            db_items = []
-        if func is not None:
-            get_target_tip(items, items2, diagnose, db_items, func)
+    # ['OncoKB', 'CIVic', 'cgi']
+    for i in os.listdir(evidence_dir):
+        if i.lower().startswith('oncokb'):
+            get_target_tip(items, items2, diagnose, i, reset_oncokb)
+        if i.lower().startswith('civic'):
+            get_target_tip(items, items2, diagnose, i, reset_civic)
+        if i.lower().startswith('cgi'):
+            get_target_tip(items, items2, diagnose, i, reset_cgi)
     vars = []
     for item2 in items2:
         var = {'col1': item2}
@@ -311,9 +316,18 @@ def get_target_tips(diagnose):
                             var[key].append(value1)
                 for key in level_names:
                     var[key] += item1[key]
-        var1 = get_drug_db(var)
-        if var1 is not None:
-            vars.append(var1)
+        vars.append(var)
+    for index, v in enumerate(vars):
+        gene = v['gene']
+        v2s = filter(lambda x: x['gene'] == gene and '模糊匹配' in x['col1'], vars)
+        for v2 in v2s:
+            for k in level_names:
+                v[k] += v2[k]
+            for k in db_names:
+                v[k.upper()] += v2[k.upper()]
+            if v2 in vars:
+                vars.remove(v2)
+        v = get_drug_db(v)
     vars = sorted(vars, cmp=cmp_target_tip)
     return vars
 
@@ -334,7 +348,8 @@ def cmp_target_tip(x, y):
     return cmp1 * (-1)
 
 
-def get_target_tip(items, items2, diagnose, db_items, func):
+def get_target_tip(items, items2, diagnose, file_name, func):
+    db_items = my_file.read(os.path.join(evidence_dir, file_name))
     i = 0
     for db_item in db_items:
         # 各数据库证据级别对应关系 https://mubu.com/doc/3LSWugo_cE
@@ -376,10 +391,15 @@ def get_target_tip(items, items2, diagnose, db_items, func):
                         if exon1 == exon and variant_type1[:3].upper() == variant_type:
                             is_match = True
                             col1 = '%s exon %s %s' % (gene, exon, reset_item['status'])
+                        else:
+                            print gene
                 elif exon1 == '' and variant_type1 != '':
                     is_match, copynumber, status = get_copynumber(gene, variant_type1)
                     col1 = u'%s%s(拷贝数%s)' % (gene, status, copynumber)
-                if is_match and len(col1) > 0:
+                if len(col1) > 0:
+                    if is_match is False:
+                        col1 = u'%s(模糊匹配)' % gene
+                        reset_item['evidence_detail'][4] = '模糊匹配'
                     item = get_drug(col1, reset_item, diagnose)
                     item['var'] = ''
                     items.append(item)
@@ -464,19 +484,21 @@ def get_drug_db(var):
         return None
     for level in level_names:
         value = []
+        value1 = []
+        value2 = []
         drugs = filter(lambda x: x['level'] == level, drug_items)
         for drug in drugs:
-            # get_drug_evidence(drug, evidence)
             responsive = drug['responsive']
             x_drug = '%s' % drug['drug'].strip()
             if x_drug.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
-                # x_drug = '%s===%s===%s' % (x_drug, x1['db_name'], x1['level'])
-                # x_drug1 = '%s==%s==%s' % (x_drug, drug['db_name'], drug['level'])
                 x_drug1 = '%s(%s)' % (x_drug, responsive)
-                if x_drug1 not in value:
-                    value.append(x_drug1)
-        value = sorted(value)
-        var[level] = ';'.join(value)
+                if responsive == 'responsive':
+                    if x_drug1 not in value1:
+                        value1.append(x_drug1)
+                else:
+                    if x_drug1 not in value2:
+                        value2.append(x_drug1)
+        var[level] = ';'.join(sorted(value1) + sorted(value2))
     return var
 
 
@@ -541,7 +563,7 @@ def get_data3(drugs):
         cell = new_item['cell']
         cell_value = '%s%s' % (item['category'], new_item['drug'])
         row, col = cell[0], cell[1]
-        if not (row == 0 or col == 0):
+        if row * col > 0:
             trs[row][col].append(cell_value)
         new_items.append(new_item)
     return new_items, trs
@@ -564,35 +586,31 @@ def get_data31(item):
             curative_effects[1].append(item1)
         elif '差' in curative_effect:
             curative_effects[2].append(item1)
-        else:
-            curative_effects[3].append(item1)
+        # else:
+        #     curative_effects[3].append(item1)
 
         if '低' in venom:
             venoms[1].append(item1)
         elif '高' in venom:
             venoms[2].append(item1)
-        else:
-            venoms[3].append(item1)
+        # else:
+        #     venoms[3].append(item1)
 
     venoms_num = [len(x) for x in venoms]
     curative_effects_num = [len(x) for x in curative_effects]
     good = len(curative_effects[1])
     bad = len(curative_effects[2])
-    unknown1 = len(curative_effects[3])
     low = len(venoms[1])
     high = len(venoms[2])
-    unknown2 = len(venoms[3])
     row, col = venoms_num.index(max(venoms_num)), curative_effects_num.index(max(curative_effects_num))
 
     # 判断逻辑问题：
     # 根据证据的数量确定推荐的方向，这种情况下，证据的权重一致；
     # 当相反证据量数量一致时，根据证据级别确定（证据级别的等级 1A＞1B＞2A＞2B＞3）
     if good == bad:
-        if col != 3:
-            col = compare_level3(curative_effects[1], curative_effects[2], 'good', 'bad')
+        col = compare_level3(curative_effects[1], curative_effects[2])
     if low == high > 0:
-        if row != 3:
-            row = compare_level3(venoms[1], venoms[2], 'low', 'high')
+        row = compare_level3(venoms[1], venoms[2])
     item['cell'] = row, col
     item['venoms'] = venoms
     item['curative_effects'] = curative_effects
@@ -641,7 +659,7 @@ def get_data44(gene):
     return gray
 
 
-def get_data45():
+def get_data45(signature_etiology):
     items = [['', 'Signature ID', '权重', '主要出现的癌种', '可能的病因', '评论']]
     tr1, tr2 = '', '该癌症可能由'
     for item in signature_etiology:
@@ -750,13 +768,13 @@ def reset_civic(item):
     cancer_type = item['disease_name']
     if status_cn == '未知':
         variant_names = variant_name.split(' ')
-        if variant_name.startswith('Ex'):
+        if variant_name.startswith('Exon'):
+            exon = 'E%s' % variant_names[1]
+            status_en, status_cn = reset_status(variant_names[2])
+        elif variant_name.startswith('Ex'):
             vars = [gene, variant_names[-1]]
             exon = 'E%s' % variant_names[0].lstrip('Ex')
             status_en, status_cn = reset_status(variant_names[1])
-        elif variant_name.startswith('Exon'):
-            exon = 'E%s' % variant_names[1]
-            status_en, status_cn = reset_status(variant_names[2])
         else:
             # status_en, status_cn = reset_status(variant_name.split('-')[0])
             vars = [variant_name]
@@ -811,9 +829,9 @@ def reset_oncokb(item):
     evidence_type = ', '.join([transfer_level(Level), cancer_type])
     # 敏感（responsive）的药物标蓝；耐药（resistance）
     if item['Level'].lower() == 'r1':
-        responsive = 'responsive'
-    else:
         responsive = 'resistance'
+    else:
+        responsive = 'responsive'
     return {
         'responsive': responsive,
         'gene': gene,
@@ -895,7 +913,7 @@ def get_domain(gene, var_p, var_c):
     return ''
 
 
-def compare_level3(list1, list2, tip1, tip2):
+def compare_level3(list1, list2):
     # 当相反证据量数量一致时，根据证据级别确定（证据级别的等级 1A＞1B＞2A＞2B＞3）
     eqs = ['1A', '1B', '2A', '2B', '3']
     for i in range(len(eqs)):
@@ -904,6 +922,8 @@ def compare_level3(list1, list2, tip1, tip2):
         for j in range(0, i+1):
             eq1 = eqs[j]
             bb = filter(lambda x: x['level'] == eq1, list2)
+            if j < i and len(bb) > 0:
+                return 2
             if len(aa) * len(bb) > 0:
                 return 3
             if len(aa) > 0:
@@ -911,6 +931,3 @@ def compare_level3(list1, list2, tip1, tip2):
             if len(bb) > 0:
                 return 2
     return 3
-
-
-

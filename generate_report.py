@@ -1,9 +1,9 @@
 # -*- coding:UTF-8 -*-
 import os
 import sys
-from report_doc.report_core import get_report_core
+from report_doc.report_core import get_report_core, patient_info
 from jy_word.File import File
-from config import base_dir, patient_info
+from config import base_dir
 reload(sys)
 sys.setdefaultencoding('utf-8')
 result_dir = os.path.join(base_dir, 'results')

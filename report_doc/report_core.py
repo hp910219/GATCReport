@@ -9,7 +9,7 @@ sys.setdefaultencoding('utf-8')
 from jy_word.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink, Relationship
 from jy_word.Word import write_cat, write_pkg_parts
 from report_doc.report_data import *
-from report_doc.get_gene_info import get_gene_info
+from report_doc.get_gene_info import get_gene_info, get_pcgr
 
 my_file = File(base_dir)
 
@@ -22,6 +22,7 @@ table = Table()
 tr = Tr()
 tc = Tc()
 page_margin = [3.5, 1.5, 2.54, 1.5, 1.5, 1.75]
+page_margin4 = [4, 1.5, 2.54, 1.5, 1.5, 1.75]
 sect_pr_catalog = set_page('A4', footer='rIdFooter1', header='rIdHeader1')
 sect_pr_content = set_page('A4', footer='rIdFooter2', pgNumType_s=1, header='rIdHeader2')
 con1 = p.write(p.set(rule='exact', line=12, sect_pr=set_page(type='continuous', cols=1)))
@@ -49,6 +50,13 @@ sect_pr1 = set_page('A4', page_margin=page_margin, footer='rIdFooter2', header='
 
 # ##################下载报告所需方法######################
 def get_report_core(title_cn, title_en, data):
+    pcgr = os.path.join(data_dir, 'pcgr')
+    signature_etiology = []
+    for i in os.listdir(pcgr):
+        html_path = os.path.join(pcgr, i)
+        signature_etiology = get_pcgr(html_path, data_dir)
+        break
+    data['signature_etiology'] = signature_etiology
     img_info = get_img_info(data_dir, is_refresh=True)
     body = write_body(title_cn, title_en, data)
     pages = write_pages()
@@ -68,7 +76,7 @@ def write_body(title_cn, title_en, data):
     body += write_chapter1(data, 3)
     body += write_chapter2(4)
     body += write_chapter3(5, trs3, chem_items)
-    body += write_chapter4(6)
+    body += write_chapter4(6, data['signature_etiology'])
     body += write_chapter5(7)
     body += write_backcover()
     return body
@@ -137,20 +145,38 @@ def write_chapter1(data, index):
     para += p.h4(cat=cats[2])
     for i, item in enumerate(target_tips):
         gene = item['gene']
-        var_name = '%s_%s' % (gene, item['col1'].split('\n')[1].strip().replace('*', 'X'))
+        try:
+            index0 = 2
+            var_name = '%s_%s' % (gene, item['col1'].split('\n')[1].strip().replace('*', 'X'))
+        except:
+            index0 = 1
+            var_name = ''
+        items = filter(lambda x: x['gene'] == gene, target_tips[: i])
         para += p.write(p.set(shade=red, line=24, ind=[0.7, 0]), r.text('%d. 变异：%s' % (i + 1, item['col1']), color=white, space=True))
-        para += p.h4('（1）该基因变异所处保守结构域位置')
-        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.7, rId=var_name, posOffset=[0, 0], align=['center', ''])) + p.write()
-        para1, index1 = write_evidences(item)
+        if len(var_name) > 0:
+            para += p.h4('（1）该基因变异所处保守结构域位置')
+            para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.7, rId=var_name, posOffset=[0, 0], align=['center', ''])) + p.write()
+        para1, index1 = write_evidences(item, index0)
         para += para1
-        para += write_gene_info(item, index1)
-        para += p.h4('（%d）基因突变保守结构域分布情况' % (index1 + 1))
-        para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.7, rId='%s_struct' % gene, posOffset=[0, 0], align=['center', ''])) + p.write()
-        para += p.h4('（%d）基因突变各癌种分布情况' % (index1 + 2))
-        para += p.write(p.set(jc='center', spacing=[5, 0]), run=r.picture(cy=6, rId='%s_distribution' % gene, posOffset=[0, 0], align=['center', '']))
-        if i < len(target_tips) - 1:
-            para += p.write() * 7
-    para += p.write(p.set(sect_pr=set_page()))
+        if len(items) == 0:
+            para += write_gene_info(item, index1)
+            struct = r.picture(cx=17.7, rId='%s_struct' % gene, posOffset=[0, 0], align=['center', ''])
+            if len(struct) > 0:
+                index1 += 1
+                para += p.h4('（%d）基因突变保守结构域分布情况' % (index1))
+                para += p.write(p.set(jc='center', spacing=[3, 0]), run=struct) + p.write()
+            distribution = r.picture(cy=6, rId='%s_distribution' % gene, posOffset=[0, 0], align=['center', ''])
+            if len(distribution) > 0:
+                index1 += 1
+                para += p.h4('（%d）基因突变各癌种分布情况' % (index1))
+                para += p.write(p.set(jc='center', spacing=[5, 0]), run=distribution)
+                if i < len(target_tips) - 1:
+                    para += p.write() * 7
+            else:
+                para += p.write()
+        else:
+            para += p.write()
+    para += p.write(p.set(sect_pr=set_page(page_margin=page_margin4)))
     para += write_chapter13(cats[3], index)
     return para
 
@@ -175,7 +201,7 @@ def write_chapter2(index):
             'title': p.h4(cat=cats[2]), 'before': 0, 'note_before': 10,
             'img_id': 'tmb',
             'func': write_immun_tip2,
-            'note': '注：NSCLC未经选择人群PD抗体有效率，具吸烟史为22%，无吸烟史为10%',
+            'note': tmb_tip,
             'infos': [
                 {'title': '结果说明：', 'text': '该结果是通过肿瘤外显子组检测得到的。全外显子组包含人体所有大约两万多个基因，大约有50M左右的区域。TMB肿瘤突变负荷指平均每M（兆）区域，肿瘤细胞发生的非同义突变的个数。同时，进一步将该结果与TCGA（肿瘤基因图谱）上相同癌种的TMB数据进行比对（如该癌种TCGA未收录，则与所有癌种的总集合进行比较），标注其TMB数值高于多少比例的人群。'},
                 {'title': '检测意义：', 'text': 'TMB在多项临床研究中均被证明能够有效区分PD1抗体、CTLA4抗体等免疫检查位点抗体治疗是否有效的人群。综合型研究表明，在不同肿瘤中，不同患者的PD1抗体治疗有效性的差异55%可以由TMB的差异解释。TMB是不同肿瘤间体细胞突变量的评估。一般情况下，TMB越高，该肿瘤可能会拥有更多的肿瘤新生抗原，该肿瘤也越有可能在经过免疫检查位点抗体解除肿瘤免疫逃逸之后，被患者自身的免疫系统所识别，相关治疗在该患者身上也就越可能有效。'},
@@ -284,7 +310,7 @@ def write_chapter3(index, trs, chem_items):
     return para
 
 
-def write_chapter4(index):
+def write_chapter4(index, signature_etiology):
     cats = get_catalog()[12: 13 + 6]
     para = ''
     para += p.h4(cat=cats[0], spacing=[0, 0], color=white)
@@ -292,7 +318,7 @@ def write_chapter4(index):
     para += p.h4(cat=cats[2]) + write_chapter42()
     para += p.h4(cat=cats[3]) + write_chapter43()
     para += p.h4(cat=cats[4]) + write_chapter44()
-    para += p.h4(cat=cats[5]) + write_chapter45()
+    para += p.h4(cat=cats[5]) + write_chapter45(signature_etiology)
     para += p.h4(cat=cats[6])
     para += p.write(r.text('癌症多组学临床检测是将多种维度的癌症全数据进行囊括的一种检测方式。随着癌症精准医疗和癌症真实世界研究高度发展，癌症循证医学证据以爆炸性的方式在扩大，整个组学甚至多个组学的整合性分析工具逐步出现。最新研究进展模块是皑医在持续的癌症最新研究进展文献调研跟进，多种组学整合型工具研究应用的基础上，在临床医生和相关生物医学研究人员共同决策的机制上，为了患者能够紧跟时代最前沿研究进展而设计的模块。该模块又进一步分成免疫治疗最新研究进展、肿瘤分子分型最新研究进展和其他最新研究进展这三类。由于该模块具有较强的前瞻性和不确定性，该模块的解读注释的使用务必在临床医生的主导下参考使用。'))
     para += p.write(p.set(sect_pr=set_page('A4', header='rIdHeader%d' % index)))
@@ -488,8 +514,8 @@ def write_chapter44():
     return para
 
 
-def write_chapter45():
-    items, tr1, tr2 = get_data45()
+def write_chapter45(signature_etiology):
+    items, tr1, tr2 = get_data45(signature_etiology)
     data = [tr1, tr2]
     para = write_immun(data, jc='center', w=5000)
     para += p.write()
@@ -643,17 +669,16 @@ def write_hla(data, w=4000):
     return table_str
 
 
-def write_evidences(item):
+def write_evidences(item, index):
     para = ''
-    index = 2
     for i in range(len(db_names)):
         rId = db_names[i]
         if rId.upper() in item:
             evidences = item[rId.upper()]
             if len(evidences) > 0:
                 run = r.text('（%d） ' % index, 12, space=True, weight=True)
-                run += r.picture(cy=0.5, rId=rId.lower(), text_wrapping='inline')
-                run += r.text(' %s数据库证据' % rId, 12, space=True, weight=True)
+                run += r.picture(cy=0.6, rId=rId.lower(), posOffset=[1.3, 0.8])
+                run += r.text('           %s数据库证据' % rId, 12, space=True, weight=True)
                 para += p.write(p.set(spacing=[1.5, 1.5]), run)
                 para += write_evidence(evidences)
                 # print index,
@@ -788,7 +813,7 @@ def write_immun_tip():
     para += table.write(trs1, ws=[3600], jc='left', bdColor=blue, ind=0, tblp=True, tblpX=1.8, leftFromText=0.4, rightFromText=0.4)
     data2 = get_immu('TMB')[1:]
     trs2 = write_tr1(data2[0]) + write_tr2(data2[1])
-    para += table.write(trs2, ws=[3200], jc='left', bdColor=blue, ind=0, tblp=True, tblpX=9.5, leftFromText=0.4, rightFromText=0.4)
+    para += table.write(trs2, ws=[3600], jc='left', bdColor=blue, ind=0, tblp=True, tblpX=9.5, leftFromText=0.4, rightFromText=0.4)
     para += p.write() * 6
     return para
 
@@ -911,7 +936,7 @@ def write_gene_list3(genes, width=9000):
             if this_index < len(genes):
                 item = genes[this_index]
                 gene = item['gene']
-                para = p.write(pPr, r.text('%s%s %s(%s)' % (gene, item['level'], item['rs'], item['genotype']), size))
+                para = p.write(pPr, r.text('%s(%s) %s(%s)' % (gene, item['level'], item['rs'], item['genotype']), size))
                 para += p.write(pPr, r.text(item['summary'], size))
                 tcs += tc.write(para, tc.set(w=ws[k], fill=fill, color=white, tcBorders=borders))
         trs2 += tr.write(tcs)
@@ -1083,15 +1108,16 @@ def write_tr51(item, ws, c=''):
         texts = item[i]
         para = ''
         for t in texts.split('\n'):
-            if c == 'target' and t > 0:
+            if c == 'target' and i > 0:
                 run = ''
-                for tt in t.split(';'):
+                for t_index, tt in enumerate(t.split(';')):
                     ttt = tt.split('(')
                     if len(ttt) > 1 and ttt[1].rstrip(')') == 'responsive':
                         run += r.text(ttt[0], size=size, color=blue)
                     else:
-                        run += r.text(tt.replace('resistance', '耐药'), size=size)
-                    run += r.text(';', size=size)
+                        run += r.text(tt.replace('(resistance)', '(耐药)'), size=size)
+                    if len(t) > 0 and t_index != len(t.split(';')) - 1:
+                        run += r.text('、', size=size)
             else:
                 run = r.text(t, size=size)
             para += p.write(pPr, run)
