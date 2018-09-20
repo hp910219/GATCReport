@@ -557,8 +557,7 @@ def get_data3():
         category = item['category']
         new_item['category'] = category
         new_item['drug'] = item['drug']
-        rs_list = get_variant_knowledge(item['rs_list'], item['items'])
-        new_item['rs_list'] = rs_list
+        new_item['rs_list'] = get_variant_knowledge(item['genes'], item['items'])
         new_item['genes'] = item['genes']
         new_item = get_data31(new_item)
         cell = new_item['cell']
@@ -862,9 +861,9 @@ def get_variant_knowledge(rs_list, items):
     for rs_item in rs_list:
         rs_list1 = []
         for item in items:
-            if item['gene'] == rs_item['gene'] and item['rs'] == rs_item['rs'] and item['level'] == rs_item['level'] and item['category'] == rs_item['category']:
+            if item['gene'] == rs_item['gene'] and item['rs'] == rs_item['rs'] and item['level'] == rs_item['level']:
                 rs_list1.append(item)
-        rs_item['rs_list'] = rs_list1
+        rs_item['genotypes'] = rs_list1
     return rs_list
 
 

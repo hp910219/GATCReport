@@ -296,12 +296,8 @@ def write_chapter3(index, trs, chem_items):
         rs_list0 = item['rs_list']
         c2 += write_gene_list3(item['genes'])
         c2 += p.write()
-        # print len(genes)
         for rs_item0 in rs_list0:
-            # rs_list1 = filter(lambda x: x['gene'] == genes1['gene'] and x['rs'] == genes1['rs'] and x['level'] == genes1['level'], item['genes'])
-            # print len(rs_list1), genes1['rs_list']
-            # c2 += write_genotype(rs_list1, [1000, 8000])
-            c2 += write_genotype(rs_item0['rs_list'], [1000, 8000])
+            c2 += write_genotype(rs_item0['genotypes'], [1000, 8000])
     para = ''
     para += p.h4(cat=cats[0], spacing=[0, 0], color=white)
     para += p.h4(cat=cats[1], spacing=[0, 1])
