@@ -31,17 +31,19 @@ patient_info = my_file.read('patient_info.tsv', dict_name=data_dir)[0]
 disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
 variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '骨肉瘤除外硬纤维瘤和肌纤维母细胞瘤']
-variant_knowledge_index = 0
+variant_knowledge_index = 2
 variant_knowledge_name = '化疗多态位点证据列表%s' % variant_knowledge_names[variant_knowledge_index]
-for index, v in enumerate(variant_knowledge_names):
+for indexx, v in enumerate(variant_knowledge_names):
     if disease_name in v:
         variant_knowledge_name = '化疗多态位点证据列表%s' % v
-        variant_knowledge_index = index
+        variant_knowledge_index = indexx
         break
 tmb_tip = '注：NSCLC未经选择人群PD抗体有效率，具吸烟史为22%，无吸烟史为10%'
 if disease_name in '结直肠癌':
     tmb_tip = '注：MSS微卫星稳定结直肠癌患者PD1抗体有效率为0%；MSI-H微卫星不稳定结直肠癌患者有效率为29.6%。'
-print disease_name, variant_knowledge_name, data_dir, variant_knowledge_index
+variant_knowledge_index = 2
+# variant_knowledge_name = variant_knowledge_names[variant_knowledge_index]
+print disease_name, variant_knowledge_name, data_dir, variant_knowledge_names[variant_knowledge_index]
 # 静态的数据：
 chem_durg_list = my_file.read('static/base_data/chem_durg_list%d.tsv' % variant_knowledge_index)  # category	drug	cancer
 variant_knowledge = my_file.read(u'static/base_data/%s.xlsx' % variant_knowledge_name, sheet_name='Sheet1')
@@ -541,7 +543,7 @@ def get_quantum_cellurity(chr, pos, is_print=False):
     return ''
 
 
-def get_data3(drugs):
+def get_data3():
     new_items = []
     trs = [
         ['', '疗效可能好', '疗效可能差', '疗效未知'],
@@ -549,12 +551,11 @@ def get_data3(drugs):
         ['毒副作用高', [], [], []],
         ['毒副作用未知', [], [], []]
     ]
+    drugs = get_variant_knowledges()
     for item in drugs:
         new_item = {}
         category = item['category']
         new_item['category'] = category
-        drug = item['drug'].strip()
-        item['drug'] = '' if drug == '' else ('(%s)' % drug)
         new_item['drug'] = item['drug']
         rs_list, genes = get_variant_knowledge(category)
         new_item['rs_list'] = rs_list
@@ -861,11 +862,15 @@ def get_variant_knowledge(category):
     items = []
     rs_list = []
     genes = []
+    categories = []
     for i in range(variant_knowledge.nrows):
         j = 1
         cell_value = variant_knowledge.cell_value(i, j)
+        if cell_value.startswith('rs') is False and i > 0:
+            print cell_value
+            categories.append(cell_value)
+
         if cell_value == category:
-            # print j, u'%s' % category
             for k in range(i + 1, variant_knowledge.nrows):
                 row_value = variant_knowledge.row_values(k)
                 cell_value1 = row_value[j]
@@ -892,14 +897,55 @@ def get_variant_knowledge(category):
                         genes.append(item)
                     if item1 not in rs_list:
                         rs_list.append(item1)
+                if item['rs'] == 'rs104522':
+                    print item
                 items.append(item)
     for rs_item in rs_list:
         rs_list1 = []
         for item in items:
             if item['gene'] == rs_item['gene'] and item['rs'] == rs_item['rs'] and item['level'] == rs_item['level'] and item['category'] == rs_item['category']:
                 rs_list1.append(item)
+
         rs_item['rs_list'] = rs_list1
     return rs_list, genes
+
+
+def get_variant_knowledges():
+    categories = []
+    for i in range(variant_knowledge.nrows):
+        j = 1
+        cell_value = variant_knowledge.cell_value(i, j)
+        if cell_value.startswith('rs') is False and i > 0:
+            drug = '' if cell_value != '铂类药物' else '(顺铂、卡铂、奥沙利铂)'
+            category = {'category': cell_value, 'drug': drug, 'rs_list': [], 'genes': []}
+            for k in range(i + 1, variant_knowledge.nrows):
+                row_value = variant_knowledge.row_values(k)
+                cell_value1 = row_value[j]
+                if not cell_value1.startswith('rs'):
+                    break
+                item = {
+                    'gene': row_value[j-1],
+                    'rs': cell_value1,
+                    'genotype': row_value[j+1],
+                    'summary': row_value[j+2],
+                    'introduction': row_value[j+3],
+                    'level': row_value[j+4],
+                    'category': category,
+                }
+                item1 = {
+                    'gene': row_value[j-1],
+                    'rs': cell_value1,
+                    'level': row_value[j+4],
+                    'category': category
+                }
+                rs_geno1 = filter(lambda x: x[0] == item['rs'] and x[1] == item['genotype'], rs_geno)
+                if len(rs_geno1) > 0:
+                    if item not in category['genes']:
+                        category['genes'].append(item)
+                    if item1 not in category['rs_list']:
+                        category['rs_list'].append(item1)
+            categories.append(category)
+    return categories
 
 
 def get_domain(gene, var_p, var_c):
