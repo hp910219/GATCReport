@@ -65,7 +65,7 @@ def get_report_core(title_cn, title_en, data):
 
 
 def write_body(title_cn, title_en, data):
-    chem_items, trs3 = get_data3(chem_durg_list)
+    chem_items, trs3 = get_data3()
     diagnose = data['patient_info']['diagnose']
     data['target_tips'] = get_target_tips(diagnose)
     data['chem_tip'] = ', '.join(trs3[1][1])
@@ -293,11 +293,15 @@ def write_chapter3(index, trs, chem_items):
         text = 'PharmGKB'
         c2 += p.h4('（%d）                   %s药物基因组数据库（基因多态性相关证据）' % (0 + 1, text), runs=r.picture(cy=0.6, rId=text, posOffset=[1.3, 0.7]))
         c2 += p.write()
-        genes = item['rs_list']
+        rs_list0 = item['rs_list']
         c2 += write_gene_list3(item['genes'])
         c2 += p.write()
-        for genes1 in genes:
-            c2 += write_genotype(genes1['rs_list'], [1000, 8000])
+        # print len(genes)
+        for rs_item0 in rs_list0:
+            # rs_list1 = filter(lambda x: x['gene'] == genes1['gene'] and x['rs'] == genes1['rs'] and x['level'] == genes1['level'], item['genes'])
+            # print len(rs_list1), genes1['rs_list']
+            # c2 += write_genotype(rs_list1, [1000, 8000])
+            c2 += write_genotype(rs_item0['rs_list'], [1000, 8000])
     para = ''
     para += p.h4(cat=cats[0], spacing=[0, 0], color=white)
     para += p.h4(cat=cats[1], spacing=[0, 1])
@@ -809,6 +813,7 @@ def write_target_tip(title, items):
 def write_immun_tip():
     para = p.h4('免疫治疗提示')
     data1 = get_immu('MSI')[1:]
+
     trs1 = write_tr1(data1[0]) + write_tr2(data1[1])
     para += table.write(trs1, ws=[3600], jc='left', bdColor=blue, ind=0, tblp=True, tblpX=1.8, leftFromText=0.4, rightFromText=0.4)
     data2 = get_immu('TMB')[1:]

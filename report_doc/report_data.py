@@ -31,7 +31,7 @@ patient_info = my_file.read('patient_info.tsv', dict_name=data_dir)[0]
 disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
 variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '骨肉瘤除外硬纤维瘤和肌纤维母细胞瘤']
-variant_knowledge_index = 2
+variant_knowledge_index = 0
 variant_knowledge_name = '化疗多态位点证据列表%s' % variant_knowledge_names[variant_knowledge_index]
 for indexx, v in enumerate(variant_knowledge_names):
     if disease_name in v:
@@ -41,8 +41,6 @@ for indexx, v in enumerate(variant_knowledge_names):
 tmb_tip = '注：NSCLC未经选择人群PD抗体有效率，具吸烟史为22%，无吸烟史为10%'
 if disease_name in '结直肠癌':
     tmb_tip = '注：MSS微卫星稳定结直肠癌患者PD1抗体有效率为0%；MSI-H微卫星不稳定结直肠癌患者有效率为29.6%。'
-variant_knowledge_index = 2
-# variant_knowledge_name = variant_knowledge_names[variant_knowledge_index]
 print disease_name, variant_knowledge_name, data_dir, variant_knowledge_names[variant_knowledge_index]
 # 静态的数据：
 chem_durg_list = my_file.read('static/base_data/chem_durg_list%d.tsv' % variant_knowledge_index)  # category	drug	cancer
@@ -72,8 +70,10 @@ neoantigen = my_file.read('neoantigen.tsv', dict_name=data_dir)
 cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir)
 quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name=data_dir)
 recent_study = my_file.read('recent_study', dict_name=data_dir)
-CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
-
+try:
+    CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
+except:
+    CGI_mutation_analysis = []
 
 def test_chinese(contents):
     import re
@@ -557,9 +557,9 @@ def get_data3():
         category = item['category']
         new_item['category'] = category
         new_item['drug'] = item['drug']
-        rs_list, genes = get_variant_knowledge(category)
+        rs_list = get_variant_knowledge(item['rs_list'], item['items'])
         new_item['rs_list'] = rs_list
-        new_item['genes'] = genes
+        new_item['genes'] = item['genes']
         new_item = get_data31(new_item)
         cell = new_item['cell']
         cell_value = '%s%s' % (item['category'], new_item['drug'])
@@ -857,57 +857,15 @@ def get_rs_list(rs_list):
     return items
 
 
-def get_variant_knowledge(category):
+def get_variant_knowledge(rs_list, items):
     # variant_knowledge gene	rs	genotype	introduction	summary
-    items = []
-    rs_list = []
-    genes = []
-    categories = []
-    for i in range(variant_knowledge.nrows):
-        j = 1
-        cell_value = variant_knowledge.cell_value(i, j)
-        if cell_value.startswith('rs') is False and i > 0:
-            print cell_value
-            categories.append(cell_value)
-
-        if cell_value == category:
-            for k in range(i + 1, variant_knowledge.nrows):
-                row_value = variant_knowledge.row_values(k)
-                cell_value1 = row_value[j]
-                if not cell_value1.startswith('rs'):
-                    break
-                item = {
-                    'gene': row_value[j-1],
-                    'rs': cell_value1,
-                    'genotype': row_value[j+1],
-                    'summary': row_value[j+2],
-                    'introduction': row_value[j+3],
-                    'level': row_value[j+4],
-                    'category': category,
-                }
-                item1 = {
-                    'gene': row_value[j-1],
-                    'rs': cell_value1,
-                    'level': row_value[j+4],
-                    'category': category
-                }
-                rs_geno1 = filter(lambda x: x[0] == item['rs'] and x[1] == item['genotype'], rs_geno)
-                if len(rs_geno1) > 0:
-                    if item not in genes:
-                        genes.append(item)
-                    if item1 not in rs_list:
-                        rs_list.append(item1)
-                if item['rs'] == 'rs104522':
-                    print item
-                items.append(item)
     for rs_item in rs_list:
         rs_list1 = []
         for item in items:
             if item['gene'] == rs_item['gene'] and item['rs'] == rs_item['rs'] and item['level'] == rs_item['level'] and item['category'] == rs_item['category']:
                 rs_list1.append(item)
-
         rs_item['rs_list'] = rs_list1
-    return rs_list, genes
+    return rs_list
 
 
 def get_variant_knowledges():
@@ -917,7 +875,7 @@ def get_variant_knowledges():
         cell_value = variant_knowledge.cell_value(i, j)
         if cell_value.startswith('rs') is False and i > 0:
             drug = '' if cell_value != '铂类药物' else '(顺铂、卡铂、奥沙利铂)'
-            category = {'category': cell_value, 'drug': drug, 'rs_list': [], 'genes': []}
+            category = {'category': cell_value, 'drug': drug, 'rs_list': [], 'genes': [], 'items': []}
             for k in range(i + 1, variant_knowledge.nrows):
                 row_value = variant_knowledge.row_values(k)
                 cell_value1 = row_value[j]
@@ -936,14 +894,17 @@ def get_variant_knowledges():
                     'gene': row_value[j-1],
                     'rs': cell_value1,
                     'level': row_value[j+4],
-                    'category': category
+                    'category': category,
+                    'rs_list': []
                 }
-                rs_geno1 = filter(lambda x: x[0] == item['rs'] and x[1] == item['genotype'], rs_geno)
-                if len(rs_geno1) > 0:
-                    if item not in category['genes']:
-                        category['genes'].append(item)
-                    if item1 not in category['rs_list']:
-                        category['rs_list'].append(item1)
+                for x in rs_geno:
+                    if x[0] == item['rs']:
+                        if x[1] == item['genotype'] and item not in category['genes']:
+                            category['genes'].append(item)
+                if item1 not in category['rs_list']:
+                    category['rs_list'].append(item1)
+                if item not in category['items']:
+                    category['items'].append(item)
             categories.append(category)
     return categories
 
@@ -977,3 +938,15 @@ def compare_level3(list1, list2):
             if len(bb) > 0:
                 return 2
     return 3
+
+
+def filter_rs_list(old_item):
+    items = old_item['genes']
+    rs_list = old_item['rs_list']
+    for rs_item in rs_list:
+        rs_list1 = []
+        for item in items:
+            if item['gene'] == rs_item['gene'] and item['rs'] == rs_item['rs'] and item['level'] == rs_item['level'] and item['category'] == rs_item['category']:
+                rs_list1.append(item)
+        rs_item['rs_list'] = rs_list1
+    return rs_list
