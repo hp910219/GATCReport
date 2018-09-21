@@ -54,6 +54,7 @@ def get_report_core(title_cn, title_en, data):
     signature_etiology = []
     for i in os.listdir(pcgr):
         html_path = os.path.join(pcgr, i)
+        print 'dddddddddddddd'
         signature_etiology = get_pcgr(html_path, data_dir)
         break
     data['signature_etiology'] = signature_etiology
