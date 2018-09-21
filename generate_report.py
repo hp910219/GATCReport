@@ -12,7 +12,6 @@ my_file = File(base_dir)
 if __name__ == '__main__':
     report_title_cn = u'多组学临床检测报告'
     report_title_en = 'AIomics1'
-    print base_dir
     user_name = patient_info['name']
     file_name = u'results/%s_%s_%s(%s)检测报告.doc' % (data_dir_name, user_name, disease_name, variant_knowledge_names[variant_knowledge_index])
     print u'%s begin.' % file_name

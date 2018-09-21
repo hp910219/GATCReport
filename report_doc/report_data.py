@@ -219,7 +219,14 @@ def get_immu(source):
     for im in immune_table:
         ims = im.split('\t')
         if ims[0] == source:
-            return ims
+            if len(ims) == 3:
+                return ims
+            elif len(ims) == 2:
+                tr1s = ims[1].split(',')
+                tr2 = tr1s[-1].strip()
+                tr1 = ', '.join(tr1s[:-1])
+                print u'%s' % tr1, u'%s' % tr2
+                return [source, tr1, tr2]
     return [source, '', '']
 
 

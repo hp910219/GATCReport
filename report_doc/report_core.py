@@ -809,7 +809,6 @@ def write_target_tip(title, items):
 def write_immun_tip():
     para = p.h4('免疫治疗提示')
     data1 = get_immu('MSI')[1:]
-
     trs1 = write_tr1(data1[0]) + write_tr2(data1[1])
     para += table.write(trs1, ws=[3600], jc='left', bdColor=blue, ind=0, tblp=True, tblpX=1.8, leftFromText=0.4, rightFromText=0.4)
     data2 = get_immu('TMB')[1:]
