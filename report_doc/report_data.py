@@ -32,18 +32,19 @@ disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
 variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '骨肉瘤除外硬纤维瘤和肌纤维母细胞瘤']
 variant_knowledge_index = 0
-variant_knowledge_name = '化疗多态位点证据列表%s' % variant_knowledge_names[variant_knowledge_index]
 for indexx, v in enumerate(variant_knowledge_names):
     if disease_name in v:
-        variant_knowledge_name = '化疗多态位点证据列表%s' % v
         variant_knowledge_index = indexx
         break
+if len(sys.argv) > 2:
+    variant_knowledge_index = int(sys.argv[2])
+variant_knowledge_name = u'化疗多态位点证据列表%s' % variant_knowledge_names[variant_knowledge_index]
 tmb_tip = '注：NSCLC未经选择人群PD抗体有效率，具吸烟史为22%，无吸烟史为10%'
 if disease_name in '结直肠癌':
     tmb_tip = '注：MSS微卫星稳定结直肠癌患者PD1抗体有效率为0%；MSI-H微卫星不稳定结直肠癌患者有效率为29.6%。'
-print disease_name, variant_knowledge_name, data_dir, variant_knowledge_names[variant_knowledge_index]
+print u'%s' % ','.join(variant_knowledge_names)
+print u'%s' % disease_name, variant_knowledge_name, data_dir
 # 静态的数据：
-chem_durg_list = my_file.read('static/base_data/chem_durg_list%d.tsv' % variant_knowledge_index)  # category	drug	cancer
 variant_knowledge = my_file.read(u'static/base_data/%s.xlsx' % variant_knowledge_name, sheet_name='Sheet1')
 gene_list12 = my_file.read('static/base_data/1.2gene_list.json')
 gene_list53 = my_file.read('static/base_data/5.3gene_list.xlsx', sheet_name='Sheet2')
