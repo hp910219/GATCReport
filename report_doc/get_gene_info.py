@@ -96,7 +96,7 @@ def get_pcgr(url, localpath):
                                 item[key] = maindata[k][i]
                             items.append(item)
         sigs = sig.find_all('img')
-        print len(sigs)
+        print 'ddddddddddddd', len(sigs)
         if len(sigs) > 0:
             save_img('%s/signature.png' % localpath, sigs[0])
         if len(sigs) > 1:
