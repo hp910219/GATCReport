@@ -77,6 +77,7 @@ def get_pcgr(url, localpath):
     if len(msi) > 0:
         save_img('%s/msi.png' % localpath, msi[0])
     items = []
+    print 'ddddddddddddd', len(signatures)
     if len(signatures) > 0:
         sig = signatures[0]
         script = sig.select('script')
@@ -96,7 +97,6 @@ def get_pcgr(url, localpath):
                                 item[key] = maindata[k][i]
                             items.append(item)
         sigs = sig.find_all('img')
-        print 'ddddddddddddd', len(sigs)
         if len(sigs) > 0:
             save_img('%s/signature.png' % localpath, sigs[0])
         if len(sigs) > 1:
