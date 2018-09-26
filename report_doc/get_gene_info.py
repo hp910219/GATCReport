@@ -4,6 +4,8 @@ __author__ = 'huo'
 import requests
 import base64
 from bs4 import BeautifulSoup
+from jy_word.Word import crop_img
+from config import data_dir
 import os
 import sys
 reload(sys)
@@ -69,15 +71,32 @@ def my_request(url, r='json'):
 def get_pcgr(url, localpath):
     htmlfile = open(url, 'r')  #以只读的方式打开本地html文件
     htmlpage = htmlfile.read()
+    htmlfile.close()
     soup = BeautifulSoup(htmlpage, "html.parser")  #实例化一个BeautifulSoup对象
     if os.path.exists(localpath) == False:                  #判断，若该文件路径不存在，则创建该目录（mkdirs创建多级目录，midir创建单级目录）
         os.makedirs(localpath)
+    snv_num, indel_num, var_num = 0, 0, 0
+    somatic = soup.select('#tier-variant-statistics')
+    if len(somatic) > 0:
+        somatic1 = somatic[0]
+        ul = somatic1.select('ul')
+        if len(ul) > 0:
+            li = ul[0].select('li')
+            for ele in li:
+                text = ele.text.strip().strip('\n').strip()
+                strong = ele.select('strong')
+                if len(strong) > 0:
+                    if 'Number of SNVs: ' in text:
+                        snv_num = strong[0].text.strip().strip('\n').strip()
+                    if 'Number of InDels: ' in text:
+                        indel_num = strong[0].text.strip().strip('\n').strip()
+                    if 'Number of protein-coding variants: ' in text:
+                        var_num = strong[0].text.strip().strip('\n').strip()
     msi = soup.select('#supporting-evidence-indel-fraction-among-somatic-calls img')
     signatures = soup.select('#mutational-signatures')
     if len(msi) > 0:
         save_img('%s/msi.png' % localpath, msi[0])
     items = []
-    print 'ddddddddddddd', len(signatures)
     if len(signatures) > 0:
         sig = signatures[0]
         script = sig.select('script')
@@ -98,20 +117,20 @@ def get_pcgr(url, localpath):
                             items.append(item)
         sigs = sig.find_all('img')
         if len(sigs) > 0:
-            save_img('%s/signature.png' % localpath, sigs[0])
+            save_img('%s/signature.png' % localpath, sigs[0], img2='4.5.1signature.png')
         if len(sigs) > 1:
-            save_img('%s/signature_pie.png' % localpath, sigs[1])
-    htmlfile.close()
-    return items
+            save_img('%s/signature_pie.png' % localpath, sigs[1], img2='4.5.2signature_pie.png')
+    return {"signature_etiology": items, 'snv_num': snv_num, 'indel_num': indel_num, 'var_num': var_num}
 
 
-def save_img(url, i):
+def save_img(url, i, img2=None):
     if os.path.exists(url) is False:
         img = base64.b64decode(i.attrs['src'].split(',')[1])
-
         f = open(url, 'wb')
         f.write(img)
         f.close()
         print 'save img success: ', url
     else:
         print 'img exists: ', url
+    if img2 is not None:
+        crop_img(url, r'%s/%s.png' % (data_dir, img2))

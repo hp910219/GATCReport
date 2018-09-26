@@ -6,7 +6,7 @@ import time
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
-from jy_word.Word import bm_index0, crop_img, get_imgs, uniq_list
+from jy_word.Word import bm_index0, crop_img, get_imgs, uniq_list, get_img
 from jy_word.File import File
 from config import img_info_path, base_dir, data_dir, images_dir
 from report_doc.get_real_level import FetchRealLevel
@@ -31,7 +31,7 @@ patient_info = my_file.read('patient_info.tsv', dict_name=data_dir)[0]
 disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
 variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '骨肉瘤除外硬纤维瘤和肌纤维母细胞瘤']
-variant_knowledge_index = 0
+variant_knowledge_index = 2
 for indexx, v in enumerate(variant_knowledge_names):
     if disease_name in v:
         variant_knowledge_index = indexx
@@ -75,6 +75,7 @@ try:
     CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
 except:
     CGI_mutation_analysis = []
+
 
 def test_chinese(contents):
     import re
@@ -370,6 +371,7 @@ def get_target_tip(items, items2, diagnose, file_name, func):
         # @霍  癌种是diseasename 列
         # level ( “oncokb”,  “R1”， “Non-Small Cell Lung Cancer”，  "肺癌")
         reset_item = func(db_item)
+        is_match = False
         if reset_item is not None:
             gene = reset_item['gene']
             i += 1
@@ -379,6 +381,7 @@ def get_target_tip(items, items2, diagnose, file_name, func):
                 #     genes.append([gene, v])
                 if len(gene) > 0:
                     for maf_item in filter_db(gene, v):
+                        is_match = True
                         cellurity = get_quantum_cellurity(maf_item['Chromosome'], maf_item['Start_Position'])
                         col1 = '%s %s\n%s\n(%s肿瘤亚克隆)' % (gene, get_exon(maf_item), maf_item['HGVSp_Short'], cellurity)
                         item = get_drug(col1, reset_item, diagnose)
@@ -389,7 +392,6 @@ def get_target_tip(items, items2, diagnose, file_name, func):
             exon1 = reset_item['exon']
             variant_type1 = reset_item['status']
             if len(reset_item['vars']) == 0:
-                is_match = False
                 if exon1 != '' and variant_type1 != '':
                     items1 = filter_db(gene)
                     if len(items1) > 0:
@@ -407,14 +409,19 @@ def get_target_tip(items, items2, diagnose, file_name, func):
                     is_match, copynumber, status = get_copynumber(gene, variant_type1)
                     col1 = u'%s%s(拷贝数%s)' % (gene, status, copynumber)
                 if len(col1) > 0:
-                    if is_match is False:
-                        col1 = u'%s(模糊匹配)' % gene
-                        reset_item['evidence_detail'][4] = '模糊匹配'
                     item = get_drug(col1, reset_item, diagnose)
                     item['var'] = ''
                     items.append(item)
                     if col1 not in items2:
                         items2.append(col1)
+            if is_match is False:
+                col1 = u'%s(模糊匹配)' % gene
+                reset_item['evidence_detail'][4] = '模糊匹配'
+                item = get_drug(col1, reset_item, diagnose)
+                item['var'] = ''
+                items.append(item)
+                if col1 not in items2:
+                    items2.append(col1)
     return items, items2
 
 
@@ -493,13 +500,13 @@ def get_drug_db(var):
     if len(drug_items) == 0 :
         return None
     for level in level_names:
-        value = []
         value1 = []
         value2 = []
         drugs = filter(lambda x: x['level'] == level, drug_items)
         for drug in drugs:
             responsive = drug['responsive']
             x_drug = '%s' % drug['drug'].strip()
+            # x_drug = '%s==%s==%s' % (drug['drug'].strip(), drug['level'], drug['db_name'])
             if x_drug.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
                 x_drug1 = '%s(%s)' % (x_drug, responsive)
                 if responsive == 'responsive':
@@ -744,6 +751,8 @@ def reset_cgi(item):
         responsive = 'resistance'
     else:
         responsive = item['EFFECT']
+    if alteration.lower().startswith(gene.lower()):
+        alteration = ' '.join([gene, alteration])
     return {
         'responsive': responsive,
         'gene': gene,
@@ -797,6 +806,9 @@ def reset_civic(item):
         responsive = 'resistance'
     else:
         responsive = item['clinical_significance']
+    alteration = variant_name
+    if alteration.lower().startswith(gene.lower()):
+        alteration = ' '.join([gene, alteration])
     return {
         'responsive': responsive,
         'gene': gene,
@@ -807,7 +819,7 @@ def reset_civic(item):
         'cancer_type': cancer_type,
         'exon': exon,
         'status': status_en,
-        'evidence_detail': [db_name, variant_name, drug, evidence_type, match_degree, pmids]
+        'evidence_detail': [db_name, alteration, drug, evidence_type, match_degree, pmids]
     }
 
 
@@ -840,6 +852,9 @@ def reset_oncokb(item):
         responsive = 'resistance'
     else:
         responsive = 'responsive'
+    alteration = variant_name
+    if alteration.lower().startswith(gene.lower()):
+        alteration = ' '.join([gene, alteration])
     return {
         'responsive': responsive,
         'gene': gene,
@@ -850,7 +865,7 @@ def reset_oncokb(item):
         'cancer_type': cancer_type,
         'exon': exon,
         'status': status_en,
-        'evidence_detail': [db_name, variant_name, drug, evidence_type, '完全匹配', item['PMIDs for drug']]
+        'evidence_detail': [db_name, alteration, drug, evidence_type, '完全匹配', item['PMIDs for drug']]
     }
 
 
@@ -925,6 +940,14 @@ def get_domain(gene, var_p, var_c):
     else:
         return items[0]['Pfam_domain'].strip()
     return ''
+
+
+def get_line(rId):
+    img = get_img(img_info_path, rId)
+    if img is not None:
+        zoom = 17.7 / img['w']
+        return int(zoom * img['h']) + 1
+    return 0
 
 
 def compare_level3(list1, list2):

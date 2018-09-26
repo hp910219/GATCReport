@@ -7,7 +7,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 from jy_word.Word import Paragraph, Run, Set_page, Table, Tc, Tr, HyperLink, Relationship
-from jy_word.Word import write_cat, write_pkg_parts
+from jy_word.Word import write_cat, write_pkg_parts, get_img
 from report_doc.report_data import *
 from report_doc.get_gene_info import get_gene_info, get_pcgr
 
@@ -28,7 +28,7 @@ sect_pr_content = set_page('A4', footer='rIdFooter2', pgNumType_s=1, header='rId
 con1 = p.write(p.set(rule='exact', line=12, sect_pr=set_page(type='continuous', cols=1)))
 con2 = p.write(p.set(rule='exact', line=12, sect_pr=set_page(type='continuous', cols=2, space=40)))
 page_br = p.write(set_page(page_margin=page_margin))
-sect_pr1 = set_page('A4', page_margin=page_margin, footer='rIdFooter2', header='rIdHeader%d' % index, type='continuous', cols=1)
+sect_pr1 = set_page('A4', page_margin=page_margin, footer='rIdFooter2', header='rIdHeader2', type='continuous', cols=1)
 
 # 初号=42磅
 # 小初=36磅
@@ -51,12 +51,22 @@ sect_pr1 = set_page('A4', page_margin=page_margin, footer='rIdFooter2', header='
 # ##################下载报告所需方法######################
 def get_report_core(title_cn, title_en, data):
     pcgr = os.path.join(data_dir, 'pcgr')
-    signature_etiology = []
+    signature = os.path.join(data_dir, 'signature/signature_etiology.csv')
+    if os.path.exists(signature):
+        signature_etiology = my_file.read(signature)
+    else:
+        signature_etiology = []
+    pcgr_data = None
     for i in os.listdir(pcgr):
-        html_path = os.path.join(pcgr, i)
-        signature_etiology = get_pcgr(html_path, data_dir)
-        break
-    data['signature_etiology'] = signature_etiology
+        if i.endswith('.html'):
+            html_path = os.path.join(pcgr, i)
+            pcgr_data = get_pcgr(html_path, data_dir)
+            break
+    if pcgr_data is not None:
+        for k in pcgr_data.keys():
+            data[k] = pcgr_data[k]
+    if len(data['signature_etiology']) == 0:
+        data['signature_etiology'] = signature_etiology
     img_info = get_img_info(data_dir, is_refresh=True)
     body = write_body(title_cn, title_en, data)
     pages = write_pages()
@@ -72,8 +82,8 @@ def write_body(title_cn, title_en, data):
     body = ''
     body += write_cover(title_cn, title_en)
     body += write_catalog()
-    body += write_chapter0(title_cn, data, 2)
-    body += write_chapter1(data, 3)
+    body += write_chapter0(title_cn, data)
+    body += write_chapter1(data)
     body += write_chapter2(4)
     body += write_chapter3(5, trs3, chem_items)
     body += write_chapter4(6, data['signature_etiology'])
@@ -108,7 +118,7 @@ def write_catalog():
     return para
 
 
-def write_chapter0(title_cn, data, index):
+def write_chapter0(title_cn, data):
     para = p.write(p.set(sect_pr=sect_pr_content))
     para += p.write(p.set(spacing=[0, 0], jc='center', line=12, rule='auto'), r.text(title_cn, size=18, weight=1))
     para += write_patient_info(data['patient_info'])
@@ -135,7 +145,7 @@ def write_chapter0(title_cn, data, index):
     return para
 
 
-def write_chapter1(data, index):
+def write_chapter1(data):
     cats = get_catalog()[0: 4]
     para = ''
     title = ['多组学发现', 'A级证据药物（CFDA、FDA、指南）', 'B级证据药物（专家共识）', 'C级证据药物（临床证据）', 'D级证据药物（临床前证据）', '致癌模式']
@@ -155,7 +165,7 @@ def write_chapter1(data, index):
         para += p.write(p.set(shade=red, line=24, ind=[0.7, 0]), r.text('%d. 变异：%s' % (i + 1, item['col1']), color=white, space=True))
         if len(var_name) > 0:
             para += p.h4('（1）该基因变异所处保守结构域位置')
-            para += p.write(p.set(jc='center', spacing=[3, 0]), run=r.picture(cx=17.7, rId=var_name, posOffset=[0, 0], align=['center', ''])) + p.write()
+            para += p.write(p.set(jc='center', spacing=[get_line(var_name), 0]), run=r.picture(cx=17.7, rId=var_name, posOffset=[0, 0], align=['center', ''])) + p.write()
         para1, index1 = write_evidences(item, index0)
         para += para1
         if len(items) == 0:
@@ -164,20 +174,20 @@ def write_chapter1(data, index):
             if len(struct) > 0:
                 index1 += 1
                 para += p.h4('（%d）基因突变保守结构域分布情况' % (index1))
-                para += p.write(p.set(jc='center', spacing=[3, 0]), run=struct) + p.write()
+                para += p.write(p.set(jc='center', spacing=[get_line('%s_struct' % gene), 0]), run=struct) + p.write()
             distribution = r.picture(cy=6, rId='%s_distribution' % gene, posOffset=[0, 0], align=['center', ''])
             if len(distribution) > 0:
                 index1 += 1
                 para += p.h4('（%d）基因突变各癌种分布情况' % (index1))
-                para += p.write(p.set(jc='center', spacing=[5, 0]), run=distribution)
+                para += p.write(p.set(jc='center', spacing=[get_line('%s_distribution' % gene), 0]), run=distribution)
                 if i < len(target_tips) - 1:
                     para += p.write() * 7
             else:
                 para += p.write()
         else:
             para += p.write()
-    para += p.write(p.set(sect_pr=set_page(page_margin=page_margin4)))
-    para += write_chapter13(cats[3], index)
+    para += p.write(p.set(sect_pr=set_page(page_margin=page_margin4, header='rIdHeader3')))
+    para += write_chapter13(cats[3])
     return para
 
 
@@ -386,7 +396,7 @@ def write_explains(content):
     return para
 
 
-def write_chapter13(cat, index):
+def write_chapter13(cat):
     para = p.h4(cat=cat)
     para += p.h4('1.靶向治疗与驱动基因')
     para += p.write(p.set(ind=['firstLine', 2]), r.text('靶向治疗药物是针对特定的肿瘤发生发展相关特定基因设计的药物。传统化疗主要针对快速分裂的细胞，既杀伤肿瘤细胞、又杀伤正常细胞，毒副作用大，而靶向治疗更精准的针对肿瘤特定特征或者肿瘤微环境，所以毒副作用相对较低。'))
@@ -407,7 +417,7 @@ def write_chapter13(cat, index):
     para += p.write(p.set(ind=['firstLine', 4]), r.text('Level C：1、同一分子标志物，FDA批准用于其他癌症；2、作为临床试验纳入标准'))
     para += p.write(p.set(ind=['firstLine', 4]), r.text('Level D：临床前研究，结果不确定'))
     para += write_db_info()
-    para += p.write(p.set(sect_pr=set_page(header='rIdHeader%d' % index)))
+    para += p.write(p.set(sect_pr=set_page(header='rIdHeader3')))
     return para
 
 
@@ -680,6 +690,7 @@ def write_evidences(item, index):
                 run += r.picture(cy=0.6, rId=rId.lower(), posOffset=[1.3, 0.8])
                 run += r.text('           %s数据库证据' % rId, 12, space=True, weight=True)
                 para += p.write(p.set(spacing=[1.5, 1.5]), run)
+                # print rId
                 para += write_evidence(evidences)
                 # print index,
                 index += 1
@@ -880,6 +891,8 @@ def write_evidence(data, **kwargs):
             trs += tr.write(tcs)
             if k > 0:
                 # print len(item)
+                # if 'titles' not in kwargs:
+                #     print item[4]
                 run = r.text(titles[5], size=size)
                 tc5 = tc.write(p.write(pPr, run), tc.set(w=ws[0], tcBorders=borders, fill=gray, color=gray))
                 run1 = r.text(item[4], size=size)
@@ -1107,7 +1120,13 @@ def write_tr51(item, ws, c=''):
     for i in range(len(item)):
         texts = item[i]
         para = ''
-        for t in texts.split('\n'):
+        if isinstance(texts, str) or isinstance(texts, unicode):
+            arr = texts.split('\n')
+        elif isinstance(texts, list):
+            arr = texts
+        else:
+            arr = [str(texts)]
+        for t in arr:
             if c == 'target' and i > 0:
                 run = ''
                 for t_index, tt in enumerate(t.split(';')):
@@ -1121,6 +1140,8 @@ def write_tr51(item, ws, c=''):
             else:
                 run = r.text(t, size=size)
             para += p.write(pPr, run)
+        if para == '':
+            para = p.write(pPr, r.text(''))
         tcs += tc.write(para, tc.set(w=ws[i], tcBorders=borders, color=gray))
     return tr.write(tcs)
 

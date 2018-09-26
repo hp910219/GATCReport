@@ -6,7 +6,7 @@ import os
 import sys
 
 base_dir = os.path.dirname(__file__)
-data_dir = r'100307'
+data_dir = r'100309'
 if len(sys.argv) > 1:
     data_dir = sys.argv[1]
 data_dir_name = os.path.relpath(data_dir, os.path.dirname(data_dir))
