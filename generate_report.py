@@ -18,4 +18,6 @@ if __name__ == '__main__':
     data = {'patient_info': patient_info}
     pkg = get_report_core(report_title_cn, report_title_en, data)
     my_file.download(pkg, file_name)
+    # os.startfile(os.path.abspath(file_name))
+    # os.system('start explorer %s' % os.path.abspath('results'))
     print u'%s over.' % file_name

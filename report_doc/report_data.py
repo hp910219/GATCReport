@@ -19,7 +19,7 @@ red = 'ED1C24'
 orange = 'F14623'
 colors = ['2C3792', '3871C1', '50ADE5', '37AB9C', '27963C', '40B93C', '80CC28']
 level_names = ['A', 'B', 'C', 'D']
-db_names = ['OncoKB', 'CIVic', 'cgi']
+db_names = ['OncoKB', 'Civic', 'CGI']
 borders = ['top', 'right', 'bottom', 'left']
 # 因为数据库的权威性  oncokb>civic>cgi
 
@@ -31,7 +31,7 @@ patient_info = my_file.read('patient_info.tsv', dict_name=data_dir)[0]
 disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
 variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '骨肉瘤除外硬纤维瘤和肌纤维母细胞瘤']
-variant_knowledge_index = 2
+variant_knowledge_index = 0
 for indexx, v in enumerate(variant_knowledge_names):
     if disease_name in v:
         variant_knowledge_index = indexx
@@ -50,9 +50,10 @@ gene_list12 = my_file.read('static/base_data/1.2gene_list.json')
 gene_list53 = my_file.read('static/base_data/5.3gene_list.xlsx', sheet_name='Sheet2')
 company = my_file.read('static/base_data/5.company.txt', sheet_name='Sheet2')
 gene_MoA = my_file.read('static/base_data/gene_MoA.tsv')
+signature_cn = my_file.read('static/base_data/signature_cn.txt')
 evidence4 = []
-for index in range(5):
-    evidence_path = 'static/base_data/4.%d.evidence.txt' % index
+for evidence4_index in range(5):
+    evidence_path = 'static/base_data/4.%d.evidence.txt' % evidence4_index
     if os.path.exists(evidence_path):
         evidence = my_file.read(evidence_path, dict_name='').split('\n')
     else:
@@ -63,18 +64,18 @@ for index in range(5):
 immune_suggestion = my_file.read(r'immune_suggestion.txt', dict_name=data_dir)
 rs_geno = my_file.read('rs.geno.update.tsv', to_json=False, dict_name=data_dir)[1:]
 f = open(os.path.join(data_dir, 'hla.tsv'))
-c = f.read().strip('\n')
+hla_c = f.read().strip('\n')
 f.close()
-hla = c.split('\t')
+hla = hla_c.split('\t')
 variant_anno1 = my_file.read('variant_anno.maf', dict_name=data_dir, sep='\t', to_json=False)
 neoantigen = my_file.read('neoantigen.tsv', dict_name=data_dir)
 cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir)
 quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name=data_dir)
 recent_study = my_file.read('recent_study', dict_name=data_dir)
-try:
-    CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
-except:
-    CGI_mutation_analysis = []
+tumor_bam_info = my_file.read('tumor.recal.bam_info.txt', dict_name=data_dir)
+tumor_bam_CNVs = my_file.read('tumor.recal.bam_CNVs', dict_name=data_dir)
+qc = my_file.read('QC.tsv', dict_name=data_dir)
+CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
 
 
 def test_chinese(contents):
@@ -158,7 +159,8 @@ def get_catalog():
         [u"（三）、免疫治疗超进展相关基因检测结果", 2, 7, 23],
         [u"（四）、免疫治疗耐药相关基因检测结果", 2, 7, 23],
         [u"（五）、肿瘤突变模式检测结果", 2, 8, 23],
-        [u"（六）、最新研究进展解读说明", 2, 8, 23],
+        [u"（六）、肿瘤遗传性检测结果", 2, 8, 23],
+        [u"（七）、最新研究进展解读说明", 2, 8, 23],
         [u"五、检测信息汇总", 0, 5, 10],
         [u"（一）、基因突变信息汇总", 2, 6, 23],
         [u"（二）、基因拷贝数信息汇总", 2, 6, 23],
@@ -184,10 +186,10 @@ def format_time(t=None, frm="%Y-%m-%d %H:%M:%S"):
 def get_page_titles():
     title_cn, title_en = u'多组学临床检测报告', 'AIomics1'
     title = '%s附录目录%s%s' % (title_cn, ' ' * 64,  title_en)
-    title1 = '%s%s%s' % (title_cn, ' ' * (64+12),  title_en)
+    title1 = '%s%s%s' % (title_cn, ' ' * (64+11),  title_en)
     titles = [title, title1]
     cats = get_catalog()
-    for i in [0, 4, 9, 12, 19]:
+    for i in [0, 4, 9, 12, 20]:
         n = 64 + 14
         if test_chinese(cats[i]['title']) == 11:
             n -= 8
@@ -223,10 +225,9 @@ def get_immu(source):
             if len(ims) == 3:
                 return ims
             elif len(ims) == 2:
-                tr1s = ims[1].split(',')
+                tr1s = ims[1].split('，')
                 tr2 = tr1s[-1].strip()
                 tr1 = ', '.join(tr1s[:-1])
-                print u'%s' % tr1, u'%s' % tr2
                 return [source, tr1, tr2]
     return [source, '', '']
 
@@ -328,6 +329,19 @@ def get_target_tips(diagnose):
                 for key in level_names:
                     var[key] += item1[key]
         vars.append(var)
+    extra = []
+    extra_gene = []
+    extra_col1 = ''
+    if diagnose == '结直肠癌':
+        extra_gene = ['KRAS', 'NRAS']
+        extra_col1 = '%s未发生突变' % '、'.join(extra_gene)
+    if diagnose in ['胃癌', '乳腺癌']:
+        extra_gene = ['HER2']
+        extra_col1 = '%s未发生扩增' % '、'.join(extra_gene)
+    if diagnose == '非小细胞肺癌':
+        extra_gene = ['EGFR']
+        extra_col1 = '%s未发生突变' % '、'.join(extra_gene)
+    show_extra = False
     for index, v in enumerate(vars):
         gene = v['gene']
         v2s = filter(lambda x: x['gene'] == gene and '模糊匹配' in x['col1'], vars)
@@ -339,8 +353,19 @@ def get_target_tips(diagnose):
             if v2 in vars:
                 vars.remove(v2)
         v = get_drug_db(v)
+        if v['gene'] in extra_gene:
+            if 'EGFR' in extra_gene:
+                if '亚克隆' in v['col1']:
+                    extra.append(v)
+            else:
+                extra.append(v)
+    if len(extra) == 0:
+        show_extra = True
+    extra_item = {'col1': extra_col1, 'gene_MoA': ''}
+    for k in level_names:
+        extra_item[k] = ''
     vars = sorted(vars, cmp=cmp_target_tip)
-    return vars
+    return vars, show_extra, extra_item
 
 
 def cmp_target_tip(x, y):
@@ -407,8 +432,10 @@ def get_target_tip(items, items2, diagnose, file_name, func):
                             print gene
                 elif exon1 == '' and variant_type1 != '':
                     is_match, copynumber, status = get_copynumber(gene, variant_type1)
+                    # if gene == 'FBXW7':
+                    #     print is_match, copynumber, status
                     col1 = u'%s%s(拷贝数%s)' % (gene, status, copynumber)
-                if len(col1) > 0:
+                if len(col1) > 0 and is_match:
                     item = get_drug(col1, reset_item, diagnose)
                     item['var'] = ''
                     items.append(item)
@@ -462,17 +489,6 @@ def get_drug_level(drug_items):
     return drug_items
 
 
-def get_drug_evidence(drug_items, evidence1):
-    evidence2 = []
-    for e in evidence1:
-        for d in e[2]:
-            for drug_item in drug_items:
-                if d['drug'] == drug_item['drug']:
-                    if e not in evidence2:
-                        evidence2.append(e)
-    return evidence2
-
-
 def get_drug_db(var):
     # oncokb>civic>cgi
     drug_items = []
@@ -490,14 +506,9 @@ def get_drug_db(var):
                     if drug_item2['drug'] == drug_item1['drug']:
                         drug_item2['db_name'] = db_name1
                         drug_item2['level'] = drug_item1['level']
-                # var = get_drug_evidence(drug_item1, var, db_name1.upper())
     drug_items = get_drug_level(drug_items)
     drug_items = get_drug_level(drug_items)
-    for i in range(len(db_names)):
-        db_name1 = db_names[i]
-        drug_items1 = filter(lambda x: x['db_name'].lower() == db_name1.lower(), drug_items)
-        var[db_name1.upper()] = get_drug_evidence(drug_items1, var[db_name1.upper()])
-    if len(drug_items) == 0 :
+    if len(drug_items) == 0:
         return None
     for level in level_names:
         value1 = []
@@ -572,7 +583,6 @@ def get_data3():
         category = item['category']
         new_item['category'] = category
         new_item['drug'] = item['drug']
-        new_item['rs_list'] = get_variant_knowledge(item['genes'], item['items'])
         new_item['genes'] = item['genes']
         new_item = get_data31(new_item)
         cell = new_item['cell']
@@ -587,6 +597,8 @@ def get_data3():
 def get_data31(item):
     venoms = [[], [], [], []]
     curative_effects = [[], [], [], []]
+    liaoxiao = 0
+    duxing = 0
     for item1 in item['genes']:
         summary = item1['summary'].split('、')
         venom = summary[0]  # 毒副作用
@@ -603,7 +615,10 @@ def get_data31(item):
             curative_effects[2].append(item1)
         # else:
         #     curative_effects[3].append(item1)
-
+        if '疗效' in item1['summary']:
+            liaoxiao += 1
+        if '毒性' in item1['summary']:
+            duxing += 1
         if '低' in venom:
             venoms[1].append(item1)
         elif '高' in venom:
@@ -629,8 +644,8 @@ def get_data31(item):
     item['cell'] = row, col
     item['venoms'] = venoms
     item['curative_effects'] = curative_effects
-    tr1 = '疗效预测方面共纳入%d个证据，其中%d个预测疗效好，%d个预测疗效差；' % (good + bad, good, bad)
-    tr1 += '毒副作用预测共纳入%d个证据，其中%d个预测毒副作用低，%d个预测毒副作用高' % (low+high, low, high)
+    tr1 = '疗效预测方面共纳入%d个证据，其中%d个预测疗效好，%d个预测疗效差；' % (liaoxiao, good, bad)
+    tr1 += '毒副作用预测共纳入%d个证据，其中%d个预测毒副作用低，%d个预测毒副作用高' % (duxing, low, high)
     item['tr1'] = tr1
     return item
 
@@ -676,14 +691,70 @@ def get_data44(gene):
 
 def get_data45(signature_etiology):
     items = [['', 'Signature ID', '权重', '主要出现的癌种', '可能的病因', '评论']]
-    tr1, tr2 = '', '该癌症可能由'
+    tr1, tr2 = '', []
+    n = 0
     for item in signature_etiology:
         s_id = item['Signature_ID']
+        item['Keyword'] = reset_sig(s_id)
         if s_id != 'unknown':
-            tr1 += '特征%s所占权重为%s，推测由%s导致;' % (s_id, item['Weight'], item['Keyword'])
-            tr2 += '%s、' % (item['Keyword'])
+            result = '原因未知'
+            if item['Keyword'] != result:
+                result = '推测由%s导致' % item['Keyword']
+                tr2.append(item['Keyword'])
+            tr1 += '特征%s所占权重为%s，%s;' % (s_id, item['Weight'], result)
             items.append(['', s_id, item['Weight'], item['Cancer_types'], item['Proposed_aetiology'], item['Comments']])
-    return uniq_list(items), tr1.rstrip(';'), tr2.rstrip('、') + '导致'
+    tip = '该癌症可能由%s' % ('、'.join(tr2))
+    if len(tr2) > 1:
+        tip += '共同'
+    return uniq_list(items), tr1.rstrip(';'), tip + '导致'
+
+
+def get_sample_purity():
+    if tumor_bam_info is None:
+        return ''
+    texts = tumor_bam_info.split('\n')
+    for t in texts:
+        if t.lower().strip().startswith('sample_purity'):
+            sample_purity = t[len('sample_purity'):].strip().strip('\t').strip()
+            try:
+                sample_purity = float(sample_purity)
+            except:
+                return sample_purity
+            return '%.2f%%' % (sample_purity * 100)
+    return ''
+
+
+def get_bam_snvs():
+    if tumor_bam_CNVs is None:
+        return 0
+    return len(tumor_bam_CNVs.strip('\n').split('\n'))
+
+
+def get_qc():
+    s = {'i': '', 'a': ''}
+    if qc is not None:
+        for k in s.keys():
+            for item in qc:
+                base_aligned = get_base_aligned(item, k)
+                if base_aligned[k] != '':
+                    s[k] = base_aligned[k]
+    return s
+
+
+def get_base_aligned(item, i):
+    s = {}
+    s[i] = ''
+    if 'Sample_ID' in item:
+        if item['Sample_ID'].strip().lower().startswith(i):
+            if 'Base_Aligned' in item:
+                Base_Aligned = item['Base_Aligned']
+                try:
+                    base_aligned = float(Base_Aligned)
+                except:
+                    s[i] = Base_Aligned
+                    return s
+                s[i] = '%.2f' % (base_aligned / (1024 * 1024 * 1024))
+    return s
 
 
 def get_gene_MoA(gene):
@@ -703,7 +774,7 @@ def reset_status(status):
     for a in ['amplification', 'gain', 'amp']:
         if status.lower().startswith(a):
             return 'gain', '扩增'
-    for b in ['loss', 'deletions', 'deletion', 'del']:
+    for b in ['loss', 'deletions', 'deletion']:
         if status.lower().startswith(b):
             return 'loss', '缺失'
     return status, '未知'
@@ -751,7 +822,7 @@ def reset_cgi(item):
         responsive = 'resistance'
     else:
         responsive = item['EFFECT']
-    if alteration.lower().startswith(gene.lower()):
+    if alteration.lower().startswith(gene.lower()) is False:
         alteration = ' '.join([gene, alteration])
     return {
         'responsive': responsive,
@@ -807,8 +878,11 @@ def reset_civic(item):
     else:
         responsive = item['clinical_significance']
     alteration = variant_name
-    if alteration.lower().startswith(gene.lower()):
+    if alteration.lower().startswith(gene.lower()) is False:
         alteration = ' '.join([gene, alteration])
+    drug_interaction_type = item['drug_interaction_type']
+    if drug_interaction_type.lower() == 'combination':
+        drug = drug.replace(',', '+')
     return {
         'responsive': responsive,
         'gene': gene,
@@ -853,7 +927,7 @@ def reset_oncokb(item):
     else:
         responsive = 'responsive'
     alteration = variant_name
-    if alteration.lower().startswith(gene.lower()):
+    if alteration.lower().startswith(gene.lower()) is False:
         alteration = ' '.join([gene, alteration])
     return {
         'responsive': responsive,
@@ -869,27 +943,6 @@ def reset_oncokb(item):
     }
 
 
-def get_rs_list(rs_list):
-    items = []
-    for rs in rs_list:
-        item = {}
-        item['rs'] = rs['text']
-        item['genotypes'] = [r['text'] for r in rs['children']]
-        items.append(item)
-    return items
-
-
-def get_variant_knowledge(rs_list, items):
-    # variant_knowledge gene	rs	genotype	introduction	summary
-    for rs_item in rs_list:
-        rs_list1 = []
-        for item in items:
-            if item['gene'] == rs_item['gene'] and item['rs'] == rs_item['rs'] and item['level'] == rs_item['level']:
-                rs_list1.append(item)
-        rs_item['genotypes'] = rs_list1
-    return rs_list
-
-
 def get_variant_knowledges():
     categories = []
     for i in range(variant_knowledge.nrows):
@@ -897,7 +950,7 @@ def get_variant_knowledges():
         cell_value = variant_knowledge.cell_value(i, j)
         if cell_value.startswith('rs') is False and i > 0:
             drug = '' if cell_value != '铂类药物' else '(顺铂、卡铂、奥沙利铂)'
-            category = {'category': cell_value, 'drug': drug, 'rs_list': [], 'genes': [], 'items': []}
+            category = {'category': cell_value, 'drug': drug, 'genes': []}
             for k in range(i + 1, variant_knowledge.nrows):
                 row_value = variant_knowledge.row_values(k)
                 cell_value1 = row_value[j]
@@ -912,33 +965,24 @@ def get_variant_knowledges():
                     'level': row_value[j+4],
                     'category': category,
                 }
-                item1 = {
-                    'gene': row_value[j-1],
-                    'rs': cell_value1,
-                    'level': row_value[j+4],
-                    'category': category,
-                    'rs_list': []
-                }
                 for x in rs_geno:
                     if x[0] == item['rs']:
                         if x[1] == item['genotype'] and item not in category['genes']:
                             category['genes'].append(item)
-                if item1 not in category['rs_list']:
-                    category['rs_list'].append(item1)
-                if item not in category['items']:
-                    category['items'].append(item)
-            categories.append(category)
+            if len(category['genes']) > 0:
+                categories.append(category)
     return categories
 
 
 def get_domain(gene, var_p, var_c):
-    items = filter(lambda x: x['gene'] == gene and x['cdna'] == var_c, CGI_mutation_analysis)
-    if len(items) != 1:
-        items2 = filter(lambda x: x['gene'] == gene and x['protein'] == var_p, CGI_mutation_analysis)
-        if len(items2) == 1:
-            return items2[0]['Pfam_domain'].strip()
-    else:
-        return items[0]['Pfam_domain'].strip()
+    if CGI_mutation_analysis is not None:
+        items = filter(lambda x: x['gene'] == gene and x['cdna'] == var_c, CGI_mutation_analysis)
+        if len(items) != 1:
+            items2 = filter(lambda x: x['gene'] == gene and x['protein'] == var_p, CGI_mutation_analysis)
+            if len(items2) == 1:
+                return items2[0]['Pfam_domain'].strip()
+        else:
+            return items[0]['Pfam_domain'].strip()
     return ''
 
 
@@ -980,3 +1024,24 @@ def filter_rs_list(old_item):
                 rs_list1.append(item)
         rs_item['rs_list'] = rs_list1
     return rs_list
+
+
+def concat_str(arr):
+    if len(arr) == 1:
+        return arr[0]
+    tip1 = '、'.join(arr[:-1])
+    if len(arr) > 1:
+        return '合并'.join([tip1, arr[-1]])
+    return tip1
+
+
+def reset_sig(s_id):
+    signature_cns = signature_cn.split('\n')
+    for s_index, s in enumerate(signature_cns):
+        if s.strip().upper() == s_id.upper():
+            if s_index < len(signature_cns) - 1:
+                text = signature_cns[s_index + 1].strip()
+                if text == '原因未知':
+                    return text
+                return text.replace('推测由', '').replace('导致', '')
+    return ''
