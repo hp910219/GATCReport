@@ -1201,20 +1201,19 @@ def write_genes4(genes, col, whith, table_jc='center'):
     tr2 = 'PD1等免疫检查位点抗体可能无效'
     if reds + oranges > 0:
         tr1 = 'DDR基因'
-        tip = 'DNA损伤反应基因DDR基因发现'
+        tr2 = 'PD1等免疫检查位点抗体可能有效'
         if reds > 0:
             tr1 += '明确致病位点突变%d个' % reds
-            tip += '%d个明确致病突变' % reds
         if oranges > 0:
             if len(tr1) > 0:
                 tr1 += '，'
             tr1 += '预测致病位点突变%d个' % oranges
-            tr1 += '%d个预测致病突变' % oranges
         tr1 += '，DDR信号通路激活。'
         if reds * oranges >0:
-            tip += '共%d个突变' % (reds + oranges)
-        tip += '，DDR信号通路激活，提示PD1等免疫检查位点抗体等免疫治疗可能有效'
-        tr2 = 'PD1等免疫检查位点抗体可能有效'
+            tip = 'DNA损伤反应基因DDR基因发现'
+            tip += '%d个明确致病突变和%d个预测致病突变共%d个突变' % (reds, oranges, reds + oranges)
+            tip += '，DDR信号通路激活，提示PD1等免疫检查位点抗体等免疫治疗可能有效'
+
     return {'para': table_str, 'tr1': tr1, 'tr2': tr2, 'tip': tip}
 
 
