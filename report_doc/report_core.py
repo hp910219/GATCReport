@@ -76,9 +76,6 @@ def write_body(title_cn, title_en, data):
     diagnose = data['patient_info']['diagnose']
     data['target_tips'] = get_target_tips(diagnose)
     data['chem_tip'] = '无' if len(trs3[1][1]) == 0 else ', '.join(trs3[1][1])
-    data['ddr'] = write_41()
-    data['hla'] = write_hla(hla)
-    write_chapter42()
     para41, tip41 = write_chapter41()
     para42, tip42 = write_chapter42()
     para43, tip43 = write_chapter43()
@@ -479,7 +476,6 @@ def write_chapter41():
 def write_chapter42():
     hlas = write_hla(hla)
     para = hlas[0]
-    # data = ['DDR基因明确致病位点突变1个，预测致病位点突变4个，DDR信号通路激活。', 'PD1等免疫检查位点抗体可能有效']
     # 1,  如果HLA-B66，或者HLA-B*15：01，疗效较差
     # 2， 如果LA-B44，较好，  如果三个均杂合（A1！=A2， B1！=B2， C1！=C2）， 疗效较好。
     # 3，其它，疗效中等。
@@ -499,24 +495,24 @@ def write_chapter43():
     items = get_data43()
     tr1, tr2 = '未发现免疫治疗超进展相关基因突变', 'PD1等免疫检查位点抗体可能无超进展风险'
     genes = []
+    kuozeng = []
     for item in items:
         if item['fill'] == red:
             genes.append(item['text'])
-            tr1 += '%s(拷贝数%s),' % (item['text'], item['copynumber'])
-            tr2 = 'PD1等免疫检查位点抗体可能有超进展风险'
-    if len(genes) == 0:
-        tip = '%s, 提示%s' % (tr1, tr2)
-    else:
-        tip = '发现免疫治疗超进展相关基因%s' % concat_str(genes)
-        tip += '，提示PD1等免疫检查位点抗体等免疫治疗可能具有超进展风险'
-    trs = [tr1.rstrip(','), tr2]
+            kuozeng.append('%s(拷贝数%s)' % (item['text'], item['copynumber']))
+    tip1 = tr1
+    if len(genes) > 0:
+        tip1 = '发现免疫治疗超进展相关基因%s' % concat_str(genes)
+        tr1 = '发现免疫治疗超进展相关基因%s' % concat_str(kuozeng)
+        tr2 = 'PD1等免疫检查位点抗体等免疫治疗可能具有超进展风险'
+    trs = [tr1, tr2]
     para = write_immun(trs, jc='center', w=2800*1.8)
     para += p.write()
     para += write_43(items)
     para += p.write()
     para += write_explain({'title': '结果说明：', 'text': 'MDM2、MDM4基因扩增、EGFR变异（突变或扩增）、DNMT3A突变和11q13(CCND1、FGF3、FGF4、FGF19)扩增与PD1抗体治疗超进展，即治疗之后，肿瘤没有缩小，反而加速增大。患者出现以上基因异常事件时，需要相对慎重选择PD1抗体治疗。'})
     para += write_evidence4(3)
-    return para, tip
+    return para, '%s，提示%s' % (tip1, tr2)
 
 
 def write_chapter44():
@@ -535,12 +531,9 @@ def write_chapter44():
             text = ''
             genes_red.append(gene)
         items.append({'fill': fill, 'text': '%s%s发生纯合失活突变' % (gene, text)})
-    tip = '%s，提示%s' % (tr1, tr2)
     if len(genes_red) > 0:
-        tip1 = concat_str(genes_red)
-        tr1 = '发现%s基因发生纯合失活突变' % tip1
-        tr2 = 'PD1等免疫检查位点抗体可能无效'
-        tip = '发现免疫治疗耐药基因B2M发生纯合失活突变%s，提示PD1等免疫检查位点抗体等免疫治疗可能会发生耐药' % tip1
+        tr1 = '发现免疫治疗耐药基因B2M发生纯合失活突变%s' % concat_str(genes_red)
+        tr2 = 'PD1等免疫检查位点抗体等免疫治疗可能会发生耐药'
     data = [tr1, tr2]
     para = write_immun(data, jc='center', h0=1600, w=3600)
     para += p.write()
@@ -548,7 +541,7 @@ def write_chapter44():
     para += p.write()
     para += write_explain({'title': '结果说明：', 'text': 'B2M等基因发生特定类型基因变异，PD1抗体治疗等免疫治疗可能会发生耐药。免疫治疗耐药可以由多种因素引起，以上基因通过不同机制导致免疫治疗耐药。B2M基因纯合失活突变，主要通过损害抗原提呈机制使免疫治疗耐药。JAK1、JAK2基因的纯合失活突变，则是通过损害效应T细胞杀伤肿瘤细胞的信号通路（γ干扰素通路）导致免疫治疗耐药。PTEN基因表达缺失或者纯合失活突变，则可能是通过影响T细胞浸润使免疫治疗耐药。'})
     para += write_evidence4(4)
-    return para, tip
+    return para, '%s，提示%s' % (tr1, tr2)
 
 
 def write_chapter45(signature_etiology):
@@ -715,19 +708,19 @@ def write_hla(data, w=4000):
     for d in data:
         if d.strip().startswith('HLA'):
             item.append(d.split('-')[1].replace('*', ''))
+    if len(item)< 6:
+        print 'please check hla.tsv, you may lose something.'
+        return '', ''
     b1 = item[2]
     b2 = item[3]
     tip = []
     is_zahe = item[0] != item[1] and b1 != b2 and item[4] != item[5]
     if b1.startswith('B66') or b2.startswith('B66') or 'B15:01' in [b1, b2]:
-        a_word = '疗效较差'
-        tip1 = '提示PD1等免疫检查位点抗体可能效果不显著'
+        tip1 = 'PD1等免疫检查位点抗体可能效果不显著'
     elif b1.startswith('B44') or is_zahe:
-        a_word = '疗效较好'
-        tip1 = '提示PD1等免疫检查位点抗体可能有效'
+        tip1 = 'PD1等免疫检查位点抗体可能有效'
     else:
-        a_word = '疗效中等'
-        tip1 = '提示PD1等免疫检查位点抗体可能效果不显著'
+        tip1 = 'PD1等免疫检查位点抗体可能效果不显著'
     if b1.startswith('B66') or b2.startswith('B66'):
         tip.append('具有免疫治疗较差的HLA-B66超型')
     elif 'B15:01' in [b1, b2]:
@@ -736,24 +729,20 @@ def write_hla(data, w=4000):
         tip.append('A、B、C三个等位基因均为杂合状态')
     elif b1.startswith('B44'):
         tip.append('具有免疫治疗较差的HLA-B15:01')
-    else:
-        a_word = '疗效中等'
-    data.append('PD1等免疫检查位点抗体可能%s' % a_word)
     texts = []
     for j in range(3):
         h1 = item[j * 2]
         h2 = item[j * 2+1]
         texts.append('HLA-%s HLA-%s' % (h1, h2))
-    tip0 = ''
+    start = 'HLA分型结果中，'
+    tip0 = start
     if len(tip) > 0:
-        tip0 = '\nHLA分型结果中, %s' % '(合并)'.join(tip)
-        tip1 = ', '.join([tip0, tip1])
-    else:
-        tip1 = 'HLA分型结果中，%s' % tip1
-    trs2 = write_tr1('\n'.join(texts) + tip0)
-    trs2 += write_tr2('PD1等免疫检查位点抗体可能%s' % a_word)
+        tip0 += '(合并)'.join(tip)
+        texts.append(tip0)
+    trs2 = write_tr1('\n'.join(texts))
+    trs2 += write_tr2(tip1)
     table_str = table.write(trs2, ws=[w], jc='center', bdColor=blue)
-    return table_str, tip1
+    return table_str, tip0.rstrip('，') + '，提示' + tip1
 
 
 def write_evidences(item, index):
@@ -1196,25 +1185,16 @@ def write_genes4(genes, col, whith, table_jc='center'):
             tcs += tc.write(para, tc.set(w=ws[j], fill=fill, color=white, tcBorders=borders))
         trs2 += tr.write(tcs, tr.set(trHeight=620))
     table_str = table.write(trs2, ws=ws, tblBorders=[], jc=table_jc)
-    tr1 = '无致病位点， DDR信号通路未激活'
-    tip = 'DNA损伤反应基因DDR基因未发生突变，提示PD1等免疫检查位点抗体等免疫治疗可能不显著'
-    tr2 = 'PD1等免疫检查位点抗体可能无效'
-    if reds + oranges > 0:
-        tr1 = 'DDR基因'
-        tr2 = 'PD1等免疫检查位点抗体可能有效'
-        if reds > 0:
-            tr1 += '明确致病位点突变%d个' % reds
-        if oranges > 0:
-            if len(tr1) > 0:
-                tr1 += '，'
-            tr1 += '预测致病位点突变%d个' % oranges
-        tr1 += '，DDR信号通路激活。'
-        if reds * oranges >0:
-            tip = 'DNA损伤反应基因DDR基因发现'
-            tip += '%d个明确致病突变和%d个预测致病突变共%d个突变' % (reds, oranges, reds + oranges)
-            tip += '，DDR信号通路激活，提示PD1等免疫检查位点抗体等免疫治疗可能有效'
-
-    return {'para': table_str, 'tr1': tr1, 'tr2': tr2, 'tip': tip}
+    tr1 = 'DNA损伤反应基因DDR基因未发生突变'
+    tr2 = 'PD1等免疫检查位点抗体等免疫治疗可能不显著'
+    tr11 = tr1
+    if reds * oranges > 0:
+        tr1 = 'DNA损伤反应基因DDR基因发现'
+        tr1 += '%d个明确致病突变和%d个预测致病突变共%d个突变' % (reds, oranges, reds + oranges)
+        tr1 += '，DDR信号通路激活'
+        tr2 = 'PD1等免疫检查位点抗体等免疫治疗可能有效'
+        tr11 = tr1 + '。'
+    return {'para': table_str, 'tr1': tr11, 'tr2': tr2, 'tip': '，提示'.join([tr1, tr2])}
 
 
 def write_thead51(titles, **kwargs):
@@ -1252,12 +1232,19 @@ def write_tr51(item, ws, c=''):
         for t in arr:
             if c == 'target' and i > 0:
                 run = ''
-                for t_index, tt in enumerate(t.split(';')):
+                for t_index, tt1 in enumerate(t.split(';')):
+                    tts = tt1.split('==')
+                    tt = tts[0]
                     ttt = tt.split('(')
+                    color1 = blue
+                    color2 = 'auto'
+                    if len(tts) > 1:
+                        color1 = red
+                        color2 = red
                     if len(ttt) > 1 and ttt[1].rstrip(')') == 'responsive':
-                        run += r.text(ttt[0], size=size, color=blue)
+                        run += r.text(ttt[0], size=size, color=color1)
                     else:
-                        run += r.text(tt.replace('(resistance)', '(耐药)'), size=size)
+                        run += r.text(tt.replace('(resistance)', '(耐药)'), size=size, color=color2)
                     if len(t) > 0 and t_index != len(t.split(';')) - 1:
                         run += r.text('、', size=size)
                 if t.strip() == '':

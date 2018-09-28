@@ -4,7 +4,6 @@ __author__ = 'huo'
 import requests
 import base64
 from bs4 import BeautifulSoup
-from jy_word.Word import crop_img
 from config import data_dir
 import os
 import sys
@@ -132,5 +131,5 @@ def save_img(url, i, img2=None):
         print 'save img success: ', url
     else:
         print 'img exists: ', url
-    if img2 is not None:
-        crop_img(url, r'%s/%s.png' % (data_dir, img2))
+    # if img2 is not None:
+    #     crop_img(url, r'%s/%s.png' % (data_dir, img2))

@@ -14,10 +14,13 @@ if __name__ == '__main__':
     report_title_en = 'AIomics1'
     user_name = patient_info['name']
     file_name = u'results/%s_%s_%s(%s)检测报告.doc' % (data_dir_name, user_name, disease_name, variant_knowledge_names[variant_knowledge_index])
+    # os.system('start explorer D:')
     print u'%s begin.' % file_name
     data = {'patient_info': patient_info}
     pkg = get_report_core(report_title_cn, report_title_en, data)
     my_file.download(pkg, file_name)
-    # os.startfile(os.path.abspath(file_name))
+    # if variant_knowledge_index == 2:
+    #     os.startfile(os.path.abspath(file_name))
+    # os.close()
     # os.system('start explorer %s' % os.path.abspath('results'))
     print u'%s over.' % file_name

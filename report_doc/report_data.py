@@ -4,9 +4,10 @@ __author__ = 'huo'
 import os
 import time
 import sys
+from PIL import Image
 reload(sys)
 sys.setdefaultencoding('utf-8')
-from jy_word.Word import bm_index0, crop_img, get_imgs, uniq_list, get_img
+from jy_word.Word import bm_index0, get_imgs, uniq_list, get_img
 from jy_word.File import File
 from config import img_info_path, base_dir, data_dir, images_dir
 from report_doc.get_real_level import FetchRealLevel
@@ -71,7 +72,6 @@ variant_anno1 = my_file.read('variant_anno.maf', dict_name=data_dir, sep='\t', t
 neoantigen = my_file.read('neoantigen.tsv', dict_name=data_dir)
 cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir)
 quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name=data_dir)
-recent_study = my_file.read('recent_study', dict_name=data_dir)
 tumor_bam_info = my_file.read('tumor.recal.bam_info.txt', dict_name=data_dir)
 tumor_bam_CNVs = my_file.read('tumor.recal.bam_CNVs', dict_name=data_dir)
 qc = my_file.read('QC.tsv', dict_name=data_dir)
@@ -198,11 +198,8 @@ def get_page_titles():
 
 
 def get_img_info(path, is_refresh=False):
-    part4 = r'%s/images/part4' % base_dir
-    if not os.path.exists(part4):
-        os.makedirs(part4)
-    crop_img(r'%s/signature.png' % (data_dir), r'%s/4.5.1signature.png' % part4)
-    crop_img(r'%s/signature_pie.png' % (data_dir), r'%s/4.5.2signature_pie.png' % part4)
+    crop_img(r'%s/signature.png' % (data_dir), r'%s/4.5.1signature.png' % data_dir)
+    crop_img(r'%s/signature_pie.png' % (data_dir), r'%s/4.5.2signature_pie.png' % data_dir)
     if is_refresh:
         img_info = get_imgs(images_dir)
         img_info += get_imgs(path)
@@ -330,18 +327,20 @@ def get_target_tips(diagnose):
                     var[key] += item1[key]
         vars.append(var)
     extra = []
-    extra_gene = []
     extra_col1 = ''
     if diagnose == '结直肠癌':
         extra_gene = ['KRAS', 'NRAS']
         extra_col1 = '%s未发生突变' % '、'.join(extra_gene)
-    if diagnose in ['胃癌', '乳腺癌']:
+    elif diagnose in ['胃癌', '乳腺癌']:
         extra_gene = ['HER2']
         extra_col1 = '%s未发生扩增' % '、'.join(extra_gene)
-    if diagnose == '非小细胞肺癌':
+    elif diagnose == '非小细胞肺癌':
         extra_gene = ['EGFR']
         extra_col1 = '%s未发生突变' % '、'.join(extra_gene)
+    else:
+        extra_gene = []
     show_extra = False
+    vars2 = []
     for index, v in enumerate(vars):
         gene = v['gene']
         v2s = filter(lambda x: x['gene'] == gene and '模糊匹配' in x['col1'], vars)
@@ -353,19 +352,24 @@ def get_target_tips(diagnose):
             if v2 in vars:
                 vars.remove(v2)
         v = get_drug_db(v)
-        if v['gene'] in extra_gene:
-            if 'EGFR' in extra_gene:
-                if '亚克隆' in v['col1']:
+        if v is not None:
+            vars2.append(v)
+            if v['gene'] in extra_gene:
+                if 'EGFR' in extra_gene:
+                    if '亚克隆' in v['col1']:
+                        extra.append(v)
+                elif 'HER2' in extra_gene:
+                    if '扩增' in v['col1']:
+                        extra.append(v)
+                else:
                     extra.append(v)
-            else:
-                extra.append(v)
-    if len(extra) == 0:
+    if len(extra) == 0 and len(extra_gene) > 0:
         show_extra = True
     extra_item = {'col1': extra_col1, 'gene_MoA': ''}
     for k in level_names:
         extra_item[k] = ''
-    vars = sorted(vars, cmp=cmp_target_tip)
-    return vars, show_extra, extra_item
+    vars2 = sorted(vars2, cmp=cmp_target_tip)
+    return vars2, show_extra, extra_item
 
 
 def cmp_target_tip(x, y):
@@ -428,8 +432,6 @@ def get_target_tip(items, items2, diagnose, file_name, func):
                         if exon1 == exon and variant_type1[:3].upper() == variant_type:
                             is_match = True
                             col1 = '%s exon %s %s' % (gene, exon, reset_item['status'])
-                        else:
-                            print gene
                 elif exon1 == '' and variant_type1 != '':
                     is_match, copynumber, status = get_copynumber(gene, variant_type1)
                     # if gene == 'FBXW7':
@@ -458,21 +460,22 @@ def get_drug(col1, reset_item, diagnose):
     drug = reset_item['drug']
     col6 = get_gene_MoA(gene)  # 原癌都是激活，抑癌都是失活。
     item = {'col1': col1, 'gene': gene, 'gene_MoA': ''.join(col6), 'gene_MoA1': col6[0], 'db_name': db_name}
-    item['responsive'] = reset_item['responsive']
+    item['responsive'] = reset_item['responsive'].lower().strip()
     item[db_name.upper()] = reset_item['evidence_detail']
     this_level = real_level.level(db_name.lower(), reset_item['level'], reset_item['cancer_type'], diagnose)
     item[db_name.upper()].append(this_level)
     # item[2] drug
-    drug1 = []
-    for x1 in drug.split(','):
-        xx1 = x1.split('(')[0].strip()
+    drug_items = []
+    drug_name = drug.strip().split('(')[0].strip()
+    for x1 in drug_name.split(','):
+        xx1 = x1.strip()
         if xx1.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
             x2 = {'drug': xx1, 'db_name': db_name, 'level': this_level, 'responsive': reset_item['responsive']}
-            if x2 not in drug1:
-                drug1.append(x2)
-    item[db_name.upper()][2] = drug1
+            if x2 not in drug_items:
+                drug_items.append(x2)
+    item[db_name.upper()][2] = drug_items
     for level in level_names:
-        item[level] = [] if level != this_level else drug1
+        item[level] = [] if level != this_level else drug_items
     return item
 
 
@@ -506,20 +509,26 @@ def get_drug_db(var):
                     if drug_item2['drug'] == drug_item1['drug']:
                         drug_item2['db_name'] = db_name1
                         drug_item2['level'] = drug_item1['level']
+                        if drug_item2['responsive'] != drug_item1['responsive']:
+                            drug_item1['color'] = 'red'
+                            drug_item2['color'] = 'red'
     drug_items = get_drug_level(drug_items)
     drug_items = get_drug_level(drug_items)
     if len(drug_items) == 0:
-        return None
+        var = None
+        return var
     for level in level_names:
         value1 = []
         value2 = []
         drugs = filter(lambda x: x['level'] == level, drug_items)
         for drug in drugs:
-            responsive = drug['responsive']
+            responsive = drug['responsive'].lower()
             x_drug = '%s' % drug['drug'].strip()
-            # x_drug = '%s==%s==%s' % (drug['drug'].strip(), drug['level'], drug['db_name'])
+            # x_drug = '%s==%s' % (drug['drug'].strip(), responsive)
             if x_drug.lower() not in ['', 'na', '5-fluorouracil', 'platinum']:
                 x_drug1 = '%s(%s)' % (x_drug, responsive)
+                if 'color' in drug:
+                    x_drug1 += '==%s' % drug['color']
                 if responsive == 'responsive':
                     if x_drug1 not in value1:
                         value1.append(x_drug1)
@@ -617,7 +626,7 @@ def get_data31(item):
         #     curative_effects[3].append(item1)
         if '疗效' in item1['summary']:
             liaoxiao += 1
-        if '毒性' in item1['summary']:
+        if '毒' in item1['summary']:
             duxing += 1
         if '低' in venom:
             venoms[1].append(item1)
@@ -692,7 +701,6 @@ def get_data44(gene):
 def get_data45(signature_etiology):
     items = [['', 'Signature ID', '权重', '主要出现的癌种', '可能的病因', '评论']]
     tr1, tr2 = '', []
-    n = 0
     for item in signature_etiology:
         s_id = item['Signature_ID']
         item['Keyword'] = reset_sig(s_id)
@@ -1045,3 +1053,27 @@ def reset_sig(s_id):
                     return text
                 return text.replace('推测由', '').replace('导致', '')
     return ''
+
+
+def crop_img(input_url, output_url):
+    if os.path.exists(input_url) is False:
+        msg = 'file not exsits, %s' % input_url
+        print msg
+        return msg
+    if os.path.exists(os.path.dirname(output_url)) is False:
+        msg = 'folder not exists, %s' % os.path.dirname(output_url)
+        print msg
+        return msg
+    img = Image.open(input_url)
+    sp = img.size
+    w, h = sp[0], sp[1]
+    region = (0, h/3, w, h/3 * 2)
+    if 'pie' in input_url:
+        region = (w/3 - 60, 320, w / 3 * 2 + 200, h-320)
+    if os.path.exists(output_url):
+        os.remove(output_url)
+    #裁切图片
+    cropImg = img.crop(region)
+    #保存裁切后的图片
+    cropImg.save(output_url)
+    return 'success'
