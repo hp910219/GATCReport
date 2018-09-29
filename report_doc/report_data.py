@@ -960,8 +960,9 @@ def get_variant_knowledges():
                 if not cell_value1.startswith('rs'):
                     break
                 gene = variant_knowledge.cell_value(k, j-1)
-                if gene == '':
-                    gene = variant_knowledge.cell_value(k-1, j-1)
+                # if gene == '':
+                #     print variant_knowledge_name
+                #     gene = variant_knowledge.cell_value(k-1, j-1)
                 item = {
                     'gene': gene,
                     'rs': cell_value1,
