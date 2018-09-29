@@ -9,7 +9,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from jy_word.Word import bm_index0, get_imgs, uniq_list, get_img
 from jy_word.File import File
-from config import img_info_path, base_dir, data_dir, images_dir
+from config import img_info_path, base_dir, data_dir, images_dir, variant_dir
 from report_doc.get_real_level import FetchRealLevel
 
 gray = 'E9E9E9'
@@ -28,7 +28,7 @@ real_level = FetchRealLevel()
 my_file = File(base_dir)
 
 # 初始化
-patient_info = my_file.read('patient_info.tsv', dict_name=data_dir)[0]
+patient_info = my_file.read('summary/patient_info.tsv', dict_name=data_dir)[0]
 disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
 variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '骨肉瘤除外硬纤维瘤和肌纤维母细胞瘤']
@@ -62,19 +62,15 @@ for evidence4_index in range(5):
     evidence4.append(evidence)
 
 # 动态的数据：
-immune_suggestion = my_file.read(r'immune_suggestion.txt', dict_name=data_dir)
-rs_geno = my_file.read('rs.geno.update.tsv', to_json=False, dict_name=data_dir)[1:]
-f = open(os.path.join(data_dir, 'hla.tsv'))
-hla_c = f.read().strip('\n')
-f.close()
-hla = hla_c.split('\t')
-variant_anno1 = my_file.read('variant_anno.maf', dict_name=data_dir, sep='\t', to_json=False)
-neoantigen = my_file.read('neoantigen.tsv', dict_name=data_dir)
+immune_suggestion = my_file.read(r'summary/immune_suggestion.tsv', dict_name=data_dir, to_json=False)
+neoantigen = my_file.read('neoantigen.tsv', dict_name=variant_dir)
+qc = my_file.read('QC.tsv', dict_name=variant_dir)
+quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name=variant_dir)
+rs_geno = my_file.read('rs.geno.update.tsv', to_json=False, dict_name=variant_dir)[1:]
+variant_anno1 = my_file.read('variant_anno.maf', dict_name=variant_dir, sep='\t', to_json=False)
 cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir)
-quantum_cellurity = my_file.read('quantum_cellurity.tsv', dict_name=data_dir)
-tumor_bam_info = my_file.read('tumor.recal.bam_info.txt', dict_name=data_dir)
-tumor_bam_CNVs = my_file.read('tumor.recal.bam_CNVs', dict_name=data_dir)
-qc = my_file.read('QC.tsv', dict_name=data_dir)
+tumor_bam_info = my_file.read('tumor.recal.bam_info.txt', dict_name=variant_dir)
+tumor_bam_CNVs = my_file.read('tumor.recal.bam_CNVs', dict_name=variant_dir, sep='\t', to_json=False)
 CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
 
 
@@ -215,9 +211,7 @@ def get_img_info(path, is_refresh=False):
 
 
 def get_immu(source):
-    immune_table = immune_suggestion.split('\n')
-    for im in immune_table:
-        ims = im.split('\t')
+    for ims in immune_suggestion:
         if ims[0] == source:
             if len(ims) == 3:
                 return ims
@@ -735,7 +729,7 @@ def get_sample_purity():
 def get_bam_snvs():
     if tumor_bam_CNVs is None:
         return 0
-    return len(tumor_bam_CNVs.strip('\n').split('\n'))
+    return len(tumor_bam_CNVs)
 
 
 def get_qc():

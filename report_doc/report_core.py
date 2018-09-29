@@ -474,6 +474,10 @@ def write_chapter41():
 
 
 def write_chapter42():
+    f = open(os.path.join(variant_dir, 'hla.tsv'))
+    hla_c = f.read().strip('\n')
+    f.close()
+    hla = hla_c.split('\t')
     hlas = write_hla(hla)
     para = hlas[0]
     # 1,  如果HLA-B66，或者HLA-B*15：01，疗效较差
