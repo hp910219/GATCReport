@@ -820,7 +820,7 @@ def reset_cgi(item):
     # 敏感（responsive）的药物标蓝；耐药（resistance）
     if item['EFFECT'].lower() == 'responsive':
         responsive = 'responsive'
-    elif item['EFFECT'].lower() in ['resistance', 'resistant']:
+    elif item['EFFECT'].lower() in ['resistance', 'resistant', 'no responsive']:
         responsive = 'resistance'
     else:
         responsive = item['EFFECT']
