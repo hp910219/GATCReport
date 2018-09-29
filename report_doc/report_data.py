@@ -31,8 +31,7 @@ my_file = File(base_dir)
 patient_info = my_file.read('summary/patient_info.tsv', dict_name=data_dir)[0]
 disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
-variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '骨肉瘤除外硬纤维瘤和肌纤维母细胞瘤']
-variant_knowledge_names += ['肉瘤', '胃癌', '胰腺癌']
+variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '肉瘤', '胃癌', '胰腺癌']
 variant_knowledge_index = 0
 for indexx, v in enumerate(variant_knowledge_names):
     if disease_name in v:
@@ -960,8 +959,8 @@ def get_variant_knowledges():
                 if not cell_value1.startswith('rs'):
                     break
                 gene = variant_knowledge.cell_value(k, j-1)
-                # if gene == '':
-                #     print variant_knowledge_name
+                if gene == '':
+                    print variant_knowledge_name
                 #     gene = variant_knowledge.cell_value(k-1, j-1)
                 item = {
                     'gene': gene,
