@@ -33,12 +33,18 @@ disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
 variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '肉瘤', '胃癌', '胰腺癌']
 variant_knowledge_index = 0
+out_path = ''
 for indexx, v in enumerate(variant_knowledge_names):
     if disease_name in v:
         variant_knowledge_index = indexx
         break
 if len(sys.argv) > 2:
-    variant_knowledge_index = int(sys.argv[2])
+    if sys.argv[2].endswith('.doc'):
+        out_path = sys.argv[2]
+    else:
+        variant_knowledge_index = int(sys.argv[2])
+    if len(sys.argv) > 3:
+        variant_knowledge_index = int(sys.argv[3])
 variant_knowledge_name = u'化疗多态位点证据列表%s' % variant_knowledge_names[variant_knowledge_index]
 tmb_tip = '注：NSCLC未经选择人群PD抗体有效率，具吸烟史为22%，无吸烟史为10%'
 if disease_name in '结直肠癌':
