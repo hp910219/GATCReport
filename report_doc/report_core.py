@@ -369,7 +369,7 @@ def write_chapter5(index, data):
     summary += '经初步分析共获得体细胞SNV %s个，' % data['snv_num']
     summary += '体细胞Indel %s个，' % data['indel_num']
     summary += '蛋白质编码区域突变%s个，' % data['var_num']
-    summary += '可能影响导致拷贝数变化的基因区域%d个。' % bam_snvs
+    summary += '可能影响导致拷贝数变化的基因区域%d个。' % (bam_snvs + 1)
     line = get_line('protocol')
     para += p.write(p.set(spacing=[0, 1], ind=['firstLine', 2]), r.text(summary))
     para += p.write(r.picture(19.3, rId='protocol', posOffset=[-1.1, 0])) + p.write() * (int(line * 1.2))

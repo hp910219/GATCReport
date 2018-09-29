@@ -70,7 +70,7 @@ rs_geno = my_file.read('rs.geno.update.tsv', to_json=False, dict_name=variant_di
 variant_anno1 = my_file.read('variant_anno.maf', dict_name=variant_dir, sep='\t', to_json=False)
 cnv_copynumber = my_file.read('cnv/cnv.copynumber.table.tsv', dict_name=data_dir)
 tumor_bam_info = my_file.read('tumor.recal.bam_info.txt', dict_name=variant_dir)
-tumor_bam_CNVs = my_file.read('tumor.recal.bam_CNVs', dict_name=variant_dir, sep='\t', to_json=False)
+tumor_bam_CNVs = my_file.read('tumor.recal.bam_CNVs', dict_name=variant_dir, sep='\t')
 CGI_mutation_analysis = my_file.read('CGI_mutation_analysis.tsv', dict_name=data_dir)
 
 
