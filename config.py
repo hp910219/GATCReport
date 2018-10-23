@@ -6,8 +6,8 @@ import os
 import sys
 
 base_dir = os.path.dirname(__file__)
-data_dir = r'C:\Users\guhongjie\Downloads\100307\100307'
-data_dir = r'test000'
+data_dir = r'C:\Users\guhongjie\Downloads\100309v3\100309'
+# data_dir = r'test000'
 if len(sys.argv) > 1:
     data_dir = sys.argv[1]
 data_dir_name = os.path.relpath(data_dir, os.path.dirname(data_dir))

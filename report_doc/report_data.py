@@ -31,21 +31,30 @@ my_file = File(base_dir)
 patient_info = my_file.read('summary/patient_info.tsv', dict_name=data_dir)[0]
 disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
-variant_knowledge_names = ['结直肠癌', '非小细胞肺癌', '肉瘤', '胃癌', '胰腺癌']
+variant_knowledge_names = [u'结直肠癌', u'非小细胞肺癌', u'肉瘤', u'胃癌', u'胰腺癌', u'乳腺癌']
 variant_knowledge_index = 0
 out_path = ''
 for indexx, v in enumerate(variant_knowledge_names):
     if disease_name in v:
         variant_knowledge_index = indexx
         break
+var_sys_arg = ''
 if len(sys.argv) > 2:
     if sys.argv[2].endswith('.doc'):
         out_path = sys.argv[2]
     else:
-        variant_knowledge_index = int(sys.argv[2])
+        var_sys_arg = sys.argv[2]
     if len(sys.argv) > 3:
-        variant_knowledge_index = int(sys.argv[3])
-variant_knowledge_name = u'化疗多态位点证据列表%s' % variant_knowledge_names[variant_knowledge_index]
+        var_sys_arg = sys.argv[3]
+var_sys_arg = var_sys_arg.decode(sys.stdin.encoding).encode('utf-8')
+if var_sys_arg in variant_knowledge_names:
+    variant_knowledge_index = variant_knowledge_names.index(var_sys_arg)
+try:
+    variant_knowledge_index = int(var_sys_arg)
+except:
+    variant_knowledge_index = -1
+var_know_name = variant_knowledge_names[variant_knowledge_index]
+variant_knowledge_name = u'化疗多态位点证据列表%s' % var_know_name
 tmb_tip = '注：NSCLC未经选择人群PD抗体有效率，具吸烟史为22%，无吸烟史为10%'
 if disease_name in '结直肠癌':
     tmb_tip = '注：MSS微卫星稳定结直肠癌患者PD1抗体有效率为0%；MSI-H微卫星不稳定结直肠癌患者有效率为29.6%。'
