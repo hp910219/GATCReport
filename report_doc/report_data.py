@@ -430,6 +430,7 @@ def get_target_tip(items, items2, diagnose, file_name, func):
             exon1 = reset_item['exon']
             variant_type1 = reset_item['status']
             if len(reset_item['vars']) == 0:
+                col1 = ''
                 if exon1 != '' and variant_type1 != '':
                     items1 = filter_db(gene)
                     if len(items1) > 0:
