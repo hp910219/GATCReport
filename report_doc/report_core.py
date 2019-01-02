@@ -1071,7 +1071,7 @@ def write_41():
         },
         {
             'title': '错配修复基因', 'color': colors[3],
-            'genes': ['MLH1', 'MLH2', 'MSH6', 'PMS1', 'PMS2']
+            'genes': ['MLH1', 'MSH2', 'MSH6', 'PMS1', 'PMS2']
         },
         {
             'title': '细胞周期检查点基因', 'color': colors[4],
@@ -1083,7 +1083,7 @@ def write_41():
         },
         {
             'title': '染色质重塑基因', 'color': colors[6],
-            'genes': ['PBRM1', 'ARID1', 'BRD7']
+            'genes': ['PBRM1', 'ARID2', 'BRD7']
         }
     ]
     return write_genes4(genes, 10, 10000)
