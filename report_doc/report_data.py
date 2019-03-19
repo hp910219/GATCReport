@@ -31,7 +31,7 @@ my_file = File(base_dir)
 patient_info = my_file.read('summary/patient_info.tsv', dict_name=data_dir)[0]
 disease_name = patient_info['diagnose']
 evidence_dir = os.path.join(data_dir, 'evidence')
-variant_knowledge_names = [u'结直肠癌', u'非小细胞肺癌', u'肉瘤', u'胃癌', u'胰腺癌', u'乳腺癌']
+variant_knowledge_names = [u'结直肠癌', u'非小细胞肺癌', u'肉瘤', u'胃癌', u'胰腺癌', u'乳腺癌', u'肝癌']
 variant_knowledge_index = 0
 out_path = ''
 for indexx, v in enumerate(variant_knowledge_names):
